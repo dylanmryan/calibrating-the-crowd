@@ -1,0 +1,14 @@
+config.yaml
+.venv/
+__pycache__/
+*.pyc
+.env
+*.pem
+.DS_Store
+data/raw/*
+data/processed/*
+!data/raw/.gitkeep
+!data/processed/.gitkeep
+results/*
+!results/.gitkeep
+.ipynb_checkpoints/
