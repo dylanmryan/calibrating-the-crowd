@@ -1,5 +1,5 @@
 # Calibrating the Crowd — Findings Summary
-*Dylan Ryan · BPF Undergraduate Research Grant · updated 2026-07-09*
+*Dylan Ryan · BPF Undergraduate Research Grant · updated 2026-07-10*
 
 **Research question:** are sports prediction markets genuine forecasting instruments,
 or another form of gambling?
@@ -65,16 +65,39 @@ Supporting figures: `spread_coherence.png`, `margin_pit.png`, `profitability.png
 ## Notable nuances
 
 1. **MLB margin distributions are miscalibrated** (PIT KS=0.072, p<0.001, unbiased in
-   location) — plausibly the margin-of-exactly-1 spike created by walk-off rules,
-   under-priced in run lines. The one distributional crack found; worth a section.
-2. **Cost asymmetry**: sportsbook overround ~4.2% everywhere; Kalshi bid/ask
+   location) — and the mechanism is now partly identified. Baseball's ending rules
+   concentrate finals at a margin of exactly 1: extra-inning games (8.6% of games,
+   ghost-runner era) end within one run **70%** of the time (home wins in extras:
+   88% by exactly 1) vs 25% in regulation. In the run-line "win by 1–2" cell the
+   market implies 14.6% in extras games that empirically hit 44.5% (+29.9pts,
+   z=8.9); extras account for ~24% of the cell's total +8.4pt under-pricing, with
+   a broad +6.4pt under-pricing of small margins remaining even in regulation.
+   Notably the market prices the home/away walk-off *asymmetry* in the right
+   direction (implied 17.3% home vs 11.6% away) — the level is wrong, not the
+   shape's direction. (`src/analysis/mlb_extras.py`)
+2. **Forecast encompassing — equally accurate ≠ redundant.** In log-odds
+   combination regressions (date-clustered SEs), Kalshi's price carries a small
+   information increment *beyond* the book (LR exclusion p=0.004) and beyond
+   Polymarket (p=0.013); neither the book nor Polymarket adds information beyond
+   Kalshi. The increment is sign-consistent across all six leagues, statistically
+   driven by the NBA (p=0.006) — the most heavily traded league, consistent with
+   informed marginal traders — and is **not** a quote-timing artifact: it
+   concentrates in games where the book quote is freshest (<10 min old, p=0.003)
+   and vanishes where it is stale. Economically it is negligible: the DM accuracy
+   gain is n.s. and liquid-game Briers are identical to 4 decimals. Precisely:
+   the crowd re-prices the books' information without loss and adds a detectable
+   whisper of its own. (`src/analysis/encompassing.py`)
+3. **Cost asymmetry**: sportsbook overround ~4.2% everywhere; Kalshi bid/ask
    overround ~1.0% (caveat: Kalshi charges trading fees on top; books are all-in).
-3. **The ordinary gambler's ROI** on Kalshi: −3 to −4.5% across strategies
+4. **The ordinary gambler's ROI** on Kalshi: −3 to −4.5% across strategies
    (everything/favorites/longshots/home) ≈ transaction costs. Efficient market, not
    a beatable casino — and also not a rigged one.
-4. **Thin markets are noisier**: Kalshi calibration error rises sharply with quoted
-   spread (ECE 0.014 tight → 0.10 wide), but thin markets do not drive any headline
-   result.
+5. **Thin markets are noisier**: Kalshi calibration error rises sharply with quoted
+   spread (ECE 0.013 tight → 0.10 wide; reliability 0.24 → 17.1 ×1000; clean-data
+   rerun 2026-07-10), but thin markets do not drive any headline result: on liquid
+   games only (spread ≤ 1¢, n=4,374) all three sources have Brier 0.2186 and every
+   pairwise clustered DM is n.s. (p ≥ 0.45). This formally retires the pre-side-fix
+   "Kalshi lags even on liquid games (p=0.004)" result — it was contamination.
 
 ## Data-quality audit (methods note)
 
