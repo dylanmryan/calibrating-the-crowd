@@ -116,7 +116,24 @@ Supporting figures: `spread_coherence.png`, `margin_pit.png`, `profitability.png
    concentrates where book quotes are freshest — not a staleness artifact.
    What traders do on the exchange in the last day is genuinely informative.
    (`src/analysis/late_flow.py`)
-3. **Cost asymmetry — 3-venue table now complete**: sportsbook overround ~4.2%
+   **…but the carrier is quote revision, not aggressive flow.** On 710,176
+   per-fill trades (516 games, all 7 leagues): markout-to-close is a flat
+   −0.3 to −0.4pt across every trade-size quintile (3-contract lots to
+   1,100-contract blocks) — no size class beats the close, all pay the spread —
+   and game-level taker imbalance (large or small) predicts nothing beyond the
+   book line (p=0.80/0.48). Prices move informatively while aggressive flow
+   carries no signal ⇒ price discovery is **maker-driven**: the informed side
+   is the passive side re-pricing its quotes. Coheres with the cost structure
+   (makers trade ~free; takers pay ~spread+fee for immediacy and gain no edge).
+   (`src/collect/kalshi_trades.py`, `src/analysis/informed.py`)
+3. **Lead–lag (first pass, 3 days of VPS panel, n=70 games):** 15-min price
+   *changes* are nearly uncorrelated across venues (r=0.02–0.08); the book
+   consensus alone shows strong momentum (own-lag +0.30, z=17.5) while both
+   exchanges adjust within one step — consensus book lines drift toward news
+   (asynchronous updates across books), exchanges jump. Directional lead–lag
+   hints (Poly→Kalshi, book→Poly) are underpowered; rerun as the panel grows.
+   (`src/analysis/lead_lag.py`)
+4. **Cost asymmetry — 3-venue table now complete**: sportsbook overround ~4.2%
    everywhere; Kalshi bid/ask overround ~1.0%; and Polymarket's archived books
    (OddPool, n=93 games, all four in-season leagues) show a median quoted spread
    of exactly 1.00pt — equal to Kalshi's on the same games. Both exchanges are
@@ -126,10 +143,10 @@ Supporting figures: `spread_coherence.png`, `margin_pit.png`, `profitability.png
    archived Polymarket book mids match our CLOB-derived closing prices with
    median error 0.00pts — both prediction-market price pipelines are now
    independently confirmed against external archives.
-4. **The ordinary gambler's ROI** on Kalshi: −3 to −4.5% across strategies
+5. **The ordinary gambler's ROI** on Kalshi: −3 to −4.5% across strategies
    (everything/favorites/longshots/home) ≈ transaction costs. Efficient market, not
    a beatable casino — and also not a rigged one.
-5. **Thin markets are noisier**: Kalshi calibration error rises sharply with quoted
+6. **Thin markets are noisier**: Kalshi calibration error rises sharply with quoted
    spread (ECE 0.013 tight → 0.10 wide; reliability 0.24 → 17.1 ×1000; clean-data
    rerun 2026-07-10), but thin markets do not drive any headline result: on liquid
    games only (spread ≤ 1¢, n=4,374) all three sources have Brier 0.2186 and every
