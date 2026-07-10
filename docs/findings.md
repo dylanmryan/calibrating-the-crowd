@@ -22,6 +22,8 @@ cost: prediction markets charge participants ~1% versus the books' ~4.2%.
 | Sportsbook consensus closing lines | 5,151 games | The Odds API historical (≈10.5 books/game, de-vigged) |
 | **All-three joint set (clean)** | **5,044 games** | NBA/NHL/MLB/CFB/NFL/WNBA, May 2025 – Jul 2026 |
 | Alternate-spread ladders | 28,940 contracts, 4,042 games | Kalshi spread series |
+| Book alternate spread lines | 107,100 points, 2,480 MLB/NBA games | The Odds API historical (per-event, de-vigged pairs) |
+| Polymarket archived order books | 93 games (spread sample) | OddPool archive |
 | Multi-horizon price paths | ~9,000 games × 7 horizons | Kalshi trade history (in progress) |
 | Live 3-source time series + World Cup 3-way | every 15 min | VPS collector (lead–lag, in progress) |
 
@@ -75,6 +77,16 @@ Supporting figures: `spread_coherence.png`, `margin_pit.png`, `profitability.png
    Notably the market prices the home/away walk-off *asymmetry* in the right
    direction (implied 17.3% home vs 11.6% away) — the level is wrong, not the
    shape's direction. (`src/analysis/mlb_extras.py`)
+   **Cross-source verdict: the blind spot is Kalshi-specific.** On the same games
+   and rungs, the books' alternate run lines price the cell almost perfectly
+   (implied 22.6% vs empirical 23.0%, gap +0.4pts, z=0.5; robust to requiring
+   ≥3 books), while Kalshi misses by +8.4pts (z=10). This is the first clean
+   Kalshi-vs-books divergence found anywhere in the project — and it lives in
+   the thin derivative ladders, not the liquid moneylines. Same pattern in tail
+   calibration on 20,363 identical contracts: book ECE 0.0069 vs Kalshi 0.0195
+   (Brier 0.1764 vs 0.1785). NBA ladders show no such gap (±1–2pts).
+   (`src/analysis/ladder_vs_books.py`, sportsbook alternate spreads for 2,480
+   MLB/NBA ladder games)
 2. **Forecast encompassing — equally accurate ≠ redundant.** In log-odds
    combination regressions (date-clustered SEs), Kalshi's price carries a small
    information increment *beyond* the book (LR exclusion p=0.004) and beyond
@@ -87,8 +99,16 @@ Supporting figures: `spread_coherence.png`, `margin_pit.png`, `profitability.png
    gain is n.s. and liquid-game Briers are identical to 4 decimals. Precisely:
    the crowd re-prices the books' information without loss and adds a detectable
    whisper of its own. (`src/analysis/encompassing.py`)
-3. **Cost asymmetry**: sportsbook overround ~4.2% everywhere; Kalshi bid/ask
-   overround ~1.0% (caveat: Kalshi charges trading fees on top; books are all-in).
+3. **Cost asymmetry — 3-venue table now complete**: sportsbook overround ~4.2%
+   everywhere; Kalshi bid/ask overround ~1.0%; and Polymarket's archived books
+   (OddPool, n=93 games, all four in-season leagues) show a median quoted spread
+   of exactly 1.00pt — equal to Kalshi's on the same games. Both exchanges are
+   ~4× tighter than the books at the quote. All-in for a market-order taker
+   (spread + fees): Polymarket ~1.25–1.75% < Kalshi ≈ books ~4.2%; makers trade
+   ~free on both exchanges, a path books don't offer. Bonus validation: the
+   archived Polymarket book mids match our CLOB-derived closing prices with
+   median error 0.00pts — both prediction-market price pipelines are now
+   independently confirmed against external archives.
 4. **The ordinary gambler's ROI** on Kalshi: −3 to −4.5% across strategies
    (everything/favorites/longshots/home) ≈ transaction costs. Efficient market, not
    a beatable casino — and also not a rigged one.
@@ -122,8 +142,8 @@ single-source studies cannot.
 
 ## Caveats & scope
 
-- Sports moneylines only (spreads analyzed within Kalshi; cross-source spread curves
-  not yet built). Deep history limited by Kalshi's ~60-day price retention (trade
+- Cross-source margin curves cover MLB + NBA (Kalshi ladders vs book alternate
+  lines); other leagues remain within-Kalshi only. Deep history limited by Kalshi's ~60-day price retention (trade
   reconstruction used beyond it) and Polymarket's structured-sports era (mid-2025→).
 - Book lines sampled up to 60 min before start (credit-batching); prediction-market
   prices at start. Any late-news asymmetry slightly *favors* the markets.
