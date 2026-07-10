@@ -1,0 +1,110 @@
+"""Referee-proofing battery: the attack surfaces a skeptical reviewer would probe.
+
+1. SELECTION: do conclusions depend on the all-three joint set? Re-test
+   Kalshi-vs-Polymarket on the wider both-priced set, and Kalshi calibration on
+   ALL its priced games (incl. leagues Polymarket never listed).
+2. DEPENDENCE: stacked both-sides calibration doubles n with p2 = 1-p1. Redo
+   slope/ECE on the home side only.
+3. SCORING RULE: Brier is one rule. Log score (tail-sensitive) as robustness,
+   with date-clustered pairwise DM.
+4. CORP decomposition (Dimitriadis-Gneiting-Jordan 2021): isotonic (PAV)
+   reliability instead of arbitrary bins — Brier = MCB (miscalibration)
+   - DSC (discrimination) + UNC, with no binning choices to dispute.
+"""
+from __future__ import annotations
+
+import numpy as np
+import pandas as pd
+from scipy import stats
+
+from src.analysis.compare import brier, cal_slope, ece, stacked
+from src.analysis.rigor import cluster_dm
+from src.analysis.three_way import SRC, load
+
+
+def pav(p, y):
+    """Pool-adjacent-violators: isotonic fit of y on sorted p (CORP recalibration)."""
+    order = np.argsort(p, kind="stable")
+    yy = y[order].astype(float)
+    val, wt = list(yy), [1.0] * len(yy)
+    i = 0
+    vals, wts = [], []
+    for v in yy:
+        vals.append(v); wts.append(1.0)
+        while len(vals) > 1 and vals[-2] > vals[-1] - 1e-12:
+            w = wts[-1] + wts[-2]
+            m = (vals[-1] * wts[-1] + vals[-2] * wts[-2]) / w
+            vals = vals[:-2] + [m]; wts = wts[:-2] + [w]
+    fit = np.repeat(vals, [int(w) for w in wts])
+    out = np.empty_like(fit)
+    out[order] = fit
+    return out
+
+
+def corp(p, y):
+    p, y = np.asarray(p, float), np.asarray(y, float)
+    c = pav(p, y)
+    s = brier(p, y)
+    s_c = brier(c, y)
+    s_r = brier(np.full_like(y, y.mean()), y)
+    return {"brier": s, "MCB": s - s_c, "DSC": s_r - s_c, "UNC": s_r}
+
+
+def main():
+    # ---------- 1. selection ----------
+    m = pd.read_csv("data/processed/games_master.csv")
+    m = m[m["outcome"].notna() & ~m["outcome_disagree"].fillna(False)].copy()
+    m["home_won"] = (m["outcome"] == 1).astype(int)
+    both = m[m.kalshi_p1.notna() & m.poly_p1.notna()]
+    d3 = load()
+    print("=== 1. selection: does the joint-set filter drive anything? ===", flush=True)
+    for label, g in (("both-priced (wide)", both), ("all-three (paper set)", d3)):
+        y = g["home_won"].values
+        dt = pd.to_datetime(g["start_utc"], utc=True, format="ISO8601").dt.date.values
+        dbar, se, z, p, _ = cluster_dm(g["kalshi_p1"], g["poly_p1"], y, dt)
+        print(f"  {label:22} n={len(g):5,}  Brier K={brier(g.kalshi_p1,y):.4f} "
+              f"P={brier(g.poly_p1,y):.4f}  DM z={z:+.2f} p={p:.3f}", flush=True)
+    kal = m[m.kalshi_p1.notna()]
+    for label, g in (("Kalshi, all priced", kal), ("Kalshi, joint set", d3)):
+        p_, y_ = stacked(g, "kalshi_p1", "kalshi_p2")
+        print(f"  {label:22} n={len(g):5,}  slope={cal_slope(p_,y_):.3f}  ECE={ece(p_,y_):.4f}", flush=True)
+
+    # ---------- 2. home-side-only ----------
+    print("\n=== 2. home-side-only calibration (no stacked-sides dependence) ===", flush=True)
+    y3 = d3["home_won"].values
+    for name, (c1, c2) in SRC.items():
+        p_, y_ = stacked(d3, c1, c2)
+        print(f"  {name:11} stacked slope={cal_slope(p_,y_):.3f} ECE={ece(p_,y_):.4f}   "
+              f"home-only slope={cal_slope(d3[c1].values, y3):.3f} "
+              f"ECE={ece(d3[c1].values, y3):.4f}", flush=True)
+
+    # ---------- 3. log score ----------
+    print("\n=== 3. log-score robustness (date-clustered pairwise DM) ===", flush=True)
+    dt3 = pd.to_datetime(d3["start_utc"], utc=True, format="ISO8601").dt.date.values
+    ll = {}
+    for name, (c1, _) in SRC.items():
+        p_ = np.clip(d3[c1].values, 1e-4, 1 - 1e-4)
+        ll[name] = -(y3 * np.log(p_) + (1 - y3) * np.log(1 - p_))
+        print(f"  {name:11} mean log loss = {ll[name].mean():.4f}", flush=True)
+    names = list(SRC)
+    for i in range(len(names)):
+        for j in range(i + 1, len(names)):
+            a, b = names[i], names[j]
+            dd = ll[a] - ll[b]
+            g = pd.DataFrame({"d": dd - dd.mean(), "c": dt3}).groupby("c")["d"].sum()
+            se = np.sqrt((g ** 2).sum()) / len(dd)
+            z = dd.mean() / se
+            print(f"  {a} - {b}: z={z:+.2f} p={2*(1-stats.norm.cdf(abs(z))):.3f}", flush=True)
+
+    # ---------- 4. CORP ----------
+    print("\n=== 4. CORP (isotonic) decomposition, no binning choices ===", flush=True)
+    print(f"  {'source':11} {'Brier':>8} {'MCB(cal)':>10} {'DSC(disc)':>10} {'UNC':>8}", flush=True)
+    for name, (c1, c2) in SRC.items():
+        p_, y_ = stacked(d3, c1, c2)
+        r = corp(p_, y_)
+        print(f"  {name:11} {r['brier']:>8.4f} {r['MCB']*1000:>9.2f}e-3 "
+              f"{r['DSC']*1000:>9.1f}e-3 {r['UNC']:>8.4f}", flush=True)
+
+
+if __name__ == "__main__":
+    main()

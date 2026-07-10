@@ -136,6 +136,30 @@ Supporting figures: `spread_coherence.png`, `margin_pit.png`, `profitability.png
    pairwise clustered DM is n.s. (p ≥ 0.45). This formally retires the pre-side-fix
    "Kalshi lags even on liquid games (p=0.004)" result — it was contamination.
 
+## Robustness (referee-proofing, 2026-07-10)
+
+- **Scoring rule**: log score reproduces the dead heat (all pairwise clustered
+  DM n.s.; the one borderline, K-vs-book p=0.051, *favors Kalshi*).
+- **Stacked-sides dependence**: home-side-only calibration ≈ stacked (slopes
+  0.97–1.02, ECE shifts <0.003) — the both-sides convention does no work.
+- **Binning**: CORP (isotonic, bin-free) miscalibration is 1.2–1.4e-3 for all
+  three sources and *reverses* the binned ordering (Kalshi lowest) — reliability
+  differences between sources are within method noise; discrimination (33e-3)
+  is identical. Bin-based "book is best calibrated" should not be over-read.
+- **Selection**: Kalshi calibration on ALL its priced games (n=9,003, incl.
+  leagues Polymarket never listed) is intact (slope 1.014, ECE 0.018). On the
+  wider both-priced set the K-vs-P DM flickers to p=0.048 in *Kalshi's* favor —
+  the K–P ordering is fragile around the 5% line in either direction; the
+  equivalence-with-books conclusion is unaffected.
+- **Fee natural experiment**: Polymarket's sports taker fee switched on
+  2026-03-30 mid-sample. Difference-in-differences on the per-game Brier
+  differential vs the book (league FE, date-clustered): post-fee coefficient
+  +0.23e-3, p=0.74 (Kalshi placebo also null); post-fee Polymarket ECE 0.004,
+  slope 0.994. **Introducing fees did not measurably degrade price quality** —
+  forecast accuracy is invariant to the fee regime, consistent with prices
+  tracking information rather than microstructure.
+  (`src/analysis/referee.py`, `src/analysis/fee_experiment.py`)
+
 ## Data-quality audit (methods note)
 
 A profitability backtest surfaced "impossible" profits (e.g. a 9¢ ask on a 91%
