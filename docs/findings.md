@@ -87,6 +87,15 @@ Supporting figures: `spread_coherence.png`, `margin_pit.png`, `profitability.png
    (Brier 0.1764 vs 0.1785). NBA ladders show no such gap (±1–2pts).
    (`src/analysis/ladder_vs_books.py`, sportsbook alternate spreads for 2,480
    MLB/NBA ladder games)
+   Two completions of this story: **(a) the books' full margin distributions
+   pass the same PIT that rejects Kalshi's** (book MLB KS p=0.46, NBA p=0.17 vs
+   Kalshi MLB p<0.001) — the books' curves are distributionally correct, not
+   just right in one cell (`src/analysis/book_pit.py`); **(b) the mispricing is
+   unexploitable**: selling the over-priced "win by 3+" contracts at the bid,
+   fees included, loses 2.9–4.5% (date-clustered z −2.3 to −4.6; robust to
+   live-book-only quotes) — the bias is harbored inside Kalshi's transaction-
+   cost band exactly as books harbor biases inside their vig, which is *why* it
+   persists (`src/analysis/ladder_cost.py`).
 2. **Forecast encompassing — equally accurate ≠ redundant.** In log-odds
    combination regressions (date-clustered SEs), Kalshi's price carries a small
    information increment *beyond* the book (LR exclusion p=0.004) and beyond
@@ -99,6 +108,14 @@ Supporting figures: `spread_coherence.png`, `margin_pit.png`, `profitability.png
    gain is n.s. and liquid-game Briers are identical to 4 decimals. Precisely:
    the crowd re-prices the books' information without loss and adds a detectable
    whisper of its own. (`src/analysis/encompassing.py`)
+   **The whisper is carried by late order flow.** Decomposing Kalshi's close
+   into a 24h-out level plus the final-day movement (trade-path panel, n=3,314
+   games with ≥10 trades): the flow term predicts outcomes beyond the closing
+   book line (LR p=0.001), and model-free, final-24h moves of ≥3pts point
+   toward the eventual winner 57.9% of the time (n=978). The effect again
+   concentrates where book quotes are freshest — not a staleness artifact.
+   What traders do on the exchange in the last day is genuinely informative.
+   (`src/analysis/late_flow.py`)
 3. **Cost asymmetry — 3-venue table now complete**: sportsbook overround ~4.2%
    everywhere; Kalshi bid/ask overround ~1.0%; and Polymarket's archived books
    (OddPool, n=93 games, all four in-season leagues) show a median quoted spread
