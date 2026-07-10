@@ -53,11 +53,11 @@ def _ml_market(event: dict):
     return None
 
 
-def harvest(out=MAP_OUT):
-    """Map clean joint-set games since SINCE to conditionId + home token (gamma, free)."""
+def harvest(out=MAP_OUT, since=SINCE):
+    """Map clean joint-set games since `since` to conditionId + home token (gamma, free)."""
     m = pd.read_csv("data/processed/games_master.csv")
     m = m[m["poly_p1"].notna() & m["outcome"].notna() & ~m["outcome_disagree"].fillna(False)]
-    m = m[m["start_utc"] >= SINCE].copy()
+    m = m[m["start_utc"] >= since].copy()
     m["gdate"] = pd.to_datetime(m["start_utc"], utc=True, format="ISO8601").dt.date
     print(f"games to map: {len(m):,} across {sorted(m.league.unique())}", flush=True)
 
@@ -104,7 +104,7 @@ def harvest(out=MAP_OUT):
                 found += 1
             # events are newest-first; stop paging once older than our window
             last = evs[-1].get("startDate") if isinstance(evs[-1], dict) else None
-            if last and last < SINCE:
+            if last and last < since:
                 break
             if len(evs) < 100:
                 break

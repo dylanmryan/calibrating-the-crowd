@@ -12,3 +12,4 @@ data/processed/*
 results/*
 !results/.gitkeep
 .ipynb_checkpoints/
+.venv-icloud-broken/
