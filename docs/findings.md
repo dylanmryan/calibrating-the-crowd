@@ -24,7 +24,8 @@ cost: prediction markets charge participants ~1% versus the books' ~4.2%.
 | Alternate-spread ladders | 28,940 contracts, 4,042 games | Kalshi spread series |
 | Book alternate spread lines | 107,100 points, 2,480 MLB/NBA games | The Odds API historical (per-event, de-vigged pairs) |
 | Polymarket archived order books | 93 games (spread sample) | OddPool archive |
-| Multi-horizon price paths | ~9,000 games × 7 horizons | Kalshi trade history (in progress) |
+| Multi-horizon price paths | Kalshi ~8,000 + Polymarket 5,410 games × 7 horizons | trade history / CLOB minute paths |
+| Book T−24h "opening" consensus | 3,461 games | The Odds API historical |
 | Live 3-source time series + World Cup 3-way | every 15 min | VPS collector (lead–lag, in progress) |
 
 Outcome integrity: ESPN finals cross-checked against both platforms' settlements
@@ -152,6 +153,24 @@ Supporting figures: `spread_coherence.png`, `margin_pit.png`, `profitability.png
    games only (spread ≤ 1¢, n=4,374) all three sources have Brier 0.2186 and every
    pairwise clustered DM is n.s. (p ≥ 0.45). This formally retires the pre-side-fix
    "Kalshi lags even on liquid games (p=0.004)" result — it was contamination.
+
+## When does the dead heat form? (open vs close, n=2,139 constant sample)
+
+At **T−24h** the books hold a small, statistically real accuracy lead over
+Kalshi (ΔBrier +0.73e-3, date-clustered z=2.18, p=0.029); Polymarket sits
+between (n.s. vs both). By **game start** all three are identical on the same
+games (0.2125 / 0.2123 / 0.2124). Both exchanges sharpen monotonically through
+the final day; cross-source price gaps contract (|K−book| 1.26→1.10pts,
+|P−book| 0.97→0.89, |K−P| 1.08→0.88); the books themselves also move (mean
+1.76pts, Brier improvement −0.66e-3, n.s.). Reading: **the equivalence is
+built during the final day** — the exchanges start slightly behind the
+professionals and close the gap by start, while their own late flow contributes
+genuine information (see the encompassing/late-flow nuance). Caveats: single
+test at p=0.03; constant sample skews toward early-listed, actively-traded
+games (NHL/CFB-heavy); book T−24h listing coverage 63%.
+Data: `sportsbook_open_prices.csv` (T−24h consensus, 3,461 games, ~24.5K
+credits), `poly_horizons.csv` (CLOB minute-paths, 5,410 games).
+(`src/analysis/horizon_equivalence.py`)
 
 ## Robustness (referee-proofing, 2026-07-10)
 
