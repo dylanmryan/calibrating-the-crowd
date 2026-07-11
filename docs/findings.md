@@ -172,6 +172,43 @@ Data: `sportsbook_open_prices.csv` (T−24h consensus, 3,461 games, ~24.5K
 credits), `poly_horizons.csv` (CLOB minute-paths, 5,410 games).
 (`src/analysis/horizon_equivalence.py`)
 
+Two completions (2026-07-11, same constant sample): **(a) all three closes are
+efficient** — the day's own move predicts nothing given the close (book move
+term p=0.99(!), Kalshi p=0.35, Poly p=0.52): no line-move anomaly anywhere;
+**(b) the Kalshi whisper does not exist at T−24h** (weight −0.22, p=0.68 — a
+day out the books fully encompass both exchanges). The exchange's incremental
+information is *created during the final day*, the same window in which it
+closes the accuracy gap. (`src/analysis/close_efficiency.py`)
+
+## Layer 2, market integration, and FDR control (2026-07-11)
+
+- **Layer 2 (the standard spread).** Main line identified per game as the
+  alternate point with de-vigged cover probability nearest ½ (mean |p−½| =
+  2.2pts). NBA is calibrated (empirical cover 51.4% vs 50.0% predicted, ECE
+  0.014). **MLB home sides cover the run line only 45.0% vs 49.9% implied**
+  (n=1,274, z≈−3.5, ECE 0.049) — directionally consistent with the walk-off
+  compression of home margins (home teams ahead stop batting; −1.5 fails on
+  1-run wins). Flagged as *suggestive*: single rung, post-hoc, needs
+  verification against the run-line literature before claiming. Kalshi ≈ book
+  at matched main-line rungs (mean diff −0.07pts; mostly NBA — MLB ladders
+  rarely quote 1.5). (`src/analysis/layer2.py`)
+- **Law of one price across venues.** On 92 games with executable books on
+  both exchanges (OddPool archive × Kalshi quotes): median mid-price gap
+  1.00pt; buy-one-sell-other crosses gross in 7.6% of games and **net of both
+  venues' fees in ≤1%** — and the largest "crossing" traced to a rare
+  wrong-game match (a playoff-series next-game market), not real money. The
+  two exchanges are one integrated market at the quote level.
+  (`src/analysis/one_price.py`) A follow-up audit showed same-pair-within-48h
+  games (series; the wrong-game risk set) have *smaller* Poly-book gaps than
+  average (0.57 vs 0.95pts; 1 outlier >5pts in 1,465) — series matching is
+  sound; 13 of 5,061 games (0.26%) show >5pt Poly-book divergence overall.
+- **Multiple testing.** Benjamini–Hochberg over the paper's 13 positive
+  claims: **11 of 13 survive q=0.05** — only the two results already flagged
+  as fragile (wide-set K>P at p=0.048; log-score K>book at p=0.051) drop, and
+  they re-enter at q=0.10. Every load-bearing discovery survives FDR control.
+  Nulls/equivalences are inventoried separately (they are not discoveries and
+  carry their own TOST margins). (`src/analysis/multiple_testing.py`)
+
 ## Robustness (referee-proofing, 2026-07-10)
 
 - **Scoring rule**: log score reproduces the dead heat (all pairwise clustered
