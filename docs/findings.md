@@ -157,8 +157,9 @@ Supporting figures: `spread_coherence.png`, `margin_pit.png`, `profitability.png
    (everything/favorites/longshots/home) ≈ transaction costs. Efficient market, not
    a beatable casino — and also not a rigged one.
 6. **Thin markets are noisier**: Kalshi calibration error rises sharply with quoted
-   spread (ECE 0.013 tight → 0.10 wide; reliability 0.24 → 17.1 ×1000; clean-data
-   rerun 2026-07-10), but thin markets do not drive any headline result: on liquid
+   spread (ECE 0.013 tight → 0.11 wide; reliability 0.25 → 18.1 ×1000; reruns
+   2026-07-10 and 2026-07-21 on the re-harvested master), but thin markets do not
+   drive any headline result: on liquid
    games only (spread ≤ 1¢, n=4,374) all three sources have Brier 0.2186 and every
    pairwise clustered DM is n.s. (p ≥ 0.45). This formally retires the pre-side-fix
    "Kalshi lags even on liquid games (p=0.004)" result — it was contamination.
