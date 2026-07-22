@@ -269,6 +269,11 @@ Frozen: `data/processed/wc_3way_snapshots.csv` (`src/analysis/wc_freeze.py`)
   three sources and *reverses* the binned ordering (Kalshi lowest) — reliability
   differences between sources are within method noise; discrimination (33e-3)
   is identical. Bin-based "book is best calibrated" should not be over-read.
+  CORP reliability *diagrams* with resampled 90% consistency bands
+  (2026-07-21): every source's isotonic curve sits inside its
+  perfect-calibration band over 83–89% of [0.01,0.99] — exactly the coverage
+  perfect calibration predicts. Report-grade replacement for the binned
+  diagrams. (`src/analysis/corp_diagram.py`, `results/corp_reliability.png`)
 - **Selection**: Kalshi calibration on ALL its priced games (n=9,003, incl.
   leagues Polymarket never listed) is intact (slope 1.014, ECE 0.018). On the
   wider both-priced set the K-vs-P DM flickers to p=0.048 in *Kalshi's* favor —

@@ -22,7 +22,7 @@ from pathlib import Path
 
 # dependency-safe order; all read local processed data only
 MODULES = [
-    "three_way", "rigor", "league_tost", "decomposition", "nuance",
+    "three_way", "rigor", "league_tost", "decomposition", "nuance", "corp_diagram",
     "coherence", "margin_dist", "book_pit", "ladder_vs_books", "ladder_cost",
     "mlb_autopsy", "mlb_extras", "profitability", "behavioral", "encompassing",
     "late_flow", "informed", "horizon", "horizon_equivalence", "horizon_cross",
