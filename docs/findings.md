@@ -208,8 +208,14 @@ same games 0.2130 (T−24h) → 0.2124 (close).
   0.014). **MLB home sides cover the run line only 45.0% vs 49.9% implied**
   (n=1,274, z≈−3.5, ECE 0.049) — directionally consistent with the walk-off
   compression of home margins (home teams ahead stop batting; −1.5 fails on
-  1-run wins). Flagged as *suggestive*: single rung, post-hoc, needs
-  verification against the run-line literature before claiming. Kalshi ≈ book
+  1-run wins). Literature check (2026-07-21): this matches the long-documented
+  home-favorite run-line bias — large-sample public analyses put historical
+  home −1.5 cover near 45% with the same walk-off mechanism (~28–29% of MLB
+  games end by exactly one run), and Woodland & Woodland (1994) established
+  MLB moneylines as efficient-within-costs with a *reverse* favorite–longshot
+  bias. So: a known structural feature the books carry inside their vig (our
+  cost-band thesis), not a pipeline artifact — but post-hoc on a single rung
+  here, so cite as corroborated context, not a new discovery. Kalshi ≈ book
   at matched main-line rungs (mean diff −0.07pts; mostly NBA — MLB ladders
   rarely quote 1.5). (`src/analysis/layer2.py`)
 - **Law of one price across venues.** On 92 games with executable books on
