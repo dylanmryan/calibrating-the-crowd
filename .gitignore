@@ -4,6 +4,10 @@ __pycache__/
 *.pyc
 .env
 *.pem
+*.key
+pem/
+logs/
+data/live/
 .DS_Store
 data/raw/*
 data/processed/*
