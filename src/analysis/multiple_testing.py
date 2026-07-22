@@ -22,7 +22,9 @@ DISCOVERIES = [
     ("NBA carries the encompassing increment",                6e-3,  "encompassing"),
     ("Kalshi encompasses Polymarket at close (LR)",           1.3e-2, "encompassing"),
     ("Books lead Kalshi at T-24h (clustered DM)",             2.9e-2, "horizon_equivalence"),
-    ("Book consensus momentum in 15-min panel (z=17.5)",      1e-10, "lead_lag"),
+    # 2026-07-21: replaced "book momentum z=17.5" — retired as a 3-day
+    # small-sample artifact (matured panel own-lag z=-0.3). Matured claim:
+    ("Cross-venue 15-min predictability K<->P, book->P (z~3)", 1.0e-3, "lead_lag (matured panel)"),
     ("Wide-set Kalshi beats Poly (DM)",                       4.8e-2, "referee (flagged fragile)"),
     ("Log-score Kalshi beats book (DM)",                      5.1e-2, "referee (flagged fragile)"),
 ]
