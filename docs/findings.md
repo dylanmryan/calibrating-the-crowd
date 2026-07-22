@@ -46,6 +46,15 @@ ticker-order rule (validated 99.6% vs ESPN).
 - **TOST equivalence:** every pairwise ΔBrier 90% CI lies within ±0.00052 → the three
   sources are formally *equivalent* at margin δ = 0.001 Brier (≈0.5% per-game
   probability error).
+- **Per-league TOST (2026-07-21):** equivalence at δ=0.001 also holds formally
+  *within each* of the three big leagues — all 9 pairwise CIs in MLB/NBA/NHL
+  (n≥1,206 each) sit inside ±0.84e-3. CFB/WNBA/NFL show no detectable
+  differences but are underpowered for the formal claim (δ_min 0.94–2.6e-3) —
+  report as "consistent, not established." **Sharpness is equal too**: mean
+  p(1−p) within 0.002 pooled (exchanges fractionally *sharper* than the book
+  consensus in every league) — equally informative, not just equally
+  calibrated; calibration alone could be gamed by hedging to the base rate,
+  identical sharpness + identical Brier cannot. (`src/analysis/league_tost.py`)
 - Robust to de-vig method (Shin vs multiplicative: book Brier 0.2181→0.2182,
   conclusions unchanged).
 - Figure: `results/three_way_calibration.png`.
