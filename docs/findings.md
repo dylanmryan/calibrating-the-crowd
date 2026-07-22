@@ -209,6 +209,21 @@ closes the accuracy gap. (`src/analysis/close_efficiency.py`)
   Nulls/equivalences are inventoried separately (they are not discoveries and
   carry their own TOST margins). (`src/analysis/multiple_testing.py`)
 
+## World Cup 3-way case study (frozen 2026-07-21)
+
+The live 3-way collector (Kalshi "Reg Time" markets vs de-vigged book h2h) ran
+from the round of 16 through the final: 9 knockout games, 1,002 snapshots.
+Outcomes backfilled by the regulation-90 rule (AET/pens ⇒ level at 90 ⇒ draw):
+4 draws, 3 away wins, 2 home wins. On the last pre-kickoff snapshot (8 games;
+the collector went live mid-match for the ninth) the two sources are
+near-identical: mean 3-way Brier 0.677 (Kalshi) vs 0.673 (book); mean price on
+the realized outcome 0.356 vs 0.358 (~0.1pt apart). Both were badly surprised
+by the *same* games — a 4-draw knockout stretch including an AET final and
+France–England 4–6 (France 0.55 to win in 90). Chalk-heavy priors, but shared
+ones: **the binary-market equivalence replicates in a 3-outcome setting** —
+descriptive only at n=9.
+Frozen: `data/processed/wc_3way_snapshots.csv` (`src/analysis/wc_freeze.py`)
+
 ## Robustness (referee-proofing, 2026-07-10)
 
 - **Scoring rule**: log score reproduces the dead heat (all pairwise clustered
