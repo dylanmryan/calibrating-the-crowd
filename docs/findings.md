@@ -190,6 +190,16 @@ day out the books fully encompass both exchanges). The exchange's incremental
 information is *created during the final day*, the same window in which it
 closes the accuracy gap. (`src/analysis/close_efficiency.py`)
 
+**Comparative sharpening (2026-07-21).** The full 7-horizon Brier curves on the
+joint constant sample (n=2,137) make the Page–Clemen replication comparative:
+both exchanges sharpen essentially monotonically (Kalshi 0.2138→0.2125,
+Polymarket 0.2134→0.2123) and are statistically indistinguishable at every
+horizon (all date-clustered |z| ≤ 1.8; smallest p=0.077 at 12h, favoring Poly)
+— **the dead heat holds along the whole final-day path**, not just at the
+close. Mean |24h→start| move is 2.0pts on both venues; book reference on the
+same games 0.2130 (T−24h) → 0.2124 (close).
+(`src/analysis/horizon_cross.py`, `results/horizon_cross.png`)
+
 ## Layer 2, market integration, and FDR control (2026-07-11)
 
 - **Layer 2 (the standard spread).** Main line identified per game as the
@@ -272,8 +282,6 @@ single-source studies cannot.
 
 ## In progress
 
-- **Multi-horizon calibration** (T−24h → start, from Kalshi trade paths): does the
-  market sharpen as the event approaches? (Page & Clemen replication.)
 - **Lead–lag price discovery**: two-week pass analyzed (nuance 3); the series
   keeps accumulating on the VPS — rerun near season end for power. The World
   Cup 3-way leg ended with the final and is frozen (see case study).
