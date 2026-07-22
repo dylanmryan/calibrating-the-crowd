@@ -127,12 +127,21 @@ Supporting figures: `spread_coherence.png`, `margin_pit.png`, `profitability.png
    is the passive side re-pricing its quotes. Coheres with the cost structure
    (makers trade ~free; takers pay ~spread+fee for immediacy and gain no edge).
    (`src/collect/kalshi_trades.py`, `src/analysis/informed.py`)
-3. **Lead–lag (first pass, 3 days of VPS panel, n=70 games):** 15-min price
-   *changes* are nearly uncorrelated across venues (r=0.02–0.08); the book
-   consensus alone shows strong momentum (own-lag +0.30, z=17.5) while both
-   exchanges adjust within one step — consensus book lines drift toward news
-   (asynchronous updates across books), exchanges jump. Directional lead–lag
-   hints (Poly→Kalshi, book→Poly) are underpowered; rerun as the panel grows.
+3. **Lead–lag (two-week VPS panel, 210 games, 10.2k complete 15-min steps,
+   2026-07-21):** 15-min changes stay nearly uncorrelated contemporaneously
+   (r=0.03–0.09). The first-pass "book momentum" was an artifact of the 3-day
+   sample — it vanishes with data (own-lag z=−0.3); books are simply stickier
+   (>0.4pt move in 4.4% of steps vs ~8–10% on the exchanges). Cross-venue
+   Granger terms are statistically real but economically tiny: the exchanges
+   predict each other (K→P z=+3.3, P→K z=+3.0) and book→Poly (z=+2.9), while
+   nothing significantly predicts the book's next move (z≤+1.4) — yet every
+   coefficient is ~0.03, i.e. ~3% of a move transmits one step ahead. Event
+   study on big moves (|d|≥2pts; n=65–123 events per source): the other
+   venues' signed response concentrates at offset 0 (+0.35–0.74pt within the
+   same 15-min step), ≈0 before, ≤0.2pt after — **big repricings are
+   simultaneous at 15-min resolution; no venue front-runs another**. Coheres
+   with the T−24h horizon result (books fractionally ahead, gap closed by
+   start) and with maker-driven discovery on public news.
    (`src/analysis/lead_lag.py`)
 4. **Cost asymmetry — 3-venue table now complete**: sportsbook overround ~4.2%
    everywhere; Kalshi bid/ask overround ~1.0%; and Polymarket's archived books
@@ -264,8 +273,9 @@ single-source studies cannot.
 
 - **Multi-horizon calibration** (T−24h → start, from Kalshi trade paths): does the
   market sharpen as the event approaches? (Page & Clemen replication.)
-- **Lead–lag price discovery**: 15-min three-source time series accumulating on an
-  always-on VPS (plus World Cup 3-way home/draw/away).
+- **Lead–lag price discovery**: two-week pass analyzed (nuance 3); the series
+  keeps accumulating on the VPS — rerun near season end for power. The World
+  Cup 3-way leg ended with the final and is frozen (see case study).
 - Advisor input pending on: HAC/cluster choices, multiple-testing policy,
   equivalence-margin convention, 3-way calibration methodology.
 

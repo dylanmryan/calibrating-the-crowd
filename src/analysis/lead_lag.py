@@ -36,6 +36,33 @@ def panel(path="data/live/vps_mirror/snapshots.csv"):
     return pd.concat(frames, ignore_index=True).dropna(subset=SRCS, how="all")
 
 
+def event_windows(g, thresh=0.02, offsets=range(-2, 3)):
+    """Event study around big one-step moves (|dA| >= thresh).
+
+    For each source A's big moves, align every other source's changes at
+    offsets -2..+2 steps, SIGNED by the direction of A's move. Response
+    concentrated at +1 => A leads B on news; response at <=0 => B moved
+    first or simultaneously (A wasn't the discoverer).
+    """
+    g = g.sort_values(["game_id", "t"]).copy()
+    for c in SRCS:
+        for k in offsets:
+            g[f"{c}@{k}"] = g.groupby("game_id")[c].shift(-k)
+    print(f"\n=== event windows: big moves (|d| >= {thresh*100:.0f}pts), signed response in pts ===", flush=True)
+    print(f"  {'event source':>12} {'n':>5} | " +
+          " ".join(f"{'B@'+str(k):>8}" for k in offsets) + "   (per other source B)", flush=True)
+    for a in SRCS:
+        ev = g[g[a].abs() >= thresh]
+        sgn = np.sign(ev[a])
+        for b in SRCS:
+            if b == a:
+                continue
+            resp = [(sgn * ev[f"{b}@{k}"]).mean() * 100 for k in offsets]
+            n = ev[f"{b}@1"].notna().sum()
+            print(f"  {a:>12} {len(ev):>5} | " +
+                  " ".join(f"{r:>+8.2f}" for r in resp) + f"   B={b}", flush=True)
+
+
 def main():
     d = panel()
     have_all = d.dropna(subset=SRCS)
@@ -77,6 +104,8 @@ def main():
         print(f"  predict d{b:<11} <- {msg}   n={len(sub):,}", flush=True)
     print("\n  (positive z on a cross term = that source's last move predicts this", flush=True)
     print("   source's next move: information flows from it. Early-sample caveat.)", flush=True)
+
+    event_windows(g)
 
 
 if __name__ == "__main__":
