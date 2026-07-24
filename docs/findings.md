@@ -74,6 +74,40 @@ ticker-order rule (validated 99.6% vs ESPN).
 Supporting figures: `spread_coherence.png`, `margin_pit.png`, `profitability.png`,
 `kalshi_nuance.png`.
 
+## Why sports? The platform pathologies vanish where a benchmark exists (2026-07-24)
+
+Bürgi–Deng–Whelan ("Makers and Takers: The Economics of the Kalshi Prediction
+Market," Jan 2026) document, on transaction data covering *all* Kalshi
+categories 2021–Apr 2025 (sports launched too late to be in their sample): a
+strong favorite–longshot bias (sub-10c contracts lose >60% of stake), average
+contract ROI ≈ **−20%**, and makers out-earning takers. Replicating their
+analyses on our sports data:
+
+- **The FLB cliff is absent in sports.** Hold-to-settlement return by price
+  bucket: moneylines at mid **−0.45%** overall (se 0.11, game-clustered,
+  n=17,821 sides); at ask + taker fee −4.6%; spread ladders at ask + fee
+  −5.8% — every bucket from 10c up sits in the 0 to −8% cost band, versus
+  their −20% platform average. The single BDW-like point (sub-10c moneylines,
+  −70%) is confined to **trade-recon prices on thin college longshots**
+  (570 of 571 sides are reconstruction-sourced, 85% CBB/CFB; one-sided
+  longshot prints overstate reconstructed mids). Live order books quote almost
+  no sub-10c moneylines, and the live-book-heavy ladder tail shows no cliff
+  (−8% ± 36, n.s.) — consistent with the earlier ladder-tail finding that
+  longshots are, if anything, slightly *under*priced.
+- **Makers > takers replicates qualitatively:** realized ROI on the final-24h
+  fill sample (709K fills, 512 games): takers −5.0% gross / −7.7% net of fee,
+  makers +5.6% (individually n.s. with game clustering; the maker−taker wedge
+  is the structural spread+fee). Caveat: home-side tickers only, and takers
+  are 94% yes-side — the sample is mostly home-backers' market orders.
+- **Reading:** BDW's platform-wide pathologies are absent precisely in the
+  corner of Kalshi that has (a) a professional pricing benchmark ecosystem
+  (the books) and (b) thousands of rapidly resolving, repeated, statistically
+  tractable events. Sports is what a prediction market looks like when that
+  discipline is available — the sharpest mechanism evidence yet for the
+  institutional thesis, and it turns the paper's benchmark design into an
+  explanation, not just a comparison.
+  (`src/analysis/why_sports.py`, `results/why_sports.png`)
+
 ## Notable nuances
 
 1. **MLB margin distributions are miscalibrated** (PIT KS=0.072, p<0.001, unbiased in

@@ -34,6 +34,10 @@ depth → institutional synthesis (surface vs aggregate).
   FLB — baseline for our run-line context note.
 - Clinton & Huang (2026): cross-platform equivalence question — we add the
   books benchmark their design lacked.
+- Bürgi, Deng & Whelan (2026) "Makers and Takers": platform-wide Kalshi FLB,
+  −20% average ROI, makers > takers (all categories, pre-sports sample). Our
+  sports replication (§5.8) shows those pathologies vanish in sports — the
+  benchmark-discipline mechanism argument.
 - Practitioner run-line literature (home −1.5 ≈45% cover, walk-off compression)
   — corroborates the Layer-2 cell.
 - Institutional context: CFTC self-certification, Polymarket fee introduction
@@ -86,6 +90,13 @@ Kalshi fails; run-line context (documented structural bias). NBA ladders clean.
 3-venue taker/maker table; realized random-bettor ROI ≈ −4% everywhere;
 fee natural experiment null; behavioral fingerprints all null (`behavioral`).
 ### 5.7 World Cup 3-way case study (frozen; descriptive n=9)
+### 5.8 Why sports? (`why_sports` — BDW replication)
+BDW's platform-wide FLB cliff and −20% ROI collapse to cost-band nulls in
+sports (moneylines @ mid −0.45%; every executable bucket ≥10c within 0 to
+−8%); makers > takers replicates qualitatively; sub-10c "cliff" shown to be a
+trade-recon one-sided-print artifact on college longshots. Mechanism claim:
+benchmark ecosystem + rapid repeated resolution discipline prices.
+Fig: why_sports.png.
 
 ## 6. Institutional synthesis
 "Sportsbook-like at the retail-taker surface (taker all-in ≈ vig; biases inside
