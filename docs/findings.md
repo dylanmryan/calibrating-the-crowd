@@ -207,6 +207,32 @@ analyses on our sports data:
    pairwise clustered DM is n.s. (p ≥ 0.45). This formally retires the pre-side-fix
    "Kalshi lags even on liquid games (p=0.004)" result — it was contamination.
 
+## The market premium over public statistics (model leg, 2026-07-24)
+
+A deliberately naive fourth forecaster — walk-forward Elo per league built
+from ESPN win/loss results only (K=20, expanding-window home advantage,
+season-gap regression, burn-in thresholds; no look-ahead anywhere) —
+evaluated on the same clean three-way games (n=4,627):
+
+- **The markets beat the public-statistics floor decisively — and
+  identically.** Model Brier 0.2348 vs 0.2209/0.2210/0.2210: ΔBrier ≈ +14e-3
+  against every source (date-clustered z ≈ +7.4, p<0.0001). The three market
+  institutions differ from each other by ≤0.5e-3 (n.s.; TOST-equivalent) —
+  they sit ~28× closer to one another than to the model. One line: **equally
+  good, and equally better than public statistics.**
+- **The naive model is calibrated but not sharp** (slope 0.976, CI incl. 1;
+  ECE 0.033). Calibration is cheap; the markets' value-add is discrimination.
+- **Per-league premium tracks where information lives**: largest in CFB
+  (+56e-3 — 1.3 seasons of won-lost records cannot learn hundreds of college
+  teams; the markets import rich priors), smallest in NHL (+4.4e-3) and MLB
+  (+6.7e-3), the low-resolution sports.
+- **Encompassing**: the book fully encompasses the model (model weight z=+0.6
+  given the book — public W/L records retain *nothing*); Kalshi still adds
+  beyond model+book (z=+2.7). The information hierarchy: public statistics ⊂
+  books ⊂ books + exchange late flow.
+- Robust to K∈{10, 32} (model Brier 0.2352–0.2369; conclusions unchanged).
+  (`src/analysis/model_benchmark.py`, `results/model_benchmark.png`)
+
 ## When does the dead heat form? (open vs close, n=2,139 constant sample)
 
 At **T−24h** the books hold a small, statistically real accuracy lead over
@@ -271,11 +297,11 @@ same games 0.2130 (T−24h) → 0.2124 (close).
   games (series; the wrong-game risk set) have *smaller* Poly-book gaps than
   average (0.57 vs 0.95pts; 1 outlier >5pts in 1,465) — series matching is
   sound; 13 of 5,061 games (0.26%) show >5pt Poly-book divergence overall.
-- **Multiple testing.** Benjamini–Hochberg over the paper's 14 positive
-  claims (Murphy sup-t added 2026-07-24): **12 of 14 survive q=0.05** — only
-  the two results already flagged as fragile (wide-set K>P at p=0.048;
-  log-score K>book at p=0.051) drop, and they re-enter at q=0.10. Every
-  load-bearing discovery survives FDR control.
+- **Multiple testing.** Benjamini–Hochberg over the paper's 15 positive
+  claims (Murphy sup-t and the model-benchmark premium added 2026-07-24):
+  **13 of 15 survive q=0.05** — only the two results already flagged as
+  fragile (wide-set K>P at p=0.048; log-score K>book at p=0.051) drop, and
+  they re-enter at q=0.10. Every load-bearing discovery survives FDR control.
   Nulls/equivalences are inventoried separately (they are not discoveries and
   carry their own TOST margins). (`src/analysis/multiple_testing.py`)
 

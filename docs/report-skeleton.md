@@ -93,7 +93,12 @@ Kalshi fails; run-line context (documented structural bias). NBA ladders clean.
 3-venue taker/maker table; realized random-bettor ROI ≈ −4% everywhere;
 fee natural experiment null; behavioral fingerprints all null (`behavioral`).
 ### 5.7 World Cup 3-way case study (frozen; descriptive n=9)
-### 5.8 Why sports? (`why_sports` — BDW replication)
+### 5.8 The market premium over public statistics (`model_benchmark`)
+Walk-forward Elo floor: markets beat it by ~14e-3 Brier (z≈7.4) while
+differing from each other by ≤0.5e-3 — "equally good, equally better than
+public statistics." Model calibrated but unsharp; book fully encompasses it;
+premium largest in CFB, smallest in NHL/MLB. Fig: model_benchmark.png.
+### 5.9 Why sports? (`why_sports` — BDW replication)
 BDW's platform-wide FLB cliff and −20% ROI collapse to cost-band nulls in
 sports (moneylines @ mid −0.45%; every executable bucket ≥10c within 0 to
 −8%); makers > takers replicates qualitatively; sub-10c "cliff" shown to be a

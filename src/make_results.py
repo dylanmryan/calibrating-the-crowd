@@ -24,7 +24,8 @@ from pathlib import Path
 MODULES = [
     "three_way", "rigor", "league_tost", "decomposition", "nuance", "corp_diagram", "murphy",
     "coherence", "margin_dist", "book_pit", "ladder_vs_books", "ladder_cost",
-    "mlb_autopsy", "mlb_extras", "profitability", "behavioral", "why_sports", "encompassing",
+    "mlb_autopsy", "mlb_extras", "profitability", "behavioral", "why_sports",
+    "model_benchmark", "encompassing",
     "late_flow", "informed", "horizon", "horizon_equivalence", "horizon_cross",
     "close_efficiency", "layer2", "one_price", "multiple_testing",
     "fee_experiment", "referee", "lead_lag",
