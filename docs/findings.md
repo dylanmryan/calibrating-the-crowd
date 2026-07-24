@@ -271,10 +271,11 @@ same games 0.2130 (T−24h) → 0.2124 (close).
   games (series; the wrong-game risk set) have *smaller* Poly-book gaps than
   average (0.57 vs 0.95pts; 1 outlier >5pts in 1,465) — series matching is
   sound; 13 of 5,061 games (0.26%) show >5pt Poly-book divergence overall.
-- **Multiple testing.** Benjamini–Hochberg over the paper's 13 positive
-  claims: **11 of 13 survive q=0.05** — only the two results already flagged
-  as fragile (wide-set K>P at p=0.048; log-score K>book at p=0.051) drop, and
-  they re-enter at q=0.10. Every load-bearing discovery survives FDR control.
+- **Multiple testing.** Benjamini–Hochberg over the paper's 14 positive
+  claims (Murphy sup-t added 2026-07-24): **12 of 14 survive q=0.05** — only
+  the two results already flagged as fragile (wide-set K>P at p=0.048;
+  log-score K>book at p=0.051) drop, and they re-enter at q=0.10. Every
+  load-bearing discovery survives FDR control.
   Nulls/equivalences are inventoried separately (they are not discoveries and
   carry their own TOST margins). (`src/analysis/multiple_testing.py`)
 
@@ -299,6 +300,21 @@ Frozen: `data/processed/wc_3way_snapshots.csv` (`src/analysis/wc_freeze.py`)
   DM n.s.; the one borderline, K-vs-book p=0.051, *favors Kalshi*).
 - **Stacked-sides dependence**: home-side-only calibration ≈ stacked (slopes
   0.97–1.02, ECE shifts <0.003) — the both-sides convention does no work.
+- **Scoring-function family (Murphy diagrams, 2026-07-24):** elementary-score
+  curves (Ehm–Gneiting–Jordan–Krueger 2016) across all decision thresholds θ,
+  with date-clustered pointwise and sup-t *uniform* bands (cluster multiplier
+  bootstrap). Kalshi vs Polymarket: globally null (sup-t p=0.29) — no proper
+  scoring function separates the exchanges. Versus the **Shin**-de-vigged
+  book: Polymarket p=0.28; Kalshi p=0.012, a marginal low-threshold
+  (θ≈0.04–0.14) edge *favoring Kalshi* — added to the FDR inventory (survives
+  q=0.05; treat with the usual fragile-flicker caution). **Method finding:
+  de-vig choice is invisible to Brier (0.2183 vs 0.2184) but decisive at
+  extreme thresholds** — against the multiplicative-de-vig book, both
+  exchanges spuriously "dominate" both tails (sup-t ≈ 5.5, p<0.001), because
+  multiplicative de-vig under-corrects the books' longshot shading and
+  flattens tail probabilities; Shin removes the effect entirely. Tail-
+  sensitive claims must use Shin. (`src/analysis/murphy.py`,
+  `results/murphy.png`)
 - **Binning**: CORP (isotonic, bin-free) miscalibration is 1.2–1.4e-3 for all
   three sources and *reverses* the binned ordering (Kalshi lowest) — reliability
   differences between sources are within method noise; discrimination (33e-3)

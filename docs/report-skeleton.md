@@ -59,7 +59,10 @@ depth → institutional synthesis (surface vs aggregate).
 - Live 15-min VPS panel + WC 3-way (collector design, one paragraph each).
 
 ## 4. Methods
-- Both-sides stacking; Brier + log score; Murphy decomposition; CORP check.
+- Both-sides stacking; Brier + log score; Murphy decomposition; CORP check;
+  Murphy diagrams w/ sup-t uniform bands (`murphy`) — dead heat across the
+  whole proper-scoring family; multiplicative-de-vig tail artifact ⇒ Shin
+  default for tail-sensitive claims.
 - DM with date-clustered SEs ⚖(two-way robustness?); TOST at δ=0.001 ⚖(margin
   convention); interval-randomized PIT ⚖; BH-FDR two-family policy ⚖.
 - Lead–lag: 15-min grid, predictive regressions + event windows ⚖(formality).
