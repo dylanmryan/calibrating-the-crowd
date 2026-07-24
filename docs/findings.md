@@ -222,6 +222,37 @@ analyses on our sports data:
    pairwise clustered DM is n.s. (p ≥ 0.45). This formally retires the pre-side-fix
    "Kalshi lags even on liquid games (p=0.004)" result — it was contamination.
 
+## Who bears the Polymarket sports fee? (liquidity incidence, 2026-07-24)
+
+The fee natural experiment's accuracy half was null (DiD p=0.74). The economic
+half, on NBA/NHL games priced by both exchanges (Feb 2–May 25, within-game
+volume pairing):
+
+- **Incidence fell on taker volume, not on the price of liquidity.** The
+  within-game ratio log(Poly volume) − log(Kalshi volume) fell **−0.53
+  log-pts (−41%, date-clustered z=−3.6)** between the complete-coverage
+  windows (Feb vs Apr–May); mid-Feb placebo split is null (z=+1.3). The
+  event-time path shows a *trend break at the fee date*: flat through
+  February, sustained decline from Mar 30 onward. Levels (descriptive):
+  Kalshi final-24h notional +51% into the playoffs, Poly −10% on the same
+  games.
+- **The quoted touch never moved**: archived order books (OddPool) show the
+  Polymarket spread at T−30m pinned at the 1¢ minimum tick both eras (pre-fee
+  median 1.0pt n=30, post 1.0pt n=10, Mann–Whitney p=0.60; July's
+  independent 93-game measurement also 1.0pt). The +25% maker rebate
+  plausibly held quoting steady — and at one tick the spread had no room to
+  narrow.
+- **Reading:** fees moved *quantity*, not price quality (fee_experiment) or
+  the *price of liquidity* — the marginal taker left, the makers stayed.
+  Coheres with maker-driven price discovery.
+- Caveats, stated plainly: gamma strips volume from most archived March
+  markets (coverage 100% Feb, 7–57% Mar, 100% post), so March is excluded
+  and the windows straddle the playoff transition; Kalshi's secular growth
+  cannot be fully separated from fee-driven migration, though the flat
+  February pre-trend and the break's timing both point at the fee.
+  (`src/collect/fee_volumes.py`, `src/analysis/fee_liquidity.py`,
+  `results/fee_liquidity.png`)
+
 ## The market premium over public statistics (model leg, 2026-07-24)
 
 A deliberately naive fourth forecaster — walk-forward Elo per league built
@@ -312,12 +343,12 @@ same games 0.2130 (T−24h) → 0.2124 (close).
   games (series; the wrong-game risk set) have *smaller* Poly-book gaps than
   average (0.57 vs 0.95pts; 1 outlier >5pts in 1,465) — series matching is
   sound; 13 of 5,061 games (0.26%) show >5pt Poly-book divergence overall.
-- **Multiple testing.** Benjamini–Hochberg over the paper's 16 positive
-  claims (Murphy sup-t, model-benchmark premium, and minute-scale
-  predictability added 2026-07-24): **14 of 16 survive q=0.05** — only the
-  two results already flagged as fragile (wide-set K>P at p=0.048; log-score
-  K>book at p=0.051) drop, and they re-enter at q=0.10. Every load-bearing
-  discovery survives FDR control.
+- **Multiple testing.** Benjamini–Hochberg over the paper's 17 positive
+  claims (Murphy sup-t, model-benchmark premium, minute-scale
+  predictability, and fee volume-incidence added 2026-07-24): **15 of 17
+  survive q=0.05** — only the two results already flagged as fragile
+  (wide-set K>P at p=0.048; log-score K>book at p=0.051) drop, and they
+  re-enter at q=0.10. Every load-bearing discovery survives FDR control.
   Nulls/equivalences are inventoried separately (they are not discoveries and
   carry their own TOST margins). (`src/analysis/multiple_testing.py`)
 

@@ -97,7 +97,10 @@ the cell); unexploitable net of fees (cost-band thesis); books pass the PIT
 Kalshi fails; run-line context (documented structural bias). NBA ladders clean.
 ### 5.6 Costs and the retail experience (`profitability`, cost table)
 3-venue taker/maker table; realized random-bettor ROI ≈ −4% everywhere;
-fee natural experiment null; behavioral fingerprints all null (`behavioral`).
+fee natural experiment null on accuracy; **fee incidence (`fee_liquidity`):
+relative volume −41% at the fee date (trend break), touch pinned at 1¢ both
+eras — fees moved quantity, not quality or the price of liquidity**;
+behavioral fingerprints all null (`behavioral`). Fig: fee_liquidity.png.
 ### 5.7 World Cup 3-way case study (frozen; descriptive n=9)
 ### 5.8 The market premium over public statistics (`model_benchmark`)
 Walk-forward Elo floor: markets beat it by ~14e-3 Brier (z≈7.4) while
