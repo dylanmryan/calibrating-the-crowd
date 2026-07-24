@@ -63,6 +63,8 @@ depth → institutional synthesis (surface vs aggregate).
   Murphy diagrams w/ sup-t uniform bands (`murphy`) — dead heat across the
   whole proper-scoring family; multiplicative-de-vig tail artifact ⇒ Shin
   default for tail-sensitive claims.
+- Hierarchical Bayes (`hierarchical_calibration`): partial-pooled league
+  (α, β); every HDI covers (0,1); small-league caveat → posterior statement.
 - DM with date-clustered SEs ⚖(two-way robustness?); TOST at δ=0.001 ⚖(margin
   convention); interval-randomized PIT ⚖; BH-FDR two-family policy ⚖.
 - Lead–lag: 15-min grid, predictive regressions + event windows ⚖(formality).

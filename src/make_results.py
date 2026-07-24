@@ -29,6 +29,7 @@ MODULES = [
     "late_flow", "informed", "horizon", "horizon_equivalence", "horizon_cross",
     "close_efficiency", "layer2", "one_price", "multiple_testing",
     "fee_experiment", "referee", "lead_lag", "minute_lead_lag",
+    "hierarchical_calibration",   # PyMC; ~90s, the suite's slowest module
 ]
 
 

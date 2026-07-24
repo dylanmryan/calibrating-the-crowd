@@ -357,6 +357,19 @@ Frozen: `data/processed/wc_3way_snapshots.csv` (`src/analysis/wc_freeze.py`)
   flattens tail probabilities; Shin removes the effect entirely. Tail-
   sensitive claims must use Shin. (`src/analysis/murphy.py`,
   `results/murphy.png`)
+- **Hierarchical Bayesian calibration (PyMC, 2026-07-24):** partial-pooling
+  logistic recalibration — league-level (α, β) under non-centered
+  hyperpriors; NUTS, 0 divergences, all R-hat ≤ 1.005. **Every league ×
+  source 90% HDI covers (α, β) = (0, 1)** — no credible miscalibration
+  anywhere. Shrinkage does what the frequentist caveat couldn't: WNBA
+  Kalshi's noisy MLE slope 0.795 becomes a posterior 0.898 [0.75, 1.04];
+  the MLB MLE slopes of 0.73–0.76 — shared by *all three* sources, hence an
+  outcome-side quirk, not a venue defect — shrink to 0.91–0.94. The
+  league-heterogeneity hyperparameter σ_β ≈ 0.10 with μ_β compatible with 1
+  in every source: nothing league-level to find. The "CFB/WNBA/NFL
+  underpowered" caveat is now a posterior statement instead of a shrug.
+  (`src/analysis/hierarchical_calibration.py`,
+  `results/hierarchical_calibration.png`)
 - **Binning**: CORP (isotonic, bin-free) miscalibration is 1.2–1.4e-3 for all
   three sources and *reverses* the binned ordering (Kalshi lowest) — reliability
   differences between sources are within method noise; discrimination (33e-3)
