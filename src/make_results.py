@@ -28,7 +28,7 @@ MODULES = [
     "model_benchmark", "encompassing",
     "late_flow", "informed", "horizon", "horizon_equivalence", "horizon_cross",
     "close_efficiency", "layer2", "one_price", "multiple_testing",
-    "fee_experiment", "referee", "lead_lag",
+    "fee_experiment", "referee", "lead_lag", "minute_lead_lag",
 ]
 
 

@@ -186,6 +186,21 @@ analyses on our sports data:
    with the T−24h horizon result (books fractionally ahead, gap closed by
    start) and with maker-driven discovery on public news.
    (`src/analysis/lead_lag.py`)
+   **Minute-level completion (2026-07-24; 563 post-cutoff games, 202K 1-min
+   changes, final 6h, exchanges only):** at 60× finer resolution the
+   simultaneity resolves into a **symmetric few-minute echo** — each
+   exchange's last 5 minutes predict the other's next move with nearly
+   identical strength (sum-coef +0.092/+0.096, z=+7.1/+7.7; bidirectional),
+   the cross-correlogram hump lives within ±2 minutes (corr 0.030 at +1
+   vs 0.021 at −1), and in the 23 joint ≥1.5pt repricing episodes the venues
+   cross half their move in the *same minute* (median lead 0.0; Kalshi-first
+   43%; sign-test p=1.0). **No leader–follower relay at any resolution
+   measured.** Scheduled-news check: MLB intensity shows no discrete
+   lineup-window burst (T−4h→T−1.5h flat ≈0.007pt/min at both venues;
+   per-game release-time variation may smear one) — repricing ramps into the
+   final 75 minutes instead, in lockstep; the 5pm-ET injury-report hour
+   (NBA/WNBA, n=78) is suggestive only. (`src/collect/minute_paths.py`,
+   `src/analysis/minute_lead_lag.py`, `results/minute_lead_lag.png`)
 4. **Cost asymmetry — 3-venue table now complete**: sportsbook overround ~4.2%
    everywhere; Kalshi bid/ask overround ~1.0%; and Polymarket's archived books
    (OddPool, n=93 games, all four in-season leagues) show a median quoted spread
@@ -297,11 +312,12 @@ same games 0.2130 (T−24h) → 0.2124 (close).
   games (series; the wrong-game risk set) have *smaller* Poly-book gaps than
   average (0.57 vs 0.95pts; 1 outlier >5pts in 1,465) — series matching is
   sound; 13 of 5,061 games (0.26%) show >5pt Poly-book divergence overall.
-- **Multiple testing.** Benjamini–Hochberg over the paper's 15 positive
-  claims (Murphy sup-t and the model-benchmark premium added 2026-07-24):
-  **13 of 15 survive q=0.05** — only the two results already flagged as
-  fragile (wide-set K>P at p=0.048; log-score K>book at p=0.051) drop, and
-  they re-enter at q=0.10. Every load-bearing discovery survives FDR control.
+- **Multiple testing.** Benjamini–Hochberg over the paper's 16 positive
+  claims (Murphy sup-t, model-benchmark premium, and minute-scale
+  predictability added 2026-07-24): **14 of 16 survive q=0.05** — only the
+  two results already flagged as fragile (wide-set K>P at p=0.048; log-score
+  K>book at p=0.051) drop, and they re-enter at q=0.10. Every load-bearing
+  discovery survives FDR control.
   Nulls/equivalences are inventoried separately (they are not discoveries and
   carry their own TOST margins). (`src/analysis/multiple_testing.py`)
 

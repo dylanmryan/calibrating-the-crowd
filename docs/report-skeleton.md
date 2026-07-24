@@ -80,10 +80,14 @@ Books lead at T−24h (p=.029) → lockstep sharpening, indistinguishable at all
 horizons → identical at close; day's move uninformative beyond close (all
 venues); whisper absent at T−24h, created in final day (`encompassing`,
 `late_flow`). Figs: horizon_calibration.png, horizon_cross.png.
-### 5.4 Microstructure: how prices form (`lead_lag`, `informed`)
-No venue leads at 15-min; big repricings simultaneous (event study); markout
-flat across trade size → maker-driven discovery; book stickiness ≠ momentum
-(small-sample artifact, retired honestly).
+### 5.4 Microstructure: how prices form (`lead_lag`, `minute_lead_lag`, `informed`)
+No venue leads at 15-min; big repricings simultaneous (event study); at 1-min
+the simultaneity resolves into a symmetric few-minute echo (bidirectional
+z≈7, coef ~0.09 both ways; joint episodes half-cross in the same minute; MLB
+lineup window shows no discrete burst — activity ramps into the final 75 min
+in lockstep). Markout flat across trade size → maker-driven discovery; book
+stickiness ≠ momentum (small-sample artifact, retired honestly).
+Fig: minute_lead_lag.png.
 ### 5.5 Where the surfaces crack (`ladder_vs_books`, `mlb_extras`,
 `ladder_cost`, `layer2`, `book_pit`)
 MLB small-margin cell: Kalshi +8.4pts vs books +0.4; extras mechanism (~24% of
