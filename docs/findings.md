@@ -441,6 +441,11 @@ single-source studies cannot.
 - **Lead–lag price discovery**: two-week pass analyzed (nuance 3); the series
   keeps accumulating on the VPS — rerun near season end for power. The World
   Cup 3-way leg ended with the final and is frozen (see case study).
+- **Order-book depth capture** (deployed to the VPS collector 2026-07-25):
+  every 15-min snapshot now records touch sizes and depth-within-5¢ for both
+  exchanges (and live Polymarket quoted spreads for the first time — 1¢ at
+  the touch, matching the archived-book measurements). Feeds a
+  price-of-immediacy curve by season end.
 - Advisor input pending on: HAC/cluster choices, multiple-testing policy,
   equivalence-margin convention, 3-way calibration methodology.
 

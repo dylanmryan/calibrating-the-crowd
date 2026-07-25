@@ -53,20 +53,36 @@ def _signed_get(path: str, params: dict | None = None):
     return _session.get(KHOST + path, headers=h, params=params, timeout=30)
 
 
-def _best_book(ticker: str):
-    """Signed orderbook -> (yes_bid, yes_ask) in dollars, or None if one-sided/empty."""
+def _book_depth(ticker: str):
+    """Signed orderbook -> touch + depth: {yes_bid, yes_ask, bidq, askq, d5bid, d5ask}.
+
+    Sizes are contracts at the touch; d5* sums contracts within 5c of the touch
+    on each side (YES bids for the bid side, NO bids for the ask side).
+    """
     r = _signed_get(f"/trade-api/v2/markets/{ticker}/orderbook")
     if r.status_code != 200:
         return None
     ob = r.json().get("orderbook_fp") or r.json().get("orderbook") or {}
-    yes = ob.get("yes_dollars") or ob.get("yes") or []
-    no = ob.get("no_dollars") or ob.get("no") or []
+    yes = [(float(p), float(q)) for p, q in (ob.get("yes_dollars") or ob.get("yes") or [])]
+    no = [(float(p), float(q)) for p, q in (ob.get("no_dollars") or ob.get("no") or [])]
     if not yes or not no:
         return None
-    yes_bid = max(float(p) for p, _ in yes)          # best (highest) YES bid
-    no_bid = max(float(p) for p, _ in no)            # best NO bid -> YES ask = 1 - no_bid
+    yes_bid = max(p for p, _ in yes)
+    no_bid = max(p for p, _ in no)                   # best NO bid -> YES ask = 1 - no_bid
     yes_ask = 1 - no_bid
-    return (yes_bid, yes_ask) if yes_ask >= yes_bid else None
+    if yes_ask < yes_bid:
+        return None
+    return {"yes_bid": yes_bid, "yes_ask": yes_ask,
+            "bidq": sum(q for p, q in yes if p == yes_bid),
+            "askq": sum(q for p, q in no if p == no_bid),
+            "d5bid": sum(q for p, q in yes if p >= yes_bid - 0.05),
+            "d5ask": sum(q for p, q in no if p >= no_bid - 0.05)}
+
+
+def _best_book(ticker: str):
+    """Signed orderbook -> (yes_bid, yes_ask) in dollars, or None if one-sided/empty."""
+    b = _book_depth(ticker)
+    return (b["yes_bid"], b["yes_ask"]) if b else None
 
 # in-season leagues -> (Kalshi series, Odds API sport key, Polymarket sport)
 LEAGUES = {
@@ -110,21 +126,27 @@ def kalshi_open(series: str) -> dict:
 
 
 def kalshi_price(kmarkets: dict, league: str, home_abbr: str, away_abbr: str):
-    """Find the matching open Kalshi event, read each side's signed book, return mids + spreads."""
+    """Find the matching open Kalshi event, read each side's signed book, return mids + spreads + depth."""
     want = {_norm(home_abbr, league), _norm(away_abbr, league)}
     for ev, sides in kmarkets.items():
         codes = {_norm(c, league) for c in sides}
         if codes == want and len(sides) == 2:
             byteam = {_norm(c, league): tk for c, tk in sides.items()}
-            hbook = _best_book(byteam[_norm(home_abbr, league)])
-            abook = _best_book(byteam[_norm(away_abbr, league)])
+            hbook = _book_depth(byteam[_norm(home_abbr, league)])
+            abook = _book_depth(byteam[_norm(away_abbr, league)])
             if not hbook or not abook:
                 return None  # book not yet populated (fills near game time)
-            hmid = (hbook[0] + hbook[1]) / 2
-            amid = (abook[0] + abook[1]) / 2
+            hmid = (hbook["yes_bid"] + hbook["yes_ask"]) / 2
+            amid = (abook["yes_bid"] + abook["yes_ask"]) / 2
             p1, p2 = _implied_pair(hmid, amid)
-            return {"p1": p1, "p2": p2, "spread1": round(hbook[1] - hbook[0], 4),
-                    "spread2": round(abook[1] - abook[0], 4), "raw_home_mid": round(hmid, 4)}
+            return {"p1": p1, "p2": p2,
+                    "spread1": round(hbook["yes_ask"] - hbook["yes_bid"], 4),
+                    "spread2": round(abook["yes_ask"] - abook["yes_bid"], 4),
+                    "raw_home_mid": round(hmid, 4),
+                    "bidq1": hbook["bidq"], "askq1": hbook["askq"],
+                    "d5bid1": hbook["d5bid"], "d5ask1": hbook["d5ask"],
+                    "bidq2": abook["bidq"], "askq2": abook["askq"],
+                    "d5bid2": abook["d5bid"], "d5ask2": abook["d5ask"]}
     return None
 
 

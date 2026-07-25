@@ -61,8 +61,10 @@ def game_prices(sport: str, window_h: float = 30, max_events: int = 600) -> list
                 except ValueError:
                     continue
                 if -3 <= (g - now).total_seconds() / 3600 <= window_h:
+                    toks = _as_list(m.get("clobTokenIds")) or [None, None]
                     out.append({"teams": frozenset(oc),
                                 "price": {oc[0]: float(pr[0]), oc[1]: float(pr[1])},
+                                "token": {oc[0]: toks[0], oc[1]: toks[1]},
                                 "start": gst})
                 break
         offset += 100
@@ -71,16 +73,52 @@ def game_prices(sport: str, window_h: float = 30, max_events: int = 600) -> list
     return out
 
 
+def book_depth(token: str):
+    """CLOB order book for one token -> touch + depth (sizes in shares).
+
+    Free, unauthenticated. d5* sums size within 5c of the touch per side.
+    """
+    if not token:
+        return None
+    try:
+        r = _session.get("https://clob.polymarket.com/book",
+                         params={"token_id": token}, timeout=20)
+        if r.status_code != 200:
+            return None
+        j = r.json()
+        bids = [(float(x["price"]), float(x["size"])) for x in j.get("bids", [])]
+        asks = [(float(x["price"]), float(x["size"])) for x in j.get("asks", [])]
+        if not bids or not asks:
+            return None
+        bb, ba = max(p for p, _ in bids), min(p for p, _ in asks)
+        if ba < bb:
+            return None
+        return {"bid": bb, "ask": ba,
+                "bidq": sum(q for p, q in bids if p == bb),
+                "askq": sum(q for p, q in asks if p == ba),
+                "d5bid": sum(q for p, q in bids if p >= bb - 0.05),
+                "d5ask": sum(q for p, q in asks if p <= ba + 0.05)}
+    except (requests.RequestException, ValueError, KeyError):
+        return None
+
+
 def price_for(games: list[dict], home: str, away: str):
-    """Normalized (p_home, p_away) for the matching game, or None."""
+    """Normalized (p_home, p_away) + home-token book depth for the matching game."""
     want = frozenset((home, away))
     for g in games:
         if g["teams"] == want:
             ph, pa = g["price"].get(home), g["price"].get(away)
             if ph is not None and pa is not None and (ph + pa) > 0:
                 s = ph + pa
-                return {"p1": round(ph / s, 4), "p2": round(pa / s, 4),
-                        "raw1": ph, "raw2": pa}
+                out = {"p1": round(ph / s, 4), "p2": round(pa / s, 4),
+                       "raw1": ph, "raw2": pa}
+                b = book_depth(g.get("token", {}).get(home))
+                if b:
+                    out.update({"spread1": round(b["ask"] - b["bid"], 4),
+                                "bid1": b["bid"], "ask1": b["ask"],
+                                "bidq1": b["bidq"], "askq1": b["askq"],
+                                "d5bid1": b["d5bid"], "d5ask1": b["d5ask"]})
+                return out
     return None
 
 
