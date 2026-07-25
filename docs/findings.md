@@ -238,7 +238,7 @@ volume pairing):
   games.
 - **The quoted touch never moved**: archived order books (OddPool) show the
   Polymarket spread at T−30m pinned at the 1¢ minimum tick both eras (pre-fee
-  median 1.0pt n=30, post 1.0pt n=10, Mann–Whitney p=0.60; July's
+  median 1.0pt n=30, post 1.0pt n=21, Mann–Whitney p=0.43; July's
   independent 93-game measurement also 1.0pt). The +25% maker rebate
   plausibly held quoting steady — and at one tick the spread had no room to
   narrow.
