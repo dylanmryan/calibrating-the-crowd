@@ -253,6 +253,36 @@ volume pairing):
   (`src/collect/fee_volumes.py`, `src/analysis/fee_liquidity.py`,
   `results/fee_liquidity.png`)
 
+## Decimal pricing: the tick, not the trader, sets the price of liquidity (2026-07-25)
+
+Tick regimes probed from the live APIs: **Kalshi sports markets are
+`linear_cent` — a uniform 1¢ tick over the entire [0,1] range, ladders
+included; Polymarket runs dynamic ticks** (0.01 mid-range,
+`orderPriceMinTickSize` = 0.001 on extreme-priced markets, sub-cent quotes
+observed live). Measured on our stored quotes:
+
+- **The touch is the tick.** 97% of Kalshi live-book moneyline quotes
+  (n=2,784 sides) and 96% of stored Polymarket books (n=144) sit at *exactly*
+  one tick. The quoted spread in the liquid range is a censored bound, not an
+  equilibrium choice — which retro-sharpens two earlier results: the fee
+  experiment's "spread unchanged" is a statement about a binding floor (the
+  free margins were volume, −41%, and depth), and cross-venue "median spread
+  1.0pt on both" partly reflects shared tick design rather than equally
+  aggressive quoting.
+- **The tick tax.** Kalshi ladder rungs hug the 1¢ floor at every price
+  level (68–78% at-tick), so the *relative* spread rises mechanically as
+  price falls: 2.6% of price mid-range → 15.4% at 5–10¢ → 28.6% at 1–5¢
+  (floor: 25%). In Polymarket's 0.001 regime the same floor is ~1–2.5% —
+  a tenfold difference in the structural cost of tail trading, set by
+  exchange design. 14.6% of our stored Poly quotes are already off the cent
+  grid.
+- **Implication for the cost-band thesis:** the band that shelters Kalshi's
+  MLB tail bias is partly *tick-made* — a finer tail tick (Polymarket-style
+  tiering) would compress it and, by the paper's own logic, force tail
+  prices closer to true probabilities. A concrete institutional-design
+  recommendation for the synthesis.
+  (`src/analysis/tick_pricing.py`, `results/tick_pricing.png`)
+
 ## The market premium over public statistics (model leg, 2026-07-24)
 
 A deliberately naive fourth forecaster — walk-forward Elo per league built

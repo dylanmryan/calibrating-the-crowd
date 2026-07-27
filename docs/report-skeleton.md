@@ -101,6 +101,10 @@ fee natural experiment null on accuracy; **fee incidence (`fee_liquidity`):
 relative volume −41% at the fee date (trend break), touch pinned at 1¢ both
 eras — fees moved quantity, not quality or the price of liquidity**;
 behavioral fingerprints all null (`behavioral`). Fig: fee_liquidity.png.
+**Tick design (`tick_pricing`): the touch IS the tick (97%/96% at-tick both
+venues — spread is a censored bound); uniform 1¢ makes Kalshi tails 10×
+costlier than Poly's 0.001 regime; the MLB-bias cost band is partly
+tick-made → institutional-design recommendation.** Fig: tick_pricing.png.
 ### 5.7 World Cup 3-way case study (frozen; descriptive n=9)
 ### 5.8 The market premium over public statistics (`model_benchmark`)
 Walk-forward Elo floor: markets beat it by ~14e-3 Brier (z≈7.4) while
