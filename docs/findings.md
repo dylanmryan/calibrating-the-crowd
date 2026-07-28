@@ -32,6 +32,19 @@ Outcome integrity: ESPN finals cross-checked against both platforms' settlements
 (99.6% / 98.7% agreement); flagged games excluded. Venue/side assignment via the
 ticker-order rule (validated 99.6% vs ESPN).
 
+**Which Polymarket:** all Polymarket data is the **Global** platform (the
+on-chain Polygon CLOB behind gamma-api/clob.polymarket.com; USDC-collateralized;
+US persons officially excluded since the 2022 CFTC settlement) — *not* the
+separately regulated Polymarket US entity launched later (too little history to
+study). This matters twice: (1) the three-way design is genuinely
+institutionally diverse — a CFTC-regulated exchange, an *offshore crypto*
+market, and licensed US sportsbooks; (2) the participant pools barely overlap
+(US bettors on Kalshi/books, non-US on Polymarket Global), so **three
+regulatory regimes and three largely distinct crowds converge on statistically
+identical prices** — the equivalence is not one population trading in three
+venues. The 2026-03-30 sports fee studied in the natural experiment is the
+Global platform's. A Polymarket-US side comparison is future work.
+
 ## Headline: a statistical dead heat (n = 5,044)
 
 | | Kalshi | Polymarket | Sportsbook |

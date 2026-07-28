@@ -74,6 +74,15 @@ zero failures, every report number regenerated from raw processed data.
   result reversed; trade-recon independently validated vs archived books
   (99% within 1pt); Poly pipeline validated twice (CLOB vs archive, 0.00 median).
 
+**Which Polymarket (know this cold):** the GLOBAL on-chain platform, not the
+newer regulated Polymarket US entity (insufficient history). Strengthens the
+design: three regulatory regimes (CFTC exchange / offshore crypto / state-
+licensed books) AND three largely non-overlapping participant pools (US
+bettors on Kalshi+books; non-US on Poly Global) converge on identical prices —
+the equivalence is not one crowd in three venues. The fee experiment is the
+Global platform's 2026-03-30 sports fee. Possible ask: is a Polymarket-US
+side comparison worth adding, or future work? (Recommend: future work.)
+
 ## 3. Limitations to volunteer before he asks
 
 Consensus book line (not one book's risk book); trade-recon staleness in the
