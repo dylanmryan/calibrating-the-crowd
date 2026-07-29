@@ -43,7 +43,40 @@ market, and licensed US sportsbooks; (2) the participant pools barely overlap
 regulatory regimes and three largely distinct crowds converge on statistically
 identical prices** — the equivalence is not one population trading in three
 venues. The 2026-03-30 sports fee studied in the natural experiment is the
-Global platform's. A Polymarket-US side comparison is future work.
+Global platform's. **Update 2026-07-28: Polymarket US is now also studied, as
+a fourth leg — see "The fourth cell" below.**
+
+## The fourth cell: Polymarket US (2026-07-28)
+
+Polymarket US — the same brand operating as a CFTC-regulated designated
+contract market with a *legally disjoint, US-only* participant pool —
+publishes a complete public execution tape (daily time-and-sales CSVs from
+platform launch 2025-10-29). Closing prices = last trade at or before the
+ESPN start (trade-recon methodology; staleness/fill-count quality flags),
+markets mapped by slug team codes + date, priced side identified from the
+catalog's long-side team and **validated against realized outcomes (97.9%
+agreement on extreme closes)** — the same audit discipline as the Kalshi
+ticker-order rule.
+
+- **The dead heat extends to a fourth institution.** On the 2,560
+  quality-filtered games where all four sources price the same event
+  (MLB/NBA/NHL/NFL/WNBA, Nov 2025–Jul 2026): Brier 0.2307 / 0.2309 / 0.2308 /
+  0.2309 (K / P-Global / book / P-US). Polymarket US is formally
+  TOST-equivalent to *each* of the other three at δ=0.001 (δ_min
+  0.49–0.62e-3; all clustered DM n.s., p ≥ 0.31) — despite its closes being
+  last-trade prices, a noisier measure than the others' book-mids.
+- **Law of one price across legally segregated pools:** |US − Global| median
+  0.50pt, mean 0.78pt, >5pt in only 0.5% of games — barely wider than the
+  Kalshi-vs-Global benchmark (median 0.40pt), even though no participant may
+  legally trade both Polymarkets. Prices agree because both pools process the
+  same public information, not because anyone arbitrages the two books: the
+  strongest version yet of the shared-information mechanism.
+- Caveats: ~2% of extreme-close side checks disagree (isolated
+  postponement/stale cases, visible as scatter outliers); 23% of tape symbols
+  didn't match ESPN (code aliases + coverage); CBB (4,387 US markets) awaits
+  our own CBB expansion; one partial season, MLB-heavy.
+  (`src/collect/polyus.py`, `src/analysis/four_way.py`,
+  `results/four_way.png`)
 
 ## Headline: a statistical dead heat (n = 5,044)
 

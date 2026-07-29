@@ -48,11 +48,14 @@ depth → institutional synthesis (surface vs aggregate).
   pre-cutoff), Polymarket (gamma discovery + CLOB prices-history), book
   consensus (Odds API, de-vigged; Shin/power robustness), ESPN anchor
   (start times, outcomes).
-- **Polymarket = the GLOBAL on-chain platform** (offshore, USDC/Polygon, US
-  persons excluded since 2022) — not Polymarket US. State early and use in
-  synthesis: three regulatory regimes + three largely non-overlapping
-  participant pools converge on identical prices. Fee experiment = Global's
-  2026-03-30 fee. Polymarket-US side comparison = future work.
+- **Two Polymarkets, both studied.** Global (offshore, USDC/Polygon, US
+  persons excluded) = the main Poly leg; **Polymarket US (CFTC DCM, US-only
+  pool) = the FOURTH leg** (`four_way`): dead heat extends (four Briers
+  within 0.0002, TOST-equivalent each way), and US-vs-Global law of one
+  price across legally segregated pools (median gap 0.50pt) — nobody can
+  arbitrage the two books, so agreement = shared information, the design's
+  cleanest mechanism demonstration. Fee experiment = Global's 2026-03-30
+  fee. Fig: four_way.png.
 - Master: 9,523 games / 7 leagues; three-way clean set n≈5,05x (cite
   regenerated `three_way.log`); quality flags (spread, staleness, source).
 - **Methods lesson (own subsection): the side-assignment audit.** Impossible
