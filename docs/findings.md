@@ -290,6 +290,24 @@ analyses on our sports data:
    with the T−24h horizon result (books fractionally ahead, gap closed by
    start) and with maker-driven discovery on public news.
    (`src/analysis/lead_lag.py`)
+   **Book-line-move event study (2026-07-31, 347-game panel):** around the
+   54 book-consensus jumps of ≥2pts (mean 4.6pts), the exchanges' *total*
+   response over ±1h is only ~1pt (Kalshi +1.03, Poly +0.69) — ~80% of a big
+   book move is never echoed by the exchanges at all. What is echoed arrives
+   almost entirely in the same 15-min step (Kalshi +0.80, Poly +0.82 at
+   offset 0), with slight reversal after (−0.2 to −0.35) and **no systematic
+   anticipation**: the share of events where an exchange had already drifted
+   the book's way is 37% for Kalshi (p=0.076) and 21% for Polymarket
+   (p<0.001) — significantly *below* chance for Poly. The mirror study is
+   symmetric: around Kalshi jumps ≥2pts the book's total response is +1.15pt
+   (70% same-step, +0.57 follow-through). Reading: big single-venue moves are
+   mostly venue-specific (book-panel composition and flow management on the
+   consensus side; idiosyncratic exchange flow on the other) — the *shared*
+   news component is small and repriced everywhere within one step. The
+   exchanges neither foresee nor chase the books' line moves; they filter
+   them. Caveat: consensus jumps can partly reflect which books happen to be
+   quoting (composition), which the muted exchange response is itself
+   evidence of. (`src/analysis/book_moves.py`, `results/book_moves.png`)
    **Minute-level completion (2026-07-24; 563 post-cutoff games, 202K 1-min
    changes, final 6h, exchanges only):** at 60× finer resolution the
    simultaneity resolves into a **symmetric few-minute echo** — each
