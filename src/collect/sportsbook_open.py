@@ -25,17 +25,19 @@ from src.collect.sportsbook_hist import SPORT, _consensus, _match_hit, _snapshot
 _ROOT = Path(__file__).resolve().parents[2]
 load_dotenv(_ROOT / ".env", override=True)
 OUT = "data/processed/sportsbook_open_prices.csv"
-CREDIT_FLOOR = 19_000
+CREDIT_FLOOR = 7_500   # lowered 2026-07-31 for the user-approved T-24h franchise top-up
 OFFSET_H = 24
 
 
-def build(out=OUT, bucket_min=30, flush_every=200):
+def build(out=OUT, bucket_min=30, flush_every=200, game_ids=None):
     import requests
     m = pd.read_csv("data/processed/games_master.csv")
     m = m[m["kalshi_p1"].notna() & m["poly_p1"].notna()].copy()
     m["start"] = pd.to_datetime(m["start_utc"], utc=True, format="ISO8601")
     done = set(pd.read_csv(out)["game_id"]) if os.path.exists(out) else set()
     m = m[~m["game_id"].isin(done)]
+    if game_ids is not None:   # targeted top-up (e.g. match-fix re-collection)
+        m = m[m["game_id"].isin(set(game_ids))]
     m["bucket"] = (m["start"] - pd.Timedelta(hours=OFFSET_H)).dt.floor(f"{bucket_min}min")
     print(f"target games: {len(m):,} ({len(done)} done)", flush=True)
 

@@ -20,7 +20,7 @@ cost: prediction markets charge participants ~1% versus the books' ~4.2%.
 | Kalshi moneyline closing prices | 9,186 games | order-book mid at official start (candlesticks); trade-reconstructed bid/ask pre-cutoff |
 | Polymarket closing prices | 5,563 games | CLOB 1-min price history at official start |
 | Sportsbook consensus closing lines | 5,151 games | The Odds API historical (≈10.5 books/game, de-vigged) |
-| **All-three joint set (clean)** | **5,044 games** | NBA/NHL/MLB/CFB/NFL/WNBA, May 2025 – Jul 2026 |
+| **All-three joint set (clean)** | **5,328 games** | NBA/NHL/MLB/CFB/NFL/WNBA, May 2025 – Jul 2026 (franchise re-collection 2026-07-31) |
 | Alternate-spread ladders | 28,940 contracts, 4,042 games | Kalshi spread series |
 | Book alternate spread lines | 107,100 points, 2,480 MLB/NBA games | The Odds API historical (per-event, de-vigged pairs) |
 | Polymarket archived order books | 93 games (spread sample) | OddPool archive |
@@ -55,9 +55,14 @@ claim and NBA-encompassing sub-claim were retracted; tie-consistent PIT
 and push handling corrected the distributional comparisons; lead–lag
 shifts now run on full calendar grids; the horizon collector's page cap
 was raised (deep re-fill in progress); book team-name matching was
-normalized (re-collection of ~290 dropped franchise games pending
-credit approval). Headline conclusions unchanged throughout: Briers
-0.2184/0.2186/0.2184, all equivalences hold.
+normalized, and the dropped franchise games re-collected (2026-07-31:
+closing leg 353 calls + targeted T-24h top-up 268 calls, ~5.7K credits
+total, user-approved; Clippers 79/82, Canadiens 99/100, Blues 82/84 now
+priced). **Final data configuration: three-way clean n=5,328, Briers
+0.2196/0.2199/0.2196, all equivalences hold; four-way n=2,639.** The
+franchise restoration is itself a selection check passed: adding ~280
+previously-missing games moved the Briers by ~1e-3 uniformly and no
+conclusion changed.
 
 **Deep coherence audit (2026-07-29).** A second gate checks that the data is
 *true*, not just well-formed, by cross-examination: no look-ahead (every
@@ -104,7 +109,7 @@ catalog's long-side team and **validated against realized outcomes (97.9%
 agreement on extreme closes)** — the same audit discipline as the Kalshi
 ticker-order rule.
 
-- **The dead heat extends to a fourth institution.** On the 2,535
+- **The dead heat extends to a fourth institution.** On the 2,639
   quality-filtered games where all four sources price the same event
   (MLB/NBA/NHL/NFL/WNBA, Nov 2025–Jul 2026; 47 games with endDate-fallback
   time anchors excluded by the deep audit's look-ahead guard): Brier
@@ -125,11 +130,11 @@ ticker-order rule.
   (`src/collect/polyus.py`, `src/analysis/four_way.py`,
   `results/four_way.png`)
 
-## Headline: a statistical dead heat (n = 5,044)
+## Headline: a statistical dead heat (n = 5,328, final data configuration 2026-07-31)
 
 | | Kalshi | Polymarket | Sportsbook |
 |---|---|---|---|
-| Brier | 0.2180 | 0.2182 | 0.2181 |
+| Brier | 0.2196 | 0.2199 | 0.2196 |
 | ECE | 0.0106 | 0.0092 | 0.0048 |
 | Calibration slope (95% CI incl. 1) | 0.98 | 0.98 | 1.03 |
 | Resolution (×1000) | 31.9 | 31.7 | 31.6 |
