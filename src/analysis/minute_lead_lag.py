@@ -37,8 +37,10 @@ def panel(path="data/processed/minute_paths.csv"):
             g[c] = g[c].ffill(limit=MAXGAP_FFILL)
         g["dk"] = g.k_mid.diff()
         g["dp"] = g.p_price.diff()
-        g = g[(g.dk.abs() <= GLITCH) | g.dk.isna()]
-        g = g[(g.dp.abs() <= GLITCH) | g.dp.isna()]
+        # MASK glitches to NaN (dropping rows would misalign later shifts:
+        # "1-minute lag" must always mean one calendar minute)
+        g.loc[g.dk.abs() > GLITCH, "dk"] = np.nan
+        g.loc[g.dp.abs() > GLITCH, "dp"] = np.nan
         g["game_id"] = gid
         g["league"] = d[d.game_id == gid].league.iloc[0]
         g["start_utc"] = d[d.game_id == gid].start_utc.iloc[0]
@@ -47,7 +49,9 @@ def panel(path="data/processed/minute_paths.csv"):
 
 
 def xcorr(d, agg=1):
-    g = d.dropna(subset=["dk", "dp"]).copy()
+    # keep the FULL minute grid so shift(k) always spans exactly k minutes;
+    # incomplete pairs drop out per-lag after shifting
+    g = d.copy()
     if agg > 1:
         g["bin"] = g.mts // agg
         g = (g.groupby(["game_id", "bin"]).agg(dk=("dk", "sum"), dp=("dp", "sum"),
@@ -107,7 +111,9 @@ def episodes(d, thresh=0.015):
                     break
                 halves[c] = w.loc[cross.index[0], "mts"]
             if len(halves) == 2:
-                leads.append(halves["p_price"] - halves["k_mid"])  # >0: K crossed EARLIER
+                # halves holds mts (minutes-to-start, DECREASING in time), so
+                # the earlier crosser has the LARGER mts: k - p > 0 = Kalshi first
+                leads.append(halves["k_mid"] - halves["p_price"])
             i += 30
     return np.array(leads, float)
 

@@ -33,7 +33,9 @@ def panel(path="data/live/vps_mirror/snapshots.csv"):
         d = d[(d.abs() <= 0.2)]
         d["game_id"] = gid
         frames.append(d.reset_index())
-    return pd.concat(frames, ignore_index=True).dropna(subset=SRCS, how="all")
+    # keep the FULL 15-min grid (all-NaN rows included): dropping rows would
+    # make shift(±1) span multi-step calendar gaps in the lag analyses
+    return pd.concat(frames, ignore_index=True)
 
 
 def event_windows(g, thresh=0.02, offsets=range(-2, 3)):
@@ -76,7 +78,9 @@ def main():
     print(have_all[SRCS].corr().round(3).to_string(), flush=True)
 
     print("\n=== cross-lag correlations: corr(dA_t, dB_t+1) — A leads B if positive ===", flush=True)
-    g = have_all.sort_values(["game_id", "t"]).copy()
+    # shift on the FULL grid so "next step" is exactly one 15-min step, then
+    # drop incomplete pairs per correlation
+    g = d.sort_values(["game_id", "t"]).copy()
     for c in SRCS:
         g[f"{c}_next"] = g.groupby("game_id")[c].shift(-1)
     print(f"  {'A -> B':28} {'corr':>7} {'n':>7}", flush=True)

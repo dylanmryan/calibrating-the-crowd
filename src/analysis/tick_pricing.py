@@ -85,7 +85,10 @@ def main():
             frames.append(d[[cols[0], cols[1]]].rename(columns={cols[0]: "bid", cols[1]: "ask"}))
     pb = pd.concat(frames).dropna()
     pb["spread"] = pb.ask - pb.bid
-    off_grid = ((pb.bid * 100) % 1 > 1e-6) | ((pb.ask * 100) % 1 > 1e-6)
+    # distance to the nearest cent (float-safe): 0.29*100 % 1 = 0.9999... would
+    # falsely flag on-grid prices — measure |x*100 - round(x*100)| instead
+    off_grid = ((pb.bid * 100 - (pb.bid * 100).round()).abs() > 1e-6) | \
+               ((pb.ask * 100 - (pb.ask * 100).round()).abs() > 1e-6)
     print(f"\nPolymarket stored books (moneylines, n={len(pb)}):")
     print(f"  spread == exactly 1 tick: {(pb.spread.round(4) == 0.01).mean():.0%}; "
           f"off-cent-grid quotes: {off_grid.mean():.1%}")

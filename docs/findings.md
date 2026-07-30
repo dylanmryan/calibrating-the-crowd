@@ -258,8 +258,9 @@ analyses on our sports data:
    sample — it vanishes with data (own-lag z=−0.3); books are simply stickier
    (>0.4pt move in 4.4% of steps vs ~8–10% on the exchanges). Cross-venue
    Granger terms are statistically real but economically tiny: the exchanges
-   predict each other (K→P z=+3.3, P→K z=+3.0) and book→Poly (z=+2.9), while
-   nothing significantly predicts the book's next move (z≤+1.4) — yet every
+   predict each other (K→P z=+3.3, P→K z=+3.0) and book→Poly (z=+4.0 after
+   the 2026-07-30 grid-alignment fix), while nothing significantly predicts
+   the book's next move (z≤+1.2) — yet every
    coefficient is ~0.03, i.e. ~3% of a move transmits one step ahead. Event
    study on big moves (|d|≥2pts; n=65–123 events per source): the other
    venues' signed response concentrates at offset 0 (+0.35–0.74pt within the
@@ -276,7 +277,8 @@ analyses on our sports data:
    the cross-correlogram hump lives within ±2 minutes (corr 0.030 at +1
    vs 0.021 at −1), and in the 23 joint ≥1.5pt repricing episodes the venues
    cross half their move in the *same minute* (median lead 0.0; Kalshi-first
-   43%; sign-test p=1.0). **No leader–follower relay at any resolution
+   39%, ties 17%; sign-test p=1.0; a 2026-07-30 sign-convention fix corrected
+   the direction labels — the symmetric-null conclusion is unchanged). **No leader–follower relay at any resolution
    measured.** Scheduled-news check: MLB intensity shows no discrete
    lineup-window burst (T−4h→T−1.5h flat ≈0.007pt/min at both venues;
    per-game release-time variation may smear one) — repricing ramps into the
