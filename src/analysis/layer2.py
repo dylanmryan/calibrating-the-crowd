@@ -23,6 +23,12 @@ def main():
     ab["dist"] = (ab.prob_home - 0.5).abs()
     main_line = ab.loc[ab.groupby("game_id")["dist"].idxmin()].copy()
     main_line["margin"] = main_line.game_id.map(mg)
+    # pushes (margin lands exactly on an integer line) are refunds, and the
+    # de-vigged two-way prob is push-conditional — exclude them, don't score
+    # them as losses
+    pushes = (main_line.margin == -main_line.point).sum()
+    main_line = main_line[main_line.margin != -main_line.point]
+    print(f"pushes excluded: {pushes}", flush=True)
     main_line["cover"] = (main_line.margin > -main_line.point).astype(float)
     print(f"main lines: {len(main_line):,} games "
           f"({dict(main_line.groupby('league').size())})", flush=True)

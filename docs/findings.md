@@ -211,9 +211,11 @@ analyses on our sports data:
    (`src/analysis/ladder_vs_books.py`, sportsbook alternate spreads for 2,480
    MLB/NBA ladder games)
    Two completions of this story: **(a) the books' full margin distributions
-   pass the same PIT that rejects Kalshi's** (book MLB KS p=0.46, NBA p=0.17 vs
-   Kalshi MLB p<0.001) — the books' curves are distributionally correct, not
-   just right in one cell (`src/analysis/book_pit.py`); **(b) the mispricing is
+   pass the same PIT that rejects Kalshi's** (tie-consistent PIT, corrected
+   2026-07-30: book MLB KS p=0.084, NBA p=0.165 vs Kalshi MLB p<0.001 — the
+   earlier p=0.46 for MLB was inflated by strict-inequality tie handling on
+   integer lines; the pass is now marginal but the contrast with Kalshi's
+   decisive rejection stands) (`src/analysis/book_pit.py`); **(b) the mispricing is
    unexploitable**: selling the over-priced "win by 3+" contracts at the bid,
    fees included, loses 2.9–4.5% (date-clustered z −2.3 to −4.6; robust to
    live-book-only quotes) — the bias is harbored inside Kalshi's transaction-
@@ -358,8 +360,10 @@ observed live). Measured on our stored quotes:
   price falls: 2.6% of price mid-range → 15.4% at 5–10¢ → 28.6% at 1–5¢
   (floor: 25%). In Polymarket's 0.001 regime the same floor is ~1–2.5% —
   a tenfold difference in the structural cost of tail trading, set by
-  exchange design. 14.6% of our stored Poly quotes are already off the cent
-  grid.
+  exchange design. Stored Poly moneyline quotes are almost entirely on the
+  cent grid (off-grid 0.7% — a 2026-07-30 fix corrected an earlier 14.6%
+  figure caused by a float-modulo bug), consistent with the 0.001 regime
+  applying only at price extremes.
 - **Implication for the cost-band thesis:** the band that shelters Kalshi's
   MLB tail bias is partly *tick-made* — a finer tail tick (Polymarket-style
   tiering) would compress it and, by the paper's own logic, force tail
@@ -431,22 +435,20 @@ same games 0.2130 (T−24h) → 0.2124 (close).
 
 ## Layer 2, market integration, and FDR control (2026-07-11)
 
-- **Layer 2 (the standard spread).** Main line identified per game as the
-  alternate point with de-vigged cover probability nearest ½ (mean |p−½| =
-  2.2pts). NBA is calibrated (empirical cover 51.4% vs 50.0% predicted, ECE
-  0.014). **MLB home sides cover the run line only 45.0% vs 49.9% implied**
-  (n=1,274, z≈−3.5, ECE 0.049) — directionally consistent with the walk-off
-  compression of home margins (home teams ahead stop batting; −1.5 fails on
-  1-run wins). Literature check (2026-07-21): this matches the long-documented
-  home-favorite run-line bias — large-sample public analyses put historical
-  home −1.5 cover near 45% with the same walk-off mechanism (~28–29% of MLB
-  games end by exactly one run), and Woodland & Woodland (1994) established
-  MLB moneylines as efficient-within-costs with a *reverse* favorite–longshot
-  bias. So: a known structural feature the books carry inside their vig (our
-  cost-band thesis), not a pipeline artifact — but post-hoc on a single rung
-  here, so cite as corroborated context, not a new discovery. Kalshi ≈ book
-  at matched main-line rungs (mean diff −0.07pts; mostly NBA — MLB ladders
-  rarely quote 1.5). (`src/analysis/layer2.py`)
+- **Layer 2 (the standard spread) — corrected 2026-07-30.** Main line
+  identified per game as the alternate point with de-vigged cover probability
+  nearest ½ (mean |p−½| = 2.2pts). The code review caught that **pushes
+  (margins landing exactly on integer lines) were being scored as losses**;
+  with the 152 pushes excluded, the main-line calibration is clean in *both*
+  leagues: MLB empirical cover 50.4% vs 49.9% predicted (n=1,137, ECE
+  0.009); NBA 52.1% vs 50.0% (n=1,191, ECE 0.020, n.s.). **The previously
+  reported "MLB home sides cover only 45.0% vs 49.9%" was substantially a
+  push-scoring artifact and is retracted.** The practitioner literature on
+  the historical home-favorite run-line bias (and Woodland & Woodland 1994)
+  remains relevant background, but our sample shows no main-line
+  miscalibration once pushes are handled — if anything a cleaner null.
+  Kalshi ≈ book at matched main-line rungs (mean diff −0.07pts).
+  (`src/analysis/layer2.py`)
 - **Law of one price across venues.** On 92 games with executable books on
   both exchanges (OddPool archive × Kalshi quotes): median mid-price gap
   1.00pt; buy-one-sell-other crosses gross in 7.6% of games and **net of both

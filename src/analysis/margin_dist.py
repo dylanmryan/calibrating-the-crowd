@@ -41,7 +41,11 @@ def pit(cdf: dict, m: int, rng) -> float | None:
     if not cdf:
         return None
     lo = max((f for x, f in cdf.items() if x < m), default=0.0)
-    hi = min((f for x, f in cdf.items() if x > m), default=1.0)
+    # x >= m (not x > m): when the margin TIES a grid threshold (possible for
+    # the books' integer lines, impossible for Kalshi's half-integer rungs),
+    # the interval must be the atom's own (F(m-), F(m)] — the strict version
+    # spanned two cells and smoothed u toward uniform exactly for the books
+    hi = min((f for x, f in cdf.items() if x >= m), default=1.0)
     if hi < lo:
         return None
     return lo + rng.uniform() * (hi - lo)

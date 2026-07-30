@@ -52,7 +52,8 @@ NULLS = [
     ("Closing-price efficiency (move beyond close)", "p=0.99/0.35/0.52"),
     ("Behavioral fingerprints (home bias, franchise, weekend)", "all n.s."),
     ("FLB: all slope CIs include 1 (home-side)", "-"),
-    ("Book PIT MLB/NBA", "pass (pending tie-consistent rerun)"),
+    ("Layer-2 main-line calibration (push-corrected)", "MLB 50.4% vs 49.9%; NBA n.s. — 45.0% claim retracted"),
+    ("Book PIT MLB/NBA (tie-consistent)", "p=0.084/0.165 (marginal pass vs Kalshi p<0.001)"),
     ("T-24h encompassing (K beyond book a day out)", "p=0.68"),
     ("Minute-scale first-passage leads", "median 0.0, sign-test p=1.0"),
 ]
