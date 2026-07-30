@@ -88,11 +88,19 @@ def match_games(d):
                 long_is_home = False
             else:
                 continue   # can't identify the priced side -> drop
+        espn_start = pd.Timestamp(e.start_utc)
         rows.append({"game_id": e.espn_id, "league": r.league,
                      "pus_p1": r.close_price if long_is_home else 1 - r.close_price,
                      "pus_long_won": (e.winner == "home") == long_is_home,
                      "stale_min": r.stale_min, "fills_24h": r.fills_24h,
-                     "vol_24h": r.vol_24h, "close_price": r.close_price})
+                     "vol_24h": r.vol_24h, "close_price": r.close_price,
+                     # anchor integrity: the tape close was computed against the
+                     # catalog's game_start, which falls back to endDate (post-
+                     # game!) when gameStartTime is missing — those closes can
+                     # contain in-game trades. Measure both defects explicitly.
+                     "anchor_delta_min": abs((pd.Timestamp(r.game_start) - espn_start)
+                                             .total_seconds()) / 60,
+                     "eff_stale_min": (espn_start - r.close_ts).total_seconds() / 60})
     return pd.DataFrame(rows)
 
 
@@ -110,6 +118,14 @@ def main():
               f"{ok:.1%} agree with realized outcome", flush=True)
 
     # ---- join the three-way clean set ----
+    # look-ahead guard (deep audit 2026-07-29): drop games whose tape anchor was
+    # the endDate fallback (start mismatch > 30min vs ESPN) and any close that
+    # postdates the ESPN start
+    bad_anchor = (m.anchor_delta_min > 30) | (m.eff_stale_min < 0)
+    print(f"anchor integrity: excluding {bad_anchor.sum()} of {len(m)} matched games "
+          f"(endDate-fallback anchors / post-start closes)", flush=True)
+    m = m[~bad_anchor]
+
     t = load()
     t["date"] = t.start_utc.astype(str).str[:10]
     j = t.merge(m[["game_id", "pus_p1", "stale_min", "fills_24h"]], on="game_id")

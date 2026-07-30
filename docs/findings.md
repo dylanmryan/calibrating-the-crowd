@@ -45,6 +45,25 @@ pass and every headline conclusion is unchanged (shifts confined to the 4th
 decimal; pooled TOST intervals tightened to ±0.46e-3).
 (`src/analysis/data_audit.py`, first entry in `src/make_results.py`)
 
+**Deep coherence audit (2026-07-29).** A second gate checks that the data is
+*true*, not just well-formed, by cross-examination: no look-ahead (every
+closing quote timestamped before its game's start, all files); cross-source
+disagreement as a misattachment detector (median gaps 0.5–0.6pt; the 13
+gross-disagreement games are *genuine stale quotes* — 11 are Aug–Sep 2025
+CFB where brand-new Polymarket listings still sat near issuance while Kalshi
+and the books agreed with each other — not matching errors); clock
+verification (found and fixed the one real defect: 47 Polymarket-US games
+whose tape anchor was the settlement time rather than kickoff — excluded via
+a look-ahead guard in `four_way`, conclusions unchanged); side-flip
+signatures (home-win rates sane in every league; price–outcome correlation
+positive in every source × league; identical-quote and exact-0.5 pairs all
+book-confirmed as genuine coin flips); zombie-data scans (16.7% of minute
+series are *resting books* with full observation counts, a market state, not
+missing data); and a fork check — two independent pipelines pricing the same
+quantity agree (horizons-at-start vs closing prices: median gap 0.5pt). Both
+gates: **72 checks, 0 warnings, 0 failures.**
+(`src/analysis/deep_audit.py`)
+
 **Which Polymarket:** all Polymarket data is the **Global** platform (the
 on-chain Polygon CLOB behind gamma-api/clob.polymarket.com; USDC-collateralized;
 US persons officially excluded since the 2022 CFTC settlement) — *not* the
@@ -71,15 +90,16 @@ catalog's long-side team and **validated against realized outcomes (97.9%
 agreement on extreme closes)** — the same audit discipline as the Kalshi
 ticker-order rule.
 
-- **The dead heat extends to a fourth institution.** On the 2,560
+- **The dead heat extends to a fourth institution.** On the 2,542
   quality-filtered games where all four sources price the same event
-  (MLB/NBA/NHL/NFL/WNBA, Nov 2025–Jul 2026): Brier 0.2307 / 0.2309 / 0.2308 /
-  0.2309 (K / P-Global / book / P-US). Polymarket US is formally
-  TOST-equivalent to *each* of the other three at δ=0.001 (δ_min
-  0.49–0.62e-3; all clustered DM n.s., p ≥ 0.31) — despite its closes being
-  last-trade prices, a noisier measure than the others' book-mids.
+  (MLB/NBA/NHL/NFL/WNBA, Nov 2025–Jul 2026; 47 games with endDate-fallback
+  time anchors excluded by the deep audit's look-ahead guard): Brier
+  0.2305 / 0.2306 / 0.2306 / 0.2308 (K / P-Global / book / P-US). Polymarket
+  US is formally TOST-equivalent to *each* of the other three at δ=0.001
+  (δ_min 0.56–0.64e-3; all clustered DM n.s., p ≥ 0.27) — despite its closes
+  being last-trade prices, a noisier measure than the others' book-mids.
 - **Law of one price across legally segregated pools:** |US − Global| median
-  0.50pt, mean 0.78pt, >5pt in only 0.5% of games — barely wider than the
+  0.50pt, mean 0.77pt, >5pt in only 0.4% of games — barely wider than the
   Kalshi-vs-Global benchmark (median 0.40pt), even though no participant may
   legally trade both Polymarkets. Prices agree because both pools process the
   same public information, not because anyone arbitrages the two books: the
