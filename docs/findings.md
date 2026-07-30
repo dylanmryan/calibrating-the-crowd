@@ -253,7 +253,7 @@ analyses on our sports data:
    **The whisper is carried by late order flow.** Decomposing Kalshi's close
    into a 24h-out level plus the final-day movement (trade-path panel, n=3,314
    games with ≥10 trades): the flow term predicts outcomes beyond the closing
-   book line (clustered z=2.83, p=0.005), and model-free, final-24h moves of ≥3pts point
+   book line (clustered z=3.43, p=0.001 after the horizon re-fill), and model-free, final-24h moves of ≥3pts point
    toward the eventual winner 57.9% of the time (n=978). The effect again
    concentrates where book quotes are freshest — not a staleness artifact.
    What traders do on the exchange in the last day is genuinely informative.
@@ -411,10 +411,12 @@ evaluated on the same clean three-way games (n=4,627):
 - Robust to K∈{10, 32} (model Brier 0.2352–0.2369; conclusions unchanged).
   (`src/analysis/model_benchmark.py`, `results/model_benchmark.png`)
 
-## When does the dead heat form? (open vs close, n=2,139 constant sample)
+## When does the dead heat form? (open vs close, n=2,901 constant sample; horizon re-fill 2026-07-30)
 
 At **T−24h** the books hold a small, statistically real accuracy lead over
-Kalshi (ΔBrier +0.73e-3, date-clustered z=2.18, p=0.029); Polymarket sits
+Kalshi (ΔBrier +0.69e-3, date-clustered z=+2.32, p=0.020 after the 2026-07-30
+horizon re-fill restored the most-liquid games the old 2-page fill cap had
+dropped — the claim *strengthened* with the selection fixed); Polymarket sits
 between (n.s. vs both). By **game start** all three are identical on the same
 games (0.2125 / 0.2123 / 0.2124). Both exchanges sharpen monotonically through
 the final day; cross-source price gaps contract (|K−book| 1.26→1.10pts,
@@ -437,8 +439,8 @@ day out the books fully encompass both exchanges). The exchange's incremental
 information is *created during the final day*, the same window in which it
 closes the accuracy gap. (`src/analysis/close_efficiency.py`)
 
-**Comparative sharpening (2026-07-21).** The full 7-horizon Brier curves on the
-joint constant sample (n=2,137) make the Page–Clemen replication comparative:
+**Comparative sharpening (2026-07-21; re-filled 2026-07-30, n=2,901).** The
+full 7-horizon Brier curves on the joint constant sample make the Page–Clemen replication comparative:
 both exchanges sharpen essentially monotonically (Kalshi 0.2138→0.2125,
 Polymarket 0.2134→0.2123) and are statistically indistinguishable at every
 horizon (all date-clustered |z| ≤ 1.8; smallest p=0.077 at 12h, favoring Poly)
