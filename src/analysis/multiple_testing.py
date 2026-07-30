@@ -2,47 +2,59 @@
 
 The project runs many hypothesis tests; a referee will ask which discoveries
 survive false-discovery-rate control. Inventory below = every POSITIVE claim
-(an effect asserted to exist) with its primary p-value as reported in
-docs/findings.md. Nulls/equivalences are not discoveries and are controlled by
-their own TOST margins, so they are listed separately for transparency.
+(an effect asserted to exist) with its p-value AS OF THE 2026-07-30 suite run
+(the code-review found the previous inventory carried stale Jul-10 values —
+several claims weakened as the sample grew and was cleaned). Policy adopted
+with the refresh: cite the DATE-CLUSTERED p wherever a clustered and an LR/MLE
+version both exist (the conservative choice), and every entry names the
+results/logs file that generates it, so drift is checkable by grep.
 
-Benjamini-Hochberg at q = 0.05 and 0.10.
+Nulls/equivalences are not discoveries and are controlled by their own TOST
+margins; listed separately. Benjamini-Hochberg at q = 0.05 and 0.10.
+
+RETIRED CLAIMS (kept here as the honest record):
+  - "Book consensus momentum z=17.5" (2026-07-21): 3-day small-sample
+    artifact; matured panel own-lag z=-0.3.
+  - "NBA carries the encompassing increment" (2026-07-30): p=0.006 on Jul-10
+    data, p=0.145 on the current master — RETRACTED.
+  - "Wide-set Kalshi beats Poly" and "log-score Kalshi beats book"
+    (2026-07-30): the two long-flagged fragiles dissolved to p=0.142 / 0.326
+    as the sample grew — no longer claims at any threshold.
+  - "Kalshi sharpens 24h->start p=3e-4" (2026-07-30): no module in the
+    current suite computes this statistic (descriptive table only); removed
+    pending a proper constant-sample DM if wanted.
 """
 from __future__ import annotations
 
-# (claim, p-value, source analysis)
+# (claim, p-value, provenance: results/logs file, 2026-07-30 run)
 DISCOVERIES = [
-    ("MLB ladder under-prices 1-2-run margins (z=10)",        1e-10, "mlb_autopsy/ladder_vs_books"),
-    ("Extras end within 1 run 70% vs 25% (z=8.9 cell gap)",   1e-10, "mlb_extras"),
-    ("MLB PIT rejects for Kalshi (KS)",                       1e-3,  "margin_dist"),
-    ("Ladder-cost: selling the bias LOSES money (z=-4.6)",    1e-5,  "ladder_cost"),
-    ("Kalshi sharpens 24h->start (DM)",                       3e-4,  "horizon"),
-    ("Late flow predicts beyond closing book (LR)",           1e-3,  "late_flow"),
-    ("Kalshi encompasses book at close (LR)",                 4e-3,  "encompassing"),
-    ("NBA carries the encompassing increment",                6e-3,  "encompassing"),
-    ("Kalshi encompasses Polymarket at close (LR)",           1.3e-2, "encompassing"),
-    ("Books lead Kalshi at T-24h (clustered DM)",             2.9e-2, "horizon_equivalence"),
-    ("Murphy sup-t: Kalshi edge vs Shin-book, low thresholds", 1.2e-2, "murphy (sup-adjusted, favors Kalshi)"),
-    ("Markets beat walk-forward Elo floor (DM z=7.4, all 3)",  1e-10, "model_benchmark"),
-    ("Minute-scale bidirectional K<->P predictability (z~7)",  1e-10, "minute_lead_lag"),
-    ("Poly relative volume -41% at fee date (z=-3.6)",         3e-4,  "fee_liquidity"),
-    # 2026-07-21: replaced "book momentum z=17.5" — retired as a 3-day
-    # small-sample artifact (matured panel own-lag z=-0.3). Matured claim:
-    ("Cross-venue 15-min predictability K<->P, book->P (z~3)", 1.0e-3, "lead_lag (matured panel)"),
-    ("Wide-set Kalshi beats Poly (DM)",                       4.8e-2, "referee (flagged fragile)"),
-    ("Log-score Kalshi beats book (DM)",                      5.1e-2, "referee (flagged fragile)"),
+    ("MLB ladder under-prices 1-2-run margins (z=+10.05)",       1e-10,  "ladder_vs_books.log"),
+    ("Extras end within 1 run 70% vs 25% (cell z~8.9)",          1e-10,  "mlb_extras.log"),
+    ("Markets beat walk-forward Elo floor (z=+7.3..+7.4)",       1e-10,  "model_benchmark.log"),
+    ("Minute-scale bidirectional K<->P predictability (z~7)",    1e-10,  "minute_lead_lag.log"),
+    ("Ladder-cost: selling the bias LOSES money (z=-4.6)",       1e-5,   "ladder_cost.log"),
+    ("Poly relative volume -41% at fee date (z=-3.6)",           3e-4,   "fee_liquidity.log"),
+    ("MLB PIT rejects for Kalshi (KS p<0.001)",                  1e-3,   "margin_dist.log"),
+    ("Cross-venue 15-min predictability K<->P, book->P (z<=3.3)", 1e-3,  "lead_lag.log"),
+    ("Late flow predicts beyond closing book (clustered z=2.83)", 5e-3,  "late_flow.log"),
+    ("Books lead Kalshi at T-24h (clustered DM)",                2.9e-2, "horizon_equivalence.log"),
+    ("Murphy sup-t: Kalshi edge vs Shin-book, low thresholds",   3.7e-2, "murphy.log (sup-adjusted)"),
+    ("Kalshi encompasses Polymarket at close (clustered z)",     4.4e-2, "encompassing.log [FRAGILE]"),
+    ("Kalshi encompasses book at close (clustered z)",           5.4e-2, "encompassing.log [FRAGILE]"),
 ]
 
 NULLS = [
-    ("Three-way closing DM (all pairs)", "p=0.15/0.26/0.54 + TOST equivalent at ±1e-3"),
-    ("Fee natural experiment DiD", "p=0.74 (placebo p=0.39)"),
+    ("Three-way closing DM (all pairs)", "n.s. + TOST equivalent at ±1e-3"),
+    ("Four-way: Poly-US vs each source", "n.s. + TOST equivalent at ±1e-3"),
+    ("Fee natural experiment DiD on accuracy", "p=0.74 (placebo p=0.39)"),
     ("Taker-size markout gradient", "flat across quintiles"),
     ("Taker imbalance beyond book", "p=0.80/0.48"),
     ("Closing-price efficiency (move beyond close)", "p=0.99/0.35/0.52"),
     ("Behavioral fingerprints (home bias, franchise, weekend)", "all n.s."),
-    ("FLB: all slope CIs include 1", "-"),
-    ("Book PIT MLB/NBA", "p=0.46/0.17 (pass)"),
+    ("FLB: all slope CIs include 1 (home-side)", "-"),
+    ("Book PIT MLB/NBA", "pass (pending tie-consistent rerun)"),
     ("T-24h encompassing (K beyond book a day out)", "p=0.68"),
+    ("Minute-scale first-passage leads", "median 0.0, sign-test p=1.0"),
 ]
 
 
@@ -59,7 +71,8 @@ def bh(items, q):
 def main():
     for q in (0.05, 0.10):
         ranked, keep = bh(DISCOVERIES, q)
-        print(f"=== Benjamini-Hochberg, q={q} ({len(DISCOVERIES)} positive claims) ===", flush=True)
+        print(f"=== Benjamini-Hochberg, q={q} ({len(DISCOVERIES)} positive claims, "
+              f"2026-07-30 values, clustered p where available) ===", flush=True)
         for i, (name, p, src) in enumerate(ranked, start=1):
             mark = "KEEP" if i <= keep else "drop"
             print(f"  [{mark}] p={p:<8.2g} {name}  ({src})", flush=True)
@@ -67,6 +80,7 @@ def main():
     print("=== nulls / equivalence claims (not FDR-controlled discoveries) ===", flush=True)
     for name, note in NULLS:
         print(f"  - {name}: {note}", flush=True)
+    print("\n(retired claims documented in the module docstring)", flush=True)
 
 
 if __name__ == "__main__":

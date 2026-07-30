@@ -219,22 +219,25 @@ analyses on our sports data:
    live-book-only quotes) — the bias is harbored inside Kalshi's transaction-
    cost band exactly as books harbor biases inside their vig, which is *why* it
    persists (`src/analysis/ladder_cost.py`).
-2. **Forecast encompassing — equally accurate ≠ redundant.** In log-odds
-   combination regressions (date-clustered SEs), Kalshi's price carries a small
-   information increment *beyond* the book (LR exclusion p=0.004) and beyond
-   Polymarket (p=0.013); neither the book nor Polymarket adds information beyond
-   Kalshi. The increment is sign-consistent across all six leagues, statistically
-   driven by the NBA (p=0.006) — the most heavily traded league, consistent with
-   informed marginal traders — and is **not** a quote-timing artifact: it
-   concentrates in games where the book quote is freshest (<10 min old, p=0.003)
-   and vanishes where it is stale. Economically it is negligible: the DM accuracy
-   gain is n.s. and liquid-game Briers are identical to 4 decimals. Precisely:
-   the crowd re-prices the books' information without loss and adds a detectable
-   whisper of its own. (`src/analysis/encompassing.py`)
+2. **Forecast encompassing — a whisper that faded as the sample grew
+   (downgraded 2026-07-30).** On the Jul-10 master, Kalshi's price appeared to
+   carry information beyond the book (LR p=0.004) and beyond Polymarket
+   (p=0.013), concentrated in the NBA (p=0.006). The code review caught that
+   these numbers were stale: **on the current, larger and cleaner master the
+   whisper is borderline at best — Kalshi-beyond-book clustered p=0.054
+   (drops under BH at q=0.05), Kalshi-beyond-Polymarket clustered p=0.044
+   (fragile), and the NBA-concentration sub-claim is retracted outright
+   (p=0.145).** What survives: neither the book nor Polymarket adds
+   information beyond Kalshi at any sample size, and the increment — if real
+   — is economically negligible (DM accuracy gain n.s.; liquid-game Briers
+   identical to 4 decimals). Treat as suggestive only; the honest headline is
+   *mutual encompassing*, not a crowd edge. Policy note: we now cite the
+   date-clustered p (the conservative choice) rather than the LR p
+   everywhere in this family. (`src/analysis/encompassing.py`)
    **The whisper is carried by late order flow.** Decomposing Kalshi's close
    into a 24h-out level plus the final-day movement (trade-path panel, n=3,314
    games with ≥10 trades): the flow term predicts outcomes beyond the closing
-   book line (LR p=0.001), and model-free, final-24h moves of ≥3pts point
+   book line (clustered z=2.83, p=0.005), and model-free, final-24h moves of ≥3pts point
    toward the eventual winner 57.9% of the time (n=978). The effect again
    concentrates where book quotes are freshest — not a staleness artifact.
    What traders do on the exchange in the last day is genuinely informative.
@@ -452,12 +455,16 @@ same games 0.2130 (T−24h) → 0.2124 (close).
   games (series; the wrong-game risk set) have *smaller* Poly-book gaps than
   average (0.57 vs 0.95pts; 1 outlier >5pts in 1,465) — series matching is
   sound; 13 of 5,061 games (0.26%) show >5pt Poly-book divergence overall.
-- **Multiple testing.** Benjamini–Hochberg over the paper's 17 positive
-  claims (Murphy sup-t, model-benchmark premium, minute-scale
-  predictability, and fee volume-incidence added 2026-07-24): **15 of 17
-  survive q=0.05** — only the two results already flagged as fragile
-  (wide-set K>P at p=0.048; log-score K>book at p=0.051) drop, and they
-  re-enter at q=0.10. Every load-bearing discovery survives FDR control.
+- **Multiple testing (inventory regenerated 2026-07-30).** The code review
+  found the inventory carried stale Jul-10 p-values; it now holds current
+  values with per-claim log provenance, citing clustered p's wherever both
+  exist. Benjamini–Hochberg over the **13** current positive claims:
+  **12 of 13 survive q=0.05**; only the Kalshi-encompasses-book whisper
+  (clustered p=0.054) drops, re-entering at q=0.10. Retired outright as the
+  sample grew: the NBA-encompassing sub-claim (p=0.006→0.145), the two
+  long-flagged fragiles (wide-set K>P 0.048→0.142; log-score 0.051→0.326),
+  and one unsourced claim ("sharpens 24h→start") removed pending a proper
+  test. Every load-bearing discovery survives FDR control.
   Nulls/equivalences are inventoried separately (they are not discoveries and
   carry their own TOST margins). (`src/analysis/multiple_testing.py`)
 
@@ -487,8 +494,9 @@ Frozen: `data/processed/wc_3way_snapshots.csv` (`src/analysis/wc_freeze.py`)
   with date-clustered pointwise and sup-t *uniform* bands (cluster multiplier
   bootstrap). Kalshi vs Polymarket: globally null (sup-t p=0.29) — no proper
   scoring function separates the exchanges. Versus the **Shin**-de-vigged
-  book: Polymarket p=0.28; Kalshi p=0.012, a marginal low-threshold
-  (θ≈0.04–0.14) edge *favoring Kalshi* — added to the FDR inventory (survives
+  book: Polymarket p=0.28; Kalshi p=0.037 on the current master (was 0.012 on
+  Jul-10 data — softened as the sample grew), a marginal low-threshold
+  (θ≈0.04–0.14) edge *favoring Kalshi* — in the FDR inventory (still keeps at
   q=0.05; treat with the usual fragile-flicker caution). **Method finding:
   de-vig choice is invisible to Brier (0.2183 vs 0.2184) but decisive at
   extreme thresholds** — against the multiplicative-de-vig book, both
