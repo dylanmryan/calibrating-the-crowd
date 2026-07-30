@@ -105,6 +105,8 @@ def _append(path, rows):
     df = pd.DataFrame(rows)
     if os.path.exists(path):
         df = pd.concat([pd.read_csv(path), df], ignore_index=True)
+    # audit gate: later harvests supersede older rows for the same game
+    df = df.drop_duplicates("game_id", keep="last")
     df.to_csv(path, index=False)
 
 

@@ -32,6 +32,19 @@ Outcome integrity: ESPN finals cross-checked against both platforms' settlements
 (99.6% / 98.7% agreement); flagged games excluded. Venue/side assignment via the
 ticker-order rule (validated 99.6% vs ESPN).
 
+**Data-quality gate (2026-07-29).** A 48-check automated audit now runs as
+the *first* module of the results suite — a failure blocks the whole
+regeneration. Checks: key uniqueness, price ranges, bid ≤ ask, two-sided
+sums, master-vs-ESPN outcome consistency, referential integrity,
+resumable-collector duplicate hazards, and file hygiene. Its first run caught
+and fixed: **39 cross-harvest duplicate game rows** in the Kalshi price file
+and 22 in the horizons file (older-era rows superseded by the current side
+rule; keep-newest now enforced inside the collectors so it cannot recur),
+plus two stale iCloud "keep both" file copies. After cleaning, all checks
+pass and every headline conclusion is unchanged (shifts confined to the 4th
+decimal; pooled TOST intervals tightened to ±0.46e-3).
+(`src/analysis/data_audit.py`, first entry in `src/make_results.py`)
+
 **Which Polymarket:** all Polymarket data is the **Global** platform (the
 on-chain Polygon CLOB behind gamma-api/clob.polymarket.com; USDC-collateralized;
 US persons officially excluded since the 2022 CFTC settlement) — *not* the

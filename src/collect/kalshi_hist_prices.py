@@ -144,6 +144,9 @@ def _append(path, rows):
     df = pd.DataFrame(rows)
     if os.path.exists(path):
         df = pd.concat([pd.read_csv(path), df], ignore_index=True)
+    # a game re-priced by a later harvest supersedes its older row (audit gate
+    # found 39 cross-era duplicates; keep the newest side-rule pricing)
+    df = df.drop_duplicates("game_id", keep="last")
     df.to_csv(path, index=False)
 
 
