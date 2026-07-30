@@ -51,6 +51,9 @@ def main():
         dt = time.time() - t0
         rows.append((m, rc, dt))
         print(f"{'OK ' if rc == 0 else 'FAIL'} {m:20} {dt:6.1f}s -> {log}", flush=True)
+        if rc != 0 and m in ("data_audit", "deep_audit"):
+            print(f"GATE FAILED ({m}) — halting the suite; nothing regenerated past this point", flush=True)
+            break
 
     figs = sorted(p.name for p in Path("results").glob("*.png"))
     fails = [m for m, rc, _ in rows if rc]

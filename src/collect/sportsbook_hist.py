@@ -41,8 +41,23 @@ def _snapshot(sport_key: str, iso_ts: str) -> list:
     return []
 
 
+def _norm_name(s):
+    """Accent/punctuation-insensitive team-name key (review 2026-07-30: raw
+    substring matching silently dropped whole franchises — Montréal's accent,
+    St. Louis's period, 'LA Clippers' vs 'Los Angeles Clippers')."""
+    import unicodedata
+    s = unicodedata.normalize("NFD", str(s).lower())
+    s = "".join(c for c in s if not unicodedata.combining(c))
+    s = s.replace(".", "").replace("'", "")
+    for a, b in (("la clippers", "los angeles clippers"),
+                 ("st louis", "saint louis"), ("st. louis", "saint louis")):
+        s = s.replace(a, b)
+    return s.strip()
+
+
 def _match_hit(pn, team):
-    t = str(team).lower()
+    t = _norm_name(team)
+    pn = _norm_name(pn)
     return pn in t or t.endswith(pn)
 
 

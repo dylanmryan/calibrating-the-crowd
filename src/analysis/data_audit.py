@@ -58,6 +58,12 @@ def main():
     odd = (sides != 2).sum()
     check("kalshi inv: 2 sides/event", odd == 0, f"{odd} events != 2 sides", warn=True)
 
+    # ---------- match integrity ----------
+    mt = pd.read_csv(f"{P}/kalshi_espn_matches.csv")
+    mm = mt[mt.espn_id.notna()]
+    check("matches: espn_id unique (1:1 enforced)", mm.espn_id.is_unique,
+          f"{mm.espn_id.duplicated().sum()} ambiguous")
+
     # ---------- Kalshi closing quotes ----------
     q = pd.read_csv(f"{P}/kalshi_hist_prices.csv")
     check("kalshi px: game_id unique", q.game_id.is_unique, f"{q.game_id.duplicated().sum()} dups")

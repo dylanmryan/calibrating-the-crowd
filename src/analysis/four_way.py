@@ -73,10 +73,9 @@ def match_games(d):
                                              - pd.Timestamp(r.game_start)))
         else:
             continue
-        home_names = f"{e.home_team}"
-        long_is_home = (str(r.long_team) in home_names or str(r.long_desc) in home_names
-                        or str(r.code2) == str(e.home_abbr).upper() and False)
-        # primary rule: match long team NAME to ESPN home/away names
+        # identify the priced (long) side by team NAME; rows without a
+        # usable name are DROPPED, never defaulted (review 2026-07-30)
+        long_is_home = None
         if str(r.long_team) and str(r.long_team) != "nan":
             if str(r.long_team) == str(e.home_team):
                 long_is_home = True
@@ -88,6 +87,8 @@ def match_games(d):
                 long_is_home = False
             else:
                 continue   # can't identify the priced side -> drop
+        if long_is_home is None:
+            continue
         espn_start = pd.Timestamp(e.start_utc)
         rows.append({"game_id": e.espn_id, "league": r.league,
                      "pus_p1": r.close_price if long_is_home else 1 - r.close_price,
@@ -128,6 +129,8 @@ def main():
 
     t = load()
     t["date"] = t.start_utc.astype(str).str[:10]
+    # two US markets can map to one game; keep the higher-volume market
+    m = m.sort_values("vol_24h").drop_duplicates("game_id", keep="last")
     j = t.merge(m[["game_id", "pus_p1", "stale_min", "fills_24h"]], on="game_id")
     jq = j[(j.stale_min <= STALE_MAX_MIN) & (j.fills_24h >= FILLS_MIN)].copy()
     y = jq.home_won.values

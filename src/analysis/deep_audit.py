@@ -92,13 +92,12 @@ def main():
               - pd.to_datetime(j.start_utc, utc=True, format="ISO8601")).dt.total_seconds().abs() / 60
     check("clock: PolyUS anchor fallback share (documented; filtered in four_way)",
           (dt_min > 30).mean() < 0.15, f"{(dt_min > 30).mean():.2%}", warn=True)
-    # the analysis set itself must be free of post-start closes
+    # the matched set's contamination is measured; four_way's guard excludes it
     from src.analysis.four_way import match_games
     mm = match_games(pus)
-    kept = mm[(mm.anchor_delta_min <= 30) & (mm.eff_stale_min >= 0)]
-    check("clock: four-way analysis set has zero post-start closes",
-          (kept.eff_stale_min >= 0).all() and len(kept) > 0,
-          f"{(mm.eff_stale_min < 0).sum()} contaminated pre-filter, all excluded")
+    n_bad = int(((mm.anchor_delta_min > 30) | (mm.eff_stale_min < 0)).sum())
+    check("clock: PolyUS contaminated anchors bounded (<5% of matches)",
+          n_bad / max(len(mm), 1) < 0.05, f"{n_bad}/{len(mm)}")
     print(f"         PolyUS-vs-ESPN start deltas: median {dt_min.median():.1f}min, "
           f"p99 {dt_min.quantile(0.99):.0f}min (n={len(j):,})", flush=True)
 
@@ -107,15 +106,14 @@ def main():
     for lg, g in espn_cl.groupby("league"):
         hw = (g.winner == "home").mean()
         check(f"home-win rate sane: {lg}", 0.42 <= hw <= 0.68, f"{hw:.1%}", warn=True)
+    bad_corr = []
     for src in ("kalshi_p1", "poly_p1", "book_p1"):
         for lg, g in clean.dropna(subset=[src]).groupby("league"):
             r = np.corrcoef(g[src], (g.outcome == 1).astype(float))[0, 1]
             if not (r > 0.05):
-                check(f"price-outcome corr positive: {src}/{lg}", False, f"r={r:+.3f}")
-                break
-        else:
-            continue
-    check("price-outcome corr positive: all source x league", True)
+                bad_corr.append(f"{src}/{lg} r={r:+.3f}")
+    check("price-outcome corr positive: all source x league",
+          not bad_corr, "; ".join(bad_corr))
     same_quote = ((q.k_yes_bid1 == q.k_yes_bid2) & (q.k_yes_ask1 == q.k_yes_ask2)
                   & q.k_yes_bid1.notna()).sum()
     genuine = ((q.k_yes_bid1 == q.k_yes_bid2) & (q.k_yes_ask1 == q.k_yes_ask2)

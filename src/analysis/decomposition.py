@@ -56,9 +56,10 @@ def main():
               f"{m['resolution']*1000:>12.1f}{m['skill']*1000:>8.1f}", flush=True)
     print("  (lower Reliability = better calibrated; higher Resolution = more informative)", flush=True)
 
-    print("\n=== favorite-longshot: calibration slope (95% CI) ===", flush=True)
+    print("\n=== favorite-longshot: calibration slope (95% CI, home-side; stacked", flush=True)
+    print("    mirrored sides would halve the variance spuriously) ===", flush=True)
     for name, (c1, c2) in SRC.items():
-        s, lo, hi = slope_ci(*stacked(d, c1, c2))
+        s, lo, hi = slope_ci(d[c1].values, d["home_won"].values)
         flag = "FAV-LONGSHOT (slope<1)" if hi < 1 else ("overconfident-ish" if s < 1 else "ok")
         print(f"  {name:11} slope={s:.3f} ({lo:.2f},{hi:.2f})  {flag}", flush=True)
 

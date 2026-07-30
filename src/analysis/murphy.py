@@ -51,7 +51,7 @@ def cluster_band(d, dates, B=999, seed=7):
     sups = np.abs(eps @ g[:, ok] / n / se[ok]).max(axis=1)
     t_obs = np.abs(mu[ok] / se[ok]).max()
     crit = np.quantile(sups, 0.95)
-    p_glob = float((sups >= t_obs).mean())
+    p_glob = float((1 + (sups >= t_obs).sum()) / (len(sups) + 1))
     return mu, se, crit, t_obs, p_glob
 
 

@@ -22,7 +22,9 @@ _session = requests.Session()
 
 def _trades(ticker: str, max_ts: int, retries: int = 3) -> list:
     out, cursor = [], None
-    for _page in range(2):  # up to 2000 fills reaches ~24h back for most games
+    for _page in range(8):  # review 2026-07-30: 2 pages capped out on the most
+                            # liquid 15% of games, losing their T-24h prices —
+                            # 8 pages (8000 fills) covers the observed maximum
         p = {"ticker": ticker, "max_ts": max_ts, "limit": 1000}
         if cursor:
             p["cursor"] = cursor

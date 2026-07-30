@@ -153,5 +153,15 @@ if __name__ == "__main__":
         ex = [c for c in g["codes"].head(6)]
         print(f"  {lg:6} misses={len(g):5} e.g. {ex}", flush=True)
 
+    # 1:1 enforcement (code review 2026-07-30): two Kalshi events mapping to
+    # one ESPN game means at least one is the wrong doubleheader/series
+    # sibling — we cannot tell which, so BOTH lose the match (their prices
+    # would otherwise enter the sample possibly attached to the wrong game)
+    amb = m.espn_id.notna() & m.espn_id.duplicated(keep=False)
+    if amb.any():
+        print(f"ambiguous 1:many matches dropped: {int(amb.sum())} rows "
+              f"/ {m.loc[amb, 'espn_id'].nunique()} games", flush=True)
+        m.loc[amb, "espn_id"] = None
+        m.loc[amb, "matched"] = False
     m.to_csv("data/processed/kalshi_espn_matches.csv", index=False)
     print(f"\nsaved matches -> data/processed/kalshi_espn_matches.csv", flush=True)

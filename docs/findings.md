@@ -45,6 +45,20 @@ pass and every headline conclusion is unchanged (shifts confined to the 4th
 decimal; pooled TOST intervals tightened to ±0.46e-3).
 (`src/analysis/data_audit.py`, first entry in `src/make_results.py`)
 
+**Review fixes applied (2026-07-30).** Following the full code review
+(`docs/code-review-findings.md`): 1:1 match enforcement dropped 117
+ambiguous doubleheader/series pairings and purged their possibly-wrong
+prices (three-way clean set 5,053 → 5,046; kalshi-disagree flags fell
+179 → 161, confirming some "disagreements" were the wrong siblings);
+the FDR inventory was regenerated from live logs; the MLB run-line 45.0%
+claim and NBA-encompassing sub-claim were retracted; tie-consistent PIT
+and push handling corrected the distributional comparisons; lead–lag
+shifts now run on full calendar grids; the horizon collector's page cap
+was raised (deep re-fill in progress); book team-name matching was
+normalized (re-collection of ~290 dropped franchise games pending
+credit approval). Headline conclusions unchanged throughout: Briers
+0.2184/0.2186/0.2184, all equivalences hold.
+
 **Deep coherence audit (2026-07-29).** A second gate checks that the data is
 *true*, not just well-formed, by cross-examination: no look-ahead (every
 closing quote timestamped before its game's start, all files); cross-source
@@ -90,7 +104,7 @@ catalog's long-side team and **validated against realized outcomes (97.9%
 agreement on extreme closes)** — the same audit discipline as the Kalshi
 ticker-order rule.
 
-- **The dead heat extends to a fourth institution.** On the 2,542
+- **The dead heat extends to a fourth institution.** On the 2,535
   quality-filtered games where all four sources price the same event
   (MLB/NBA/NHL/NFL/WNBA, Nov 2025–Jul 2026; 47 games with endDate-fallback
   time anchors excluded by the deep audit's look-ahead guard): Brier
