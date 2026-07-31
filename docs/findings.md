@@ -507,6 +507,37 @@ close. Mean |24h→start| move is 2.0pts on both venues; book reference on the
 same games 0.2130 (T−24h) → 0.2124 (close).
 (`src/analysis/horizon_cross.py`, `results/horizon_cross.png`)
 
+## Beyond binary: 3-way outcomes and full margin distributions (2026-08-02)
+
+Extending the comparison past win/lose markets (`src/analysis/multi_outcome.py`):
+
+- **World Cup 3-way, outcome level (n=8 pre-kickoff games, descriptive).**
+  The knockout sample ran hot on draws and aways (home teams priced ~46%
+  won 25%; draws priced ~28% happened 37.5%) — but *identically at both
+  venues* (RPS 0.2157 vs 0.2149), and across all 888 snapshot rows the two
+  venues priced the **draw** — the outcome with no fans — within 0.3pt of
+  each other, tighter than the teams. Small-sample surprise, shared priors.
+- **Margin distributions scored head-to-head (the "by how much" question).**
+  Each game's spread ladder implies a full probability distribution over
+  victory margins; scoring Kalshi's and the books' distributions with the
+  ranked probability score on each game's *shared* rungs (n=2,382 games):
+  **the books are better as distribution forecasters in BOTH leagues** —
+  MLB ΔRPS +3.9e-3 (z=+5.4, the known small-margin blind spot) and NBA
+  ΔRPS +1.2e-3 (z=+2.3, new — previously invisible to cell-gap and PIT
+  tests separately), overall z=+5.75. Refined thesis sentence: *dead heat
+  on who wins; on by-how-much, the professionals keep a real but small
+  distributional edge, concentrated where Kalshi's ladders are thinnest.*
+- **The picture** (`results/margin_distribution.png`): aggregated implied
+  margin distributions vs realized outcomes. MLB books track reality
+  within 2.3pts total variation; Kalshi misallocates ~18pts (blowouts
+  over-priced, 1–2-run games under-priced). NBA: the two sources'
+  implied curves are visually identical.
+- **Next (inventoried): outrights/futures.** Kalshi lists 3,068 sports
+  series including settled multi-outcome championship markets — the classic
+  home of favorite–longshot bias and the sharpest place to extend the BDW
+  contrast. Polymarket US `tec-` tournament markets are already in the
+  downloaded tape.
+
 ## Layer 2, market integration, and FDR control (2026-07-11)
 
 - **Layer 2 (the standard spread) — corrected 2026-07-30.** Main line
