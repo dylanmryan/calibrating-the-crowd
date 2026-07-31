@@ -25,7 +25,7 @@ from src.collect.sportsbook_hist import SPORT, _consensus, _match_hit, _snapshot
 _ROOT = Path(__file__).resolve().parents[2]
 load_dotenv(_ROOT / ".env", override=True)
 OUT = "data/processed/sportsbook_open_prices.csv"
-CREDIT_FLOOR = 7_500   # lowered 2026-07-31 for the user-approved T-24h franchise top-up
+CREDIT_FLOOR = 500   # quota resets monthly (100K on the 1st); burn expiring credits, resume next month
 OFFSET_H = 24
 
 

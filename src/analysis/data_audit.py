@@ -104,7 +104,7 @@ def main():
     # three-way clean set reproduces
     from src.analysis.three_way import load
     n3 = len(load())
-    check("master: three-way clean set size", 5000 <= n3 <= 5200, f"n={n3}", warn=True)
+    check("master: three-way clean set size", 5200 <= n3 <= 5500, f"n={n3}", warn=True)
     print(f"         (three-way clean n = {n3:,})", flush=True)
 
     # ---------- ladders ----------

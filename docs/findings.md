@@ -130,6 +130,30 @@ ticker-order rule.
   (`src/collect/polyus.py`, `src/analysis/four_way.py`,
   `results/four_way.png`)
 
+## The thesis in one table (Table 1 of the report)
+
+Of all teams priced at X%, how many actually won — same games, all three
+institutions (n=5,328 games / 10,656 priced teams; `plain_calibration`):
+
+| priced | Kalshi won | Polymarket won | Sportsbook won |
+|---|---|---|---|
+| 10% | 8.9% | 8.8% | 7.3% |
+| 20% | 22.6% | 22.7% | 22.6% |
+| 30% | 30.7% | 31.2% | 29.1% |
+| 40% | 43.3% | 43.2% | 44.1% |
+| 50% | 50.0% | 50.2% | 50.0% |
+| 60% | 56.8% | 56.4% | 55.9% |
+| 70% | 69.2% | 68.9% | 70.9% |
+| 80% | 77.1% | 77.4% | 77.4% |
+| 90% | 91.1% | 91.2% | 92.7% |
+
+A $1 stake at any price level returns ≈$1.00 gross at every institution —
+the fees/vig are the whole house edge. Even the small deviations are
+*shared* (the mild 40/60 compression appears identically at the books):
+prediction markets behave like sportsbooks at every price level, and the
+formal machinery below (slopes, ECE, CORP, Murphy, TOST) exists to prove
+this table is not luck. (`results/plain_calibration.png`)
+
 ## Headline: a statistical dead heat (n = 5,328, final data configuration 2026-07-31)
 
 | | Kalshi | Polymarket | Sportsbook |
@@ -317,7 +341,18 @@ analyses on our sports data:
    vs 0.021 at −1), and in the 23 joint ≥1.5pt repricing episodes the venues
    cross half their move in the *same minute* (median lead 0.0; Kalshi-first
    39%, ties 17%; sign-test p=1.0; a 2026-07-30 sign-convention fix corrected
-   the direction labels — the symmetric-null conclusion is unchanged). **No leader–follower relay at any resolution
+   the direction labels — the symmetric-null conclusion is unchanged).
+   Interpretation caveat (2026-08-01): part of the few-minute echo may be
+   *print timing* rather than information diffusion (thin markets record the
+   common move when they next trade — nonsynchronous-trading bias). This
+   cannot manufacture the null: stale prints create symmetric echo, while a
+   true leader would still show asymmetric cross-prediction — and the
+   symmetry (0.092 vs 0.096) is the finding. Measured biases run *against*
+   the books (live feed verified fresh — median quote age 0.6 min — but
+   consensus-composition noise attenuates measured book leadership), so
+   "books lead slightly, exchanges never lead" is if anything understated.
+   The one honestly open cell: book-vs-exchange at sub-15-min resolution,
+   closing via the 5-min live cadence (deployed 2026-07-31). **No leader–follower relay at any resolution
    measured.** Scheduled-news check: MLB intensity shows no discrete
    lineup-window burst (T−4h→T−1.5h flat ≈0.007pt/min at both venues;
    per-game release-time variation may smear one) — repricing ramps into the

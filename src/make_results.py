@@ -23,7 +23,7 @@ from pathlib import Path
 # dependency-safe order; all read local processed data only
 MODULES = [
     "data_audit", "deep_audit",   # the gates: a FAIL here fails the whole suite
-    "three_way", "rigor", "league_tost", "four_way", "decomposition", "nuance", "corp_diagram", "murphy",
+    "plain_calibration", "three_way", "rigor", "league_tost", "four_way", "decomposition", "nuance", "corp_diagram", "murphy",
     "coherence", "margin_dist", "book_pit", "ladder_vs_books", "ladder_cost",
     "mlb_autopsy", "mlb_extras", "profitability", "behavioral", "why_sports",
     "model_benchmark", "encompassing",
