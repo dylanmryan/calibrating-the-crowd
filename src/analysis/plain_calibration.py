@@ -88,27 +88,33 @@ def main():
     print("\n  (50% band note: both sides of a near-coin-flip game can land in the", flush=True)
     print("   same band, so its effective sample is slightly below n.)", flush=True)
 
-    fig, ax = plt.subplots(figsize=(9, 6.5))
-    ax.plot([0, 100], [0, 100], "--", color="0.55", lw=1.2, label="perfect (priced = won)", zorder=1)
-    marks = {"Kalshi": "o", "Polymarket": "s", "Sportsbook": "^"}
-    # dodge each source slightly on x so all three lines stay visible —
-    # undodged they overlap almost perfectly (which is the finding)
-    for i, name in enumerate(SRC):
-        t = tabs[name]
-        xo = t.said * 100 + (i - 1) * 0.9
-        ax.errorbar(xo, t.obs * 100,
-                    yerr=[(t.obs - t.ci_lo) * 100, (t.ci_hi - t.obs) * 100],
-                    fmt=marks[name] + "-", ms=6, capsize=3, lw=2,
-                    color=COLOR[name], label=name, alpha=0.9, zorder=3 - i * 0)
-    ax.annotate("the three lines sit on top of each other\n— that is the result",
-                xy=(30, 31), xytext=(38, 14), fontsize=10, color="0.25",
-                arrowprops=dict(arrowstyle="->", color="0.45"))
+    # figure at FULL resolution: one point per integer percent (1..99),
+    # shown where >=10 teams were priced there, plus a 5-point centered
+    # rolling mean per source so the three lines stay readable
+    fig, ax = plt.subplots(figsize=(10, 7))
+    ax.plot([0, 100], [0, 100], "--", color="0.55", lw=1.2,
+            label="perfect (priced = won)", zorder=1)
+    for name, (c1, c2) in SRC.items():
+        p, y = stacked(d, c1, c2)
+        p, y = np.asarray(p), np.asarray(y)
+        pct = np.round(p * 100).astype(int)
+        rows = []
+        for k in range(1, 100):
+            m = pct == k
+            if m.sum() >= 10:
+                rows.append((k, y[m].mean() * 100, int(m.sum())))
+        t1 = pd.DataFrame(rows, columns=["pct", "obs", "n"])
+        ax.scatter(t1.pct, t1.obs, s=np.clip(t1.n / 6, 4, 40), alpha=0.35,
+                   color=COLOR[name], edgecolors="none")
+        smooth = t1.set_index("pct").obs.rolling(5, center=True, min_periods=2).mean()
+        ax.plot(smooth.index, smooth.values, lw=2.2, color=COLOR[name],
+                label=name, alpha=0.95)
     ax.set(xlabel="stated price / odds (implied win probability, %)",
            ylabel="share of teams that actually won (%)",
            xlim=(0, 100), ylim=(0, 100),
-           title=f"Teams priced X% win X% of the time — at all three institutions\n"
-                 f"(same {len(d):,} games; {2*len(d):,} priced teams; 95% CIs; "
-                 f"points dodged ±1pt for visibility)")
+           title=f"Every price point, 1%-resolution: teams priced X% win X% of the time\n"
+                 f"(same {len(d):,} games; {2*len(d):,} priced teams; dot size = "
+                 f"number of teams at that price; lines = 5-pt rolling mean)")
     ax.legend(fontsize=10, loc="upper left")
     ax.grid(alpha=0.25)
     fig.tight_layout()
