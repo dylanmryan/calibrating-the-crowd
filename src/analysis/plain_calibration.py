@@ -88,20 +88,31 @@ def main():
     print("\n  (50% band note: both sides of a near-coin-flip game can land in the", flush=True)
     print("   same band, so its effective sample is slightly below n.)", flush=True)
 
-    fig, ax = plt.subplots(figsize=(8.5, 6))
-    for name in SRC:
+    fig, ax = plt.subplots(figsize=(9, 6.5))
+    ax.plot([0, 100], [0, 100], "--", color="0.55", lw=1.2, label="perfect (priced = won)", zorder=1)
+    marks = {"Kalshi": "o", "Polymarket": "s", "Sportsbook": "^"}
+    # dodge each source slightly on x so all three lines stay visible —
+    # undodged they overlap almost perfectly (which is the finding)
+    for i, name in enumerate(SRC):
         t = tabs[name]
-        ax.errorbar(t.said * 100, t.obs * 100,
+        xo = t.said * 100 + (i - 1) * 0.9
+        ax.errorbar(xo, t.obs * 100,
                     yerr=[(t.obs - t.ci_lo) * 100, (t.ci_hi - t.obs) * 100],
-                    fmt="o-", ms=5, capsize=3, color=COLOR[name], label=name)
-    ax.plot([0, 100], [0, 100], "--", color="0.4", lw=1, label="perfect (said = won)")
-    ax.set(xlabel="stated price (implied win probability, %)",
+                    fmt=marks[name] + "-", ms=6, capsize=3, lw=2,
+                    color=COLOR[name], label=name, alpha=0.9, zorder=3 - i * 0)
+    ax.annotate("the three lines sit on top of each other\n— that is the result",
+                xy=(30, 31), xytext=(38, 14), fontsize=10, color="0.25",
+                arrowprops=dict(arrowstyle="->", color="0.45"))
+    ax.set(xlabel="stated price / odds (implied win probability, %)",
            ylabel="share of teams that actually won (%)",
+           xlim=(0, 100), ylim=(0, 100),
            title=f"Teams priced X% win X% of the time — at all three institutions\n"
-                 f"(same {len(d):,} games; {2*len(d):,} priced teams)")
-    ax.legend(fontsize=9)
+                 f"(same {len(d):,} games; {2*len(d):,} priced teams; 95% CIs; "
+                 f"points dodged ±1pt for visibility)")
+    ax.legend(fontsize=10, loc="upper left")
+    ax.grid(alpha=0.25)
     fig.tight_layout()
-    fig.savefig("results/plain_calibration.png", dpi=130)
+    fig.savefig("results/plain_calibration.png", dpi=150)
     print("\nsaved results/plain_calibration.png", flush=True)
 
 
