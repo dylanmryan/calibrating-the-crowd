@@ -47,12 +47,9 @@ def last_trade_before(ticker: str, ts: int):
     return None
 
 
-def build(out=OUT, min_outcomes=3, max_contracts=4000):
-    inv = pd.read_csv(INV)
-    picks = inv[(inv.max_outcomes >= min_outcomes) & (inv.n_settled >= min_outcomes)]
-    print(f"series with multi-outcome settled events: {len(picks)}", flush=True)
-    done = set(pd.read_csv(out)["ticker"]) if os.path.exists(out) else set()
-    rows, priced = [], 0
+def _worklist(picks, done, min_outcomes):
+    """Enumerate every unpriced contract in settled winner-take-all fields."""
+    work = []
     for sr in picks.itertuples(index=False):
         try:
             r = _session.get(f"{B}/markets", params={"series_ticker": sr.ticker,
@@ -66,38 +63,53 @@ def build(out=OUT, min_outcomes=3, max_contracts=4000):
         for ev, mlist in evs.items():
             if len(mlist) < min_outcomes:
                 continue
-            results = [m.get("result") for m in mlist]
-            if results.count("yes") != 1:
+            if [m.get("result") for m in mlist].count("yes") != 1:
                 continue          # not winner-take-all (or voided) -> skip
             close = max(pd.Timestamp(m.get("close_time")) for m in mlist)
             for m in mlist:
-                tk = m.get("ticker")
-                if tk in done:
+                if m.get("ticker") in done:
                     continue
-                row = {"series": sr.ticker, "event_ticker": ev, "ticker": tk,
-                       "title": m.get("title") or m.get("yes_sub_title"),
-                       "close_time": str(close), "n_outcomes": len(mlist),
-                       "won": 1 if m.get("result") == "yes" else 0}
-                any_price = False
-                for hd in HORIZONS_D:
-                    ts = int((close - pd.Timedelta(days=hd)).timestamp())
-                    p = last_trade_before(tk, ts)
-                    row[f"p_{hd}d"] = p
-                    any_price = any_price or (p is not None)
-                    time.sleep(0.08)
-                if any_price:
-                    rows.append(row)
-                    priced += 1
-                if len(rows) >= 50:
-                    pd.DataFrame(rows).to_csv(out, mode="a",
-                                              header=not os.path.exists(out), index=False)
-                    rows = []
-                if priced >= max_contracts:
-                    break
-            if priced >= max_contracts:
-                break
-        if priced >= max_contracts:
-            break
+                work.append((sr.ticker, ev, m.get("ticker"),
+                             m.get("title") or m.get("yes_sub_title"),
+                             close, len(mlist),
+                             1 if m.get("result") == "yes" else 0))
+        time.sleep(0.05)
+    return work
+
+
+def _price_one(item):
+    series, ev, tk, title, close, n_out, won = item
+    row = {"series": series, "event_ticker": ev, "ticker": tk, "title": title,
+           "close_time": str(close), "n_outcomes": n_out, "won": won}
+    any_price = False
+    for hd in HORIZONS_D:
+        ts = int((close - pd.Timedelta(days=hd)).timestamp())
+        p = last_trade_before(tk, ts)
+        row[f"p_{hd}d"] = p
+        any_price = any_price or (p is not None)
+    return row if any_price else None
+
+
+def build(out=OUT, min_outcomes=3, max_contracts=6000, workers=12):
+    from concurrent.futures import ThreadPoolExecutor
+    inv = pd.read_csv(INV)
+    picks = inv[(inv.max_outcomes >= min_outcomes) & (inv.n_settled >= min_outcomes)]
+    print(f"series with multi-outcome settled events: {len(picks)}", flush=True)
+    done = set(pd.read_csv(out)["ticker"]) if os.path.exists(out) else set()
+    work = _worklist(picks, done, min_outcomes)[:max_contracts]
+    print(f"contracts to price: {len(work):,} ({len(done)} already done)", flush=True)
+    rows, priced = [], 0
+    with ThreadPoolExecutor(max_workers=workers) as ex:
+        for i, row in enumerate(ex.map(_price_one, work), 1):
+            if row is not None:
+                rows.append(row)
+                priced += 1
+            if len(rows) >= 100:
+                pd.DataFrame(rows).to_csv(out, mode="a",
+                                          header=not os.path.exists(out), index=False)
+                rows = []
+            if i % 500 == 0:
+                print(f"  {i}/{len(work)} ({priced} priced)", flush=True)
     if rows:
         pd.DataFrame(rows).to_csv(out, mode="a", header=not os.path.exists(out), index=False)
     print(f"done: {priced} contracts priced -> {out}", flush=True)

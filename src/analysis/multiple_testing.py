@@ -36,6 +36,7 @@ DISCOVERIES = [
     ("Poly relative volume -41% at fee date (z=-3.6)",           3e-4,   "fee_liquidity.log"),
     ("MLB PIT rejects for Kalshi (KS p<0.001)",                  1e-3,   "margin_dist.log"),
     ("Books beat Kalshi ladders as DISTRIBUTIONS (RPS z=+5.75)",  1e-8,   "multi_outcome.log (MLB z=+5.4, NBA z=+2.3)"),
+    ("Sports FUTURES longshots overpriced ($0.33/$1, pooled)",    6e-3,   "futures_calibration.log [modest n]"),
     ("Cross-venue 15-min predictability K<->P, book->P (z<=3.3)", 1e-3,  "lead_lag.log"),
     ("Late flow predicts beyond closing book (clustered z=3.43)", 1e-3,  "late_flow.log"),
     ("Books lead Kalshi at T-24h (clustered DM, z=+2.32)",       2.0e-2, "horizon_equivalence.log"),

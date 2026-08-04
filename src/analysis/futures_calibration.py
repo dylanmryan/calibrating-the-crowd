@@ -65,9 +65,13 @@ def main():
 
     for hd in (7, 30):
         col = f"p_{hd}d"
-        print(f"\n=== calibration at T-{hd}d (BDW-style buckets; "
-              f"event-clustered z) ===", flush=True)
-        bucket_table(d, col)
+        # calibration must use FULLY-priced fields only: in a partially
+        # priced field the unpriced winner (late-surging longshot) drops out
+        # while its losers stay, biasing every bucket's win rate downward
+        full = d.groupby("event_ticker").filter(lambda g: g[col].notna().all())
+        print(f"\n=== calibration at T-{hd}d (fully-priced fields only: "
+              f"{full.event_ticker.nunique()} fields, {len(full)} contracts) ===", flush=True)
+        bucket_table(full, col)
 
     print("\n=== the field overround: do prices sum to 1? ===", flush=True)
     for hd in (7, 30):
@@ -82,7 +86,8 @@ def main():
                   f"1.2-1.6 on comparable fields", flush=True)
 
     print("\n=== the BDW bridge ===", flush=True)
-    lo = d[d.p_7d.notna() & (d.p_7d < 0.10)]
+    full7 = d.groupby("event_ticker").filter(lambda g: g.p_7d.notna().all())
+    lo = full7[full7.p_7d < 0.10]
     if len(lo):
         ret = (lo.won / lo.p_7d.clip(lower=0.005))
         mu, se = cluster_mean_se(ret - 1, lo.event_ticker.values)

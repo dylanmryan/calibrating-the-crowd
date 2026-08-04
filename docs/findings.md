@@ -507,6 +507,42 @@ close. Mean |24h→start| move is 2.0pts on both venues; book reference on the
 same games 0.2130 (T−24h) → 0.2124 (close).
 (`src/analysis/horizon_cross.py`, `results/horizon_cross.png`)
 
+## Futures and outrights: the pathologies return (2026-08-03)
+
+The within-sports control for the benchmark-discipline mechanism: settled
+multi-outcome winner-take-all fields (champions, seeds, award and win-total
+fields — 635 priceable contracts in 89 fields from 34 series; prices =
+last trade at T−7d/T−30d, trade-recon; calibration on fully-priced fields
+so no field's winner can be missing). (`src/collect/kalshi_futures.py`,
+`src/analysis/futures_calibration.py`)
+
+- **Longshot futures are badly overpriced — the BDW pattern, inside
+  sports.** Sub-10¢ contracts returned **$0.33 per $1 staked** gross
+  (n=344; ~9 winners expected at stated prices, 2 observed; pooled exact
+  p≈0.006). Compare BDW's all-Kalshi ~$0.40 and our game markets' ~$1.00.
+- **Overall**: $1 staked across all futures contracts returned $0.55
+  (T−7d) / $0.75 (T−30d) gross, versus ≈$1.00 in game markets.
+- **The shape is overconfidence, not classic FLB**: *both* tails
+  underperform (sub-10¢ longshots return $0.00–0.52; 75–99¢ favorites won
+  62.5% vs 86.3% priced, exact p=0.003) while the middle is roughly fair
+  (10–20¢ pays $0.98; 50–75¢ pays $1.09). Futures prices are too extreme
+  in both directions.
+- **Yet the *vig* is exchange-like**: fully-priced fields sum to a median
+  1.03 (T−7d) / 1.06 (T−30d) — nothing like the books' 1.2–1.6 futures
+  overrounds. The inversion is striking: on futures, the exchange offers
+  book-beating *cost* with badly miscalibrated *prices*, while on games it
+  offers both. Cost discipline survives without a benchmark; calibration
+  does not.
+- Caveats, plainly: 89 fields is modest; field types are heterogeneous
+  (championships, exact-win-totals, seeds, awards); thin futures trade
+  sparsely so T−7d "prices" can be stale prints; only ~11% of enumerated
+  contracts ever traded near the horizons (the priceable universe *is*
+  the liquid tail).
+- **Mechanism reading**: the same platform, the same sports, the same
+  participants — but remove rapid repetition and the sharp benchmark, and
+  the calibration pathologies reappear. It is not "sports" that is clean;
+  it is benchmarked, fast-resolving, repeated markets.
+
 ## Self-correction over time (2026-08-02)
 
 Two tests of whether the market behaves like a static house edge or a
