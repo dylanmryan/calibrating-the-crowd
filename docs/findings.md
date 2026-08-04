@@ -507,6 +507,23 @@ close. Mean |24h→start| move is 2.0pts on both venues; book reference on the
 same games 0.2130 (T−24h) → 0.2124 (close).
 (`src/analysis/horizon_cross.py`, `results/horizon_cross.png`)
 
+## The retail fingerprint: who the market is for (2026-08-03)
+
+Descriptive institutional evidence from the 710K-fill sample
+(`src/analysis/retail_fingerprint.py`, `results/retail_fingerprint.png`):
+the taker flow looks exactly like a betting shop's clientele. **53% of
+fills (60% of notional) arrive in the final 3 hours** before the game
+(uniform would be 12.5%), running 31%/hour in the last hour versus
+1.1%/hour overnight. Fills placed far from any game (T−24h..T−12h)
+concentrate in evening leisure hours — 41% between 7pm and midnight ET
+(2× uniform) versus 10% during working hours (a third of uniform). The
+**median fill is 30 contracts, about $14 at stake**; 28% of fills are ≤10
+contracts yet carry only 1% of volume, while the 7.6% of fills ≥500
+contracts carry 78% of it — and the markout analysis shows even those
+large fills do not beat the close. The synthesis in one line:
+**consumption pays, makers price** — a sportsbook-shaped crowd at the
+surface, exchange-grade prices in aggregate.
+
 ## Futures and outrights: the pathologies return (2026-08-03)
 
 The within-sports control for the benchmark-discipline mechanism: settled
