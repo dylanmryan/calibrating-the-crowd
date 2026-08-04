@@ -507,6 +507,27 @@ close. Mean |24h→start| move is 2.0pts on both venues; book reference on the
 same games 0.2130 (T−24h) → 0.2124 (close).
 (`src/analysis/horizon_cross.py`, `results/horizon_cross.png`)
 
+## Self-correction over time (2026-08-02)
+
+Two tests of whether the market behaves like a static house edge or a
+learning instrument (`src/analysis/time_stability.py`):
+
+- **The dead heat holds in every sub-period independently.** Quarterly
+  splits: 2025Q4 and 2026Q2 are each formally TOST-equivalent on their own
+  (δ_min ≤ 0.84e-3); 2025Q3 is consistent but power-limited (n=465). The
+  one detectable wobble — 2026Q1, where **Kalshi beat the books** for a
+  quarter (ΔBrier −0.68e-3, z=−3.09, one of 12 quarter-pair tests) —
+  favors the *exchange* and vanished the next quarter. No sub-period shows
+  the exchanges behind.
+- **The MLB blind spot is NOT self-correcting — as the cost-band thesis
+  predicts.** The win-by-1-2 underpricing persisted through 2026 at
+  +7.5pts (H1, z=+7.6) and +11.2pts (H2, z=+7.3), with implied
+  probabilities static near 14% while reality sat at 22–25%. Where fees
+  and the 1¢ tick shelter a bias from arbitrage, no correction pressure
+  exists and none is observed — the sheltering mechanism demonstrated in
+  real time, not just cross-sectionally. (2025 ladders were too sparse to
+  measure, n=65 sides.)
+
 ## Beyond binary: 3-way outcomes and full margin distributions (2026-08-02)
 
 Extending the comparison past win/lose markets (`src/analysis/multi_outcome.py`):
