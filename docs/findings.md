@@ -507,6 +507,61 @@ close. Mean |24h→start| move is 2.0pts on both venues; book reference on the
 same games 0.2130 (T−24h) → 0.2124 (close).
 (`src/analysis/horizon_cross.py`, `results/horizon_cross.png`)
 
+## The mechanism, isolated: repetition disciplines, benchmarks don't (2026-08-04)
+
+Two free legs and one purchased leg completed the futures 2x2 and revised
+the mechanism story. The earlier framing — "benchmarked, repeated markets
+are disciplined" — bundled three ingredients (benchmark presence,
+repetition, fast resolution). Today's evidence separates them:
+
+**1. Niche game markets are clean without any benchmark**
+(`src/analysis/niche_gradient.py`, `logs/niche_gradient.log`). 962
+settled Kalshi game contracts from 44 un-benchmarked series (minor-league
+soccer, T20 cricket, esports, table tennis; prices = last trade before
+scheduled start, staleness <= 6h; Tier A uses ticker-embedded start times,
+the exact main-sample methodology). ECE 2.43pt sits BELOW the 3.26pt a
+perfectly calibrated sample of this size would show from binning noise
+alone — zero detectable excess miscalibration. Slope 0.980 (event-
+clustered 90% CI 0.84–1.15), no bucket rejects, and 128 three-way soccer
+field sums have median 1.020 — exchange-grade vig in the Bolivian Primera
+Division. The benchmark's real effect is on *quantity*, not quality: only
+~17% of enumerated niche contracts ever traded pre-start (vs near-total
+pricing in covered leagues). Without books, there are fewer prices; the
+prices that form are good ones.
+
+**2. The books' own outrights fail the same way the exchanges' do**
+(`src/collect/sportsbook_outrights.py`, `src/analysis/book_outrights.py`).
+Monthly in-season snapshots, 12 resolved sport-seasons (NBA/NFL/MLB/NHL,
+2023-24 through 2025-26), 20 books including Pinnacle. De-vigged consensus
+sub-10c longshots returned **$0.24 per $1** at 0-3 months out
+(sport-season-clustered se 0.09) and $0.42 at 3-12 months — bracketing
+Kalshi's $0.33. Robust to Shin de-vig ($0.32/$0.42). Meanwhile the books
+charge outright overrounds of 1.20 (Pinnacle) to 1.27 vs Kalshi's
+1.03-1.06. An apparent 10-20c "value pocket" (+9pt) is not claimable:
+with 12 champions total, whichever bucket happens to hold the eventual
+winners pops mechanically. (Betfair Exchange's displayed outright sums of
+~2.3 are stale thin asks on dust longshots, a liquidity fact, not vig.)
+
+**3. Polymarket outrights replicate the direction**
+(`src/collect/poly_futures.py`). With decision-moment anchoring (first
+winner print >= 0.99, because event closedTime can postdate the title by
+weeks) and a 3-day print-freshness cap: 22 fully-priced fields, sub-10c
+$0.53/$1 (se 0.37), all-futures $0.59, field sums median 1.017.
+Underpowered alone; consistent cross-platform. A methods note worth
+keeping: without the freshness cap, stale peak prices of faded contenders
+manufacture fake pathology (field sums 1.21, a -36pt bucket) — the same
+trap the Kalshi staleness re-check guards against (fresh sub-10c prints
+there: 0 winners in 114, $0.00/$1 — the pathology is not a staleness
+artifact).
+
+**The revised mechanism, one sentence:** repeated, fast-resolving markets
+price well at every institution and even without a benchmark; one-shot,
+long-horizon markets price badly at every institution — exchanges and
+sportsbooks alike — and the institutions differ only in what they charge
+for it (exchange vig 1.03 vs book vig 1.2+). Discipline comes from
+repetition and feedback, not from institutional design or the presence of
+a sportsbook consensus.
+
 ## The retail fingerprint: who the market is for (2026-08-03)
 
 Descriptive institutional evidence from the 710K-fill sample
@@ -520,9 +575,14 @@ concentrate in evening leisure hours — 41% between 7pm and midnight ET
 **median fill is 30 contracts, about $14 at stake**; 28% of fills are ≤10
 contracts yet carry only 1% of volume, while the 7.6% of fills ≥500
 contracts carry 78% of it — and the markout analysis shows even those
-large fills do not beat the close. The synthesis in one line:
-**consumption pays, makers price** — a sportsbook-shaped crowd at the
-surface, exchange-grade prices in aggregate.
+large fills do not beat the close. Held to settlement (added 2026-08-04),
+taker flow surrendered **5.0% of stake gross, 7.7% net of taker fees, on
+$95.7M staked** — essentially a sportsbook hold — and no size class
+escaped (gross -3.7% to -6.1%; >500-contract fills -4.9%). The pattern is
+uniform across all seven leagues (final-3h share 46-57%, median fills
+21-34 contracts). The synthesis in one line: **consumption pays, makers
+price** — a sportsbook-shaped crowd at the surface, exchange-grade prices
+in aggregate.
 
 ## Futures and outrights: the pathologies return (2026-08-03)
 

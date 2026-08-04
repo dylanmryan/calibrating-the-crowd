@@ -25,7 +25,7 @@ MODULES = [
     "data_audit", "deep_audit",   # the gates: a FAIL here fails the whole suite
     "plain_calibration", "three_way", "rigor", "league_tost", "four_way", "decomposition", "nuance", "corp_diagram", "murphy",
     "coherence", "margin_dist", "book_pit", "ladder_vs_books", "ladder_cost", "multi_outcome",
-    "mlb_autopsy", "mlb_extras", "profitability", "behavioral", "why_sports", "time_stability", "futures_calibration", "retail_fingerprint",
+    "mlb_autopsy", "mlb_extras", "profitability", "behavioral", "why_sports", "time_stability", "futures_calibration", "retail_fingerprint", "niche_gradient", "book_outrights",
     "model_benchmark", "encompassing",
     "late_flow", "informed", "horizon", "horizon_equivalence", "horizon_cross",
     "close_efficiency", "layer2", "one_price", "multiple_testing",

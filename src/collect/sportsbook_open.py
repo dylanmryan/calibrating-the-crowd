@@ -25,7 +25,7 @@ from src.collect.sportsbook_hist import SPORT, _consensus, _match_hit, _snapshot
 _ROOT = Path(__file__).resolve().parents[2]
 load_dotenv(_ROOT / ".env", override=True)
 OUT = "data/processed/sportsbook_open_prices.csv"
-CREDIT_FLOOR = 500   # quota resets monthly (100K on the 1st); burn expiring credits, resume next month
+CREDIT_FLOOR = 12000   # reserve for the VPS live feed through the Aug 24 project end (~600/day)
 OFFSET_H = 24
 
 

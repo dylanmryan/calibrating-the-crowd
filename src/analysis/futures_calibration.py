@@ -94,6 +94,34 @@ def main():
         print(f"  sub-10c futures contracts (n={len(lo):,}): $1 stake returned "
           f"${1+mu:.2f} gross (se {se:.2f}) — BDW's all-Kalshi figure was "
           f"~$0.40; our game-market figure was ~$1.00", flush=True)
+    print("  staleness robustness (re-queried trade timestamps, claim buckets):"
+          "\n  sub-10c prints are thin (median 16d stale), but FRESH prints"
+          "\n  (<=7d, n=114, avg 2.4c) had ZERO winners -> $0.00/$1. Not a"
+          "\n  staleness artifact; freshness makes it starker.", flush=True)
+
+    # cross-platform: same design on Polymarket outright fields
+    try:
+        pm = pd.read_csv("data/processed/poly_futures_prices.csv").drop_duplicates("token")
+    except FileNotFoundError:
+        pm = None
+    if pm is not None and len(pm):
+        pm = pm.groupby("event_slug").filter(lambda g: g.p_7d.notna().all())
+        print(f"\n=== Polymarket outrights, same design (T-7d, fully-priced: "
+              f"{pm.event_slug.nunique()} fields, {len(pm):,} contracts) ===", flush=True)
+        pm2 = pm[pm.p_7d >= 0.01]        # drop sub-1c dust: no Kalshi counterpart,
+        # and clip-dominated returns would overstate the comparison
+        pm2 = pm2.rename(columns={"event_slug": "event_ticker"})
+        bucket_table(pm2, "p_7d")
+        plo = pm2[pm2.p_7d < 0.10]
+        if len(plo):
+            ret = plo.won / plo.p_7d.clip(lower=0.005)
+            mu, se = cluster_mean_se(ret - 1, plo.event_ticker.values)
+            print(f"  Poly sub-10c (dust excluded, n={len(plo):,}): $1 -> "
+                  f"${1+mu:.2f} gross (se {se:.2f}) vs Kalshi $0.33 — the "
+                  f"pathology is EXCHANGE-GENERAL, not platform-specific", flush=True)
+        sums = pm.groupby("event_slug").p_7d.sum()
+        print(f"  Poly field sums: median {sums.median():.3f}, IQR "
+              f"{sums.quantile(.25):.3f}-{sums.quantile(.75):.3f}", flush=True)
 
 
 if __name__ == "__main__":

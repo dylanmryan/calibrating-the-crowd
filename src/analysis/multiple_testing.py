@@ -37,9 +37,10 @@ DISCOVERIES = [
     ("MLB PIT rejects for Kalshi (KS p<0.001)",                  1e-3,   "margin_dist.log"),
     ("Books beat Kalshi ladders as DISTRIBUTIONS (RPS z=+5.75)",  1e-8,   "multi_outcome.log (MLB z=+5.4, NBA z=+2.3)"),
     ("Sports FUTURES longshots overpriced ($0.33/$1, pooled)",    6e-3,   "futures_calibration.log [modest n]"),
+    ("BOOKS' outright longshots overpriced ($0.24/$1, 0-3mo)",    1e-4,   "book_outrights.log [cluster-t, 12 sport-seasons; Shin-robust]"),
     ("Cross-venue 15-min predictability K<->P, book->P (z<=3.3)", 1e-3,  "lead_lag.log"),
     ("Late flow predicts beyond closing book (clustered z=3.43)", 1e-3,  "late_flow.log"),
-    ("Books lead Kalshi at T-24h (clustered DM, z=+2.32)",       2.0e-2, "horizon_equivalence.log"),
+    ("Books lead Kalshi at T-24h (clustered DM, z=+1.86)",       6.3e-2, "horizon_equivalence.log [softened on completed 84%-coverage T-24h sample; was z=+2.32 p=0.020]"),
     ("Murphy sup-t: Kalshi edge vs Shin-book, low thresholds",   3.7e-2, "murphy.log (sup-adjusted)"),
     ("Kalshi encompasses Polymarket at close (clustered z)",     4.4e-2, "encompassing.log [FRAGILE]"),
     ("Kalshi encompasses book at close (clustered z)",           5.4e-2, "encompassing.log [FRAGILE]"),
@@ -58,6 +59,8 @@ NULLS = [
     ("Book PIT MLB/NBA (tie-consistent)", "p=0.084/0.165 (marginal pass vs Kalshi p<0.001)"),
     ("T-24h encompassing (K beyond book a day out)", "p=0.68"),
     ("Minute-scale first-passage leads", "median 0.0, sign-test p=1.0"),
+    ("Niche-sport games (no benchmark): excess ECE", "0.00pt vs noise floor; slope CI 0.84-1.15"),
+    ("Poly outrights alone (22 fields)", "direction matches Kalshi, underpowered"),
 ]
 
 

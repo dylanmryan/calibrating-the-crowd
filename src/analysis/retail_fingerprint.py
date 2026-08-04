@@ -67,6 +67,37 @@ def main():
     med_dollar = t.notional.median()
     print(f"  median fill: {med_fill:.0f} contracts ≈ ${med_dollar:.0f} at stake", flush=True)
 
+    # 4. what the flow actually earned: taker P&L held to settlement.
+    # Trades are on the HOME ticker (taker yes = backing home, no = backing
+    # away); fee is Kalshi's taker schedule 0.07*p*(1-p) per contract.
+    print(f"\n=== taker P&L to settlement, by size class ===", flush=True)
+    home_won = (t.outcome == 1).astype(float)
+    stake = np.where(t.taker_side == "yes", t.yes_price, 1 - t.yes_price)
+    pnl = np.where(t.taker_side == "yes", home_won - t.yes_price,
+                   (1 - home_won) - (1 - t.yes_price))
+    fee = 0.07 * t.yes_price * (1 - t.yes_price)
+    t2 = t.assign(stake_d=stake * t["count"], pnl_d=pnl * t["count"],
+                  fee_d=fee * t["count"])
+    bins = [0, 10, 100, 500, np.inf]
+    labs = ["<=10", "11-100", "101-500", ">500"]
+    t2["szc"] = pd.cut(t2["count"], bins, labels=labs)
+    print(f"  {'size':>8} {'fills':>8} {'$ staked':>12} {'gross ret':>10} "
+          f"{'net of fee':>10}", flush=True)
+    for lab, g in t2.groupby("szc", observed=True):
+        st = g.stake_d.sum()
+        print(f"  {lab:>8} {len(g):>8,} {st:>12,.0f} "
+              f"{g.pnl_d.sum()/st:>9.1%} {(g.pnl_d.sum()-g.fee_d.sum())/st:>9.1%}", flush=True)
+    st = t2.stake_d.sum()
+    print(f"  {'ALL':>8} {len(t2):>8,} {st:>12,.0f} "
+          f"{t2.pnl_d.sum()/st:>9.1%} {(t2.pnl_d.sum()-t2.fee_d.sum())/st:>9.1%}", flush=True)
+
+    # 5. league robustness of the fingerprint (sample is capped 80 games/league)
+    print(f"\n=== fingerprint by league (robustness) ===", flush=True)
+    for lg, g in t.groupby("league"):
+        l3 = (g.hrs_to <= 3).mean()
+        print(f"  {lg:>5}: n={len(g):>7,} | final-3h share {l3:.0%} | "
+              f"median fill {g['count'].median():.0f}", flush=True)
+
     print(f"\n  reading: flow is event-clustered, evening-tilted, and tiny —", flush=True)
     print(f"  a betting-shop clientele — while the markout analysis shows no", flush=True)
     print(f"  size class beats the close: consumption pays, makers price.", flush=True)
