@@ -507,6 +507,37 @@ close. Mean |24h→start| move is 2.0pts on both venues; book reference on the
 same games 0.2130 (T−24h) → 0.2124 (close).
 (`src/analysis/horizon_cross.py`, `results/horizon_cross.png`)
 
+## Against the sharp book itself: the dead heat's strongest test (2026-08-04)
+
+The paper's benchmark had been a US retail consensus with per-book quotes
+discarded. An EU-region re-collection of the full joint set's closing
+buckets (`src/collect/sportsbook_sharp.py`, 24 books per game kept,
+n=5,294 with Pinnacle) upgrades the comparison three ways
+(`src/analysis/sharp_books.py`, `logs/sharp_books.log`):
+
+**1. Equivalence survives Pinnacle.** Against the academic-standard sharp
+book specifically: Kalshi ΔBrier −0.12e-3 (z=−0.93), Polymarket −0.03e-3,
+US retail consensus −0.08e-3 — every pairwise 90% CI inside ±0.34e-3,
+formally equivalent at the paper's δ=1e-3. The dead heat is not an
+artifact of averaging soft books; the exchanges match the sharpest price
+in the market.
+
+**2. Exchanges are a family.** Mean |price gap|: Kalshi sits 0.55pt from
+Betfair Exchange but 0.71-0.72pt from Pinnacle and US retail; Polymarket
+0.59 vs 0.80. The three peer-to-peer mechanisms (Kalshi, Polymarket,
+Betfair) cluster with each other more tightly than with any bookmaker —
+institutional design leaves a visible fingerprint on prices even when
+accuracy is identical. Betfair's Brier ties everyone on its subsample
+(n=3,728).
+
+**3. No economically meaningful Levitt shading.** Per-book deviation from
+Pinnacle on home favorites spans −0.49pt (Nordic books) to +0.88pt
+(tipico_de) — directionally a hint of favorite-shading at some retail
+books, but sub-1pt everywhere, an order of magnitude below classic
+line-shading claims. The modern retail book prices off the sharp line,
+not off its customers' biases; its revenue lives in the vig, same as the
+exchange's fee schedule.
+
 ## The mechanism, isolated: repetition disciplines, benchmarks don't (2026-08-04)
 
 Two free legs and one purchased leg completed the futures 2x2 and revised
@@ -654,13 +685,19 @@ Extending the comparison past win/lose markets (`src/analysis/multi_outcome.py`)
 - **Margin distributions scored head-to-head (the "by how much" question).**
   Each game's spread ladder implies a full probability distribution over
   victory margins; scoring Kalshi's and the books' distributions with the
-  ranked probability score on each game's *shared* rungs (n=2,382 games):
-  **the books are better as distribution forecasters in BOTH leagues** —
-  MLB ΔRPS +3.9e-3 (z=+5.4, the known small-margin blind spot) and NBA
-  ΔRPS +1.2e-3 (z=+2.3, new — previously invisible to cell-gap and PIT
-  tests separately), overall z=+5.75. Refined thesis sentence: *dead heat
-  on who wins; on by-how-much, the professionals keep a real but small
-  distributional edge, concentrated where Kalshi's ladders are thinnest.*
+  ranked probability score on each game's *shared* rungs (n=3,690 games
+  after the NHL extension, 2026-08-04): **the books' distributional edge
+  is real but LOCALIZED** — MLB ΔRPS +3.9e-3 (z=+5.4, the known
+  small-margin blind spot), NBA +1.1e-3 (z=+2.3), and NHL an exact tie
+  (+0.01e-3, z=+0.05); pooled z=+5.36. The edge concentrates precisely in
+  the sport whose margin process is strangest (baseball's walk-off/extras
+  spike), not as a general books-are-better-at-shapes rule. A curiosity
+  for the report's caveats: on NHL the BOOKS' ladder-implied margins fail
+  the PIT (KS p<0.001) while Kalshi's pass (p=0.23) — but NHL ladders
+  carry only 2-3 rungs, where shape inference is weakest, so this is
+  noted, not claimed. Refined thesis sentence: *dead heat on who wins; on
+  by-how-much, the professionals keep an edge only where the margin
+  distribution itself is pathological.*
 - **The picture** (`results/margin_distribution.png`): aggregated implied
   margin distributions vs realized outcomes. MLB books track reality
   within 2.3pts total variation; Kalshi misallocates ~18pts (blowouts

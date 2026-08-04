@@ -26,7 +26,7 @@ from src.collect.kalshi_hist_prices import _rule_home
 def _kalshi_ladder():
     """(game_id, side, threshold, k_prob) with side resolved via ticker-order rule."""
     sp = pd.read_csv("data/processed/kalshi_spread_prices.csv")
-    sp = sp[sp.league.isin(("MLB", "NBA"))]
+    sp = sp[sp.league.isin(("MLB", "NBA", "NHL"))]
     rows = []
     for gid, g in sp.groupby("game_id"):
         ev = g["event_ticker"].iloc[0]

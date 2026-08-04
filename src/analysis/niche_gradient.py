@@ -140,6 +140,32 @@ def main():
         print(f"  median {sums.median():.3f}, IQR {sums.quantile(.25):.3f}-{sums.quantile(.75):.3f} "
               f"(games ~1.01, futures 1.03-1.06, books 1.2-1.6)", flush=True)
 
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+    fig, ax = plt.subplots(figsize=(6.4, 6))
+    ax.plot([0, 1], [0, 1], "k--", lw=1, alpha=0.6, label="perfect calibration")
+    for p, w, color, lab in (
+            (core.p.to_numpy(), core.won.to_numpy(), "tab:blue",
+             f"covered leagues (n={len(core):,})"),
+            (d.p_start.to_numpy(), d.won.to_numpy().astype(float), "tab:red",
+             f"niche sports, no book benchmark (n={len(d):,})")):
+        b = np.clip(np.digitize(p, EDGES) - 1, 0, 9)
+        xs, ys, ns = [], [], []
+        for k in range(10):
+            m = b == k
+            if m.sum() >= 20:
+                xs.append(p[m].mean()); ys.append(w[m].mean()); ns.append(m.sum())
+        ax.plot(xs, ys, "-", color=color, alpha=0.6)
+        ax.scatter(xs, ys, s=[max(20, n / 8) for n in ns], color=color, label=lab)
+    ax.set(xlabel="price (implied probability)", ylabel="realized win rate",
+           title="Calibration survives the loss of the benchmark\n"
+                 "(table tennis, cricket, esports, minor-league soccer)")
+    ax.legend(loc="upper left", fontsize=9)
+    fig.tight_layout()
+    fig.savefig("results/niche_gradient.png", dpi=130)
+    print("\nsaved results/niche_gradient.png", flush=True)
+
 
 if __name__ == "__main__":
     main()

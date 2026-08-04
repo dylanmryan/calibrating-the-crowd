@@ -35,7 +35,7 @@ DISCOVERIES = [
     ("Ladder-cost: selling the bias LOSES money (z=-4.6)",       1e-5,   "ladder_cost.log"),
     ("Poly relative volume -41% at fee date (z=-3.6)",           3e-4,   "fee_liquidity.log"),
     ("MLB PIT rejects for Kalshi (KS p<0.001)",                  1e-3,   "margin_dist.log"),
-    ("Books beat Kalshi ladders as DISTRIBUTIONS (RPS z=+5.75)",  1e-8,   "multi_outcome.log (MLB z=+5.4, NBA z=+2.3)"),
+    ("Books beat Kalshi ladders as DISTRIBUTIONS (RPS z=+5.36)",  1e-7,   "multi_outcome.log (MLB z=+5.4, NBA z=+2.3, NHL z=+0.05 TIE — edge is MLB-concentrated)"),
     ("Sports FUTURES longshots overpriced ($0.33/$1, pooled)",    6e-3,   "futures_calibration.log [modest n]"),
     ("BOOKS' outright longshots overpriced ($0.24/$1, 0-3mo)",    1e-4,   "book_outrights.log [cluster-t, 12 sport-seasons; Shin-robust]"),
     ("Cross-venue 15-min predictability K<->P, book->P (z<=3.3)", 1e-3,  "lead_lag.log"),
@@ -60,6 +60,8 @@ NULLS = [
     ("T-24h encompassing (K beyond book a day out)", "p=0.68"),
     ("Minute-scale first-passage leads", "median 0.0, sign-test p=1.0"),
     ("Niche-sport games (no benchmark): excess ECE", "0.00pt vs noise floor; slope CI 0.84-1.15"),
+    ("Exchanges vs PINNACLE at close (n=5,294)", "all n.s.; 90% CIs within ±0.34e-3 (TOST-equiv)"),
+    ("Levitt shading vs sharp line (24 books)", "sub-1pt deviations, both signs"),
     ("Poly outrights alone (22 fields)", "direction matches Kalshi, underpowered"),
 ]
 

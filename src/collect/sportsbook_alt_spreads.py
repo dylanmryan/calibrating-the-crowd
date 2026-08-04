@@ -28,7 +28,7 @@ load_dotenv(_ROOT / ".env", override=True)
 KEY = os.getenv("ODDS_API_KEY")
 BASE = "https://api.the-odds-api.com/v4"
 OUT = "data/processed/sportsbook_alt_spreads.csv"
-CREDIT_FLOOR = 42_000     # never spend below this remaining balance
+CREDIT_FLOOR = 12_000     # live-feed reserve through the Aug 24 project end
 _session = requests.Session()
 _remaining = [None]
 
@@ -52,7 +52,7 @@ def targets():
     sp = pd.read_csv("data/processed/kalshi_spread_prices.csv")
     m = pd.read_csv("data/processed/games_master.csv")
     m = m[m.outcome.notna() & ~m.outcome_disagree.fillna(False)]
-    m = m[m.league.isin(("MLB", "NBA")) & m.game_id.isin(sp.game_id)].copy()
+    m = m[m.league.isin(("MLB", "NBA", "NHL")) & m.game_id.isin(sp.game_id)].copy()
     m["start"] = pd.to_datetime(m["start_utc"], utc=True, format="ISO8601")
     m["bucket"] = m["start"].dt.floor("30min")
     return m
