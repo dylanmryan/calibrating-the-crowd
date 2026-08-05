@@ -543,6 +543,35 @@ limitation, and the one place the paper must rely on the documentary
 record (KalshiEX rulebook; CFTC proposal of 2026-07-30) rather than
 measurement.
 
+## "Betting against the house": testing the MPU/class-action claim (2026-08-04)
+
+The More Perfect Union investigation and the 2025-26 class actions
+(nationwide Nov 2025; KY/IL/OH and others, funded by Veridis Management
+under Statute-of-Anne recovery theories) allege that Kalshi customers
+unknowingly wager against "the house" — Kalshi Trading LLC and partner
+market makers like Susquehanna — rather than against peers. None of the
+sources names WHICH markets; the complaints allege the MM complex stands
+in essentially every sports contract, and member IDs are private, so
+"affiliate vs no affiliate" is unobservable. What IS observable is the
+footprint contrast (professional book present vs absent), and the
+lawsuits imply a testable prediction: customers should fare better away
+from the house's book.
+
+They do not (`src/analysis/mm_involvement.py`, 43,080 niche fills
+collected for the test): takers held to settlement lost **5.0% gross /
+7.7% net where the MM complex stands ($95.7M staked) and 7.1% / 10.0%
+where it does not ($1.8M)** — the difference is inside the cluster SEs,
+so the supportable claim is "no better, possibly worse." The first-order
+effect of the house's absence is quantity: only 218 of 962 niche
+contracts saw a single pre-start fill. Literature anchor: Burgi, Deng &
+Whelan's follow-up ("Makers and Takers," Jan 2026) finds makers earn
+more than takers platform-wide — consistent with our maker-driven price
+formation and taker-pays results. The paper's framing: the house's
+presence is what makes there be a price at all; what it costs is the
+same ~5% a sportsbook charges; whether that is "betting the house" or
+"liquidity provision" is precisely the question the CFTC's bona fide MM
+proposal exists to answer.
+
 ## The footprint: where the liquidity complex actually stands (2026-08-04)
 
 Kalshi discloses THAT its affiliate trades (Sept 2021 emergency rule
