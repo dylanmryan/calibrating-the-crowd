@@ -507,6 +507,42 @@ close. Mean |24h→start| move is 2.0pts on both venues; book reference on the
 same games 0.2130 (T−24h) → 0.2124 (close).
 (`src/analysis/horizon_cross.py`, `results/horizon_cross.png`)
 
+## The affiliated dealer inside the exchange (2026-08-04)
+
+Kalshi's own affiliate, Kalshi Trading, has traded on KalshiEX since June
+2021 — posting passive orders and aggressing — with the exchange's CEO
+and COO on both boards. A CFTC rule proposal issued 2026-07-30 would
+formalize the arrangement for roughly eight such affiliated market makers
+across prediction markets (Kalshi Trading; SIG's stake in Rothera on
+Polymarket; CME/FanDuel; DraftKings): affiliates may make markets but
+must be "bona fide" — continuous two-sided quotes, no directional
+positions beyond what quoting requires, and fills subordinated to
+unaffiliated traders at every price level.
+
+This matters for the thesis in both directions. It SOFTENS the cleanest
+institutional line — part of the "peer-to-peer" book is structurally the
+house — and our depth captures show what that book looks like
+(`src/analysis/maker_structure.py`, 4,533 snapshots, 93 games): a
+two-layer structure where the touch is thin and asymmetric (a
+<=10-contract retail order is the best quote on one side in 20% of
+snapshots) while ~20K contracts per side stand within 5c — 11x the
+touch, twice as balanced, ~2M contracts standing across ~90 games at
+once. Standing two-sided size at that scale is professional market
+making, not organic peer supply. Takers surrender ~5% of stake to
+settlement and this quoting layer collects it: dealer-like revenue
+inside a peer-to-peer shell. But it also SUPPORTS the distinction: the
+bona fide restrictions are precisely what a bookmaker is NOT subject to
+— the affiliate may not take a directional view against its customers,
+where taking that view is a sportsbook's entire business model. The
+honest statement: the exchange-vs-house line is not about who supplies
+liquidity (professionals do, in both institutions, affiliate included);
+it is about whether the liquidity supplier is permitted a directional
+book. Public trade data carries no member IDs, so Kalshi Trading's own
+share of the quoting layer cannot be measured from outside — a stated
+limitation, and the one place the paper must rely on the documentary
+record (KalshiEX rulebook; CFTC proposal of 2026-07-30) rather than
+measurement.
+
 ## Against the sharp book itself: the dead heat's strongest test (2026-08-04)
 
 The paper's benchmark had been a US retail consensus with per-book quotes
