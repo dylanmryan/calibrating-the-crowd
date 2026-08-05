@@ -543,6 +543,40 @@ limitation, and the one place the paper must rely on the documentary
 record (KalshiEX rulebook; CFTC proposal of 2026-07-30) rather than
 measurement.
 
+## The footprint: where the liquidity complex actually stands (2026-08-04)
+
+Kalshi discloses THAT its affiliate trades (Sept 2021 emergency rule
+filing; rulebook; the CFTC 2026-07-30 proposal) but publishes no
+market-level roster — and its Liquidity Incentive Program filing (Aug
+2025, effective through Sept 2026, i.e. spanning our sample) shows a
+second channel: per-second-snapshot rewards for resting orders near the
+touch, open to everyone EXCEPT the affiliate and formal Market Maker
+Agreement firms, who are paid under separate private agreements. So the
+WHO is unobservable; the WHERE is not. A full-exchange sweep (784,617
+open markets, 2026-08-04; `src/collect/kalshi_liquidity_sweep.py`) plus
+a signed orderbook survey of the top-volume markets per class
+(`src/analysis/liquidity_footprint.py`):
+
+- **Covered-league games**: 100% two-sided, 1c spreads, median ~$817K
+  standing within 5c per market.
+- **Niche games**: 90-99% two-sided but at 1/100th the size (~$6K) —
+  and, per the gradient leg, calibrated anyway.
+- **Sports outrights**: headline fields carry real depth (~$235K median
+  among top-volume) yet are miscalibrated ($0.33/$1 longshots); 74% of
+  the outright tail has no two-sided book at all.
+- **The fee menu prices the same gradient**: covered games are
+  `quadratic_with_maker_fees` (makers PAY — supply is abundant), while
+  niche games, outrights, and politics are `quadratic` (makers free —
+  supply needs coaxing). The exchange's own price list tells you where
+  liquidity provision is inframarginal.
+
+This closes a confounder: the futures pathology is not a thin-book
+artifact (the big outright fields have deep books and fail anyway), and
+niche calibration is not a deep-book product (those books are tiny). The
+liquidity complex deploys where flow is; calibration follows repetition.
+API note: `liquidity_dollars` is served zeroed everywhere (list and
+detail) — depth requires the signed orderbook endpoint.
+
 ## Against the sharp book itself: the dead heat's strongest test (2026-08-04)
 
 The paper's benchmark had been a US retail consensus with per-book quotes
