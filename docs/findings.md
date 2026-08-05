@@ -543,6 +543,33 @@ limitation, and the one place the paper must rely on the documentary
 record (KalshiEX rulebook; CFTC proposal of 2026-07-30) rather than
 measurement.
 
+## How markets FUNCTION with and without the complex (2026-08-05)
+
+Same niche-league matches (Brasileiro, Eliteserien, NRL), three
+institutions, measured head-to-head (`src/analysis/market_functioning.py`;
+book leg `src/collect/niche_books.py`, ~2.8K credits, EU/Pinnacle):
+
+| | books | Polymarket | Kalshi |
+|---|---|---|---|
+| presence (same matches) | 80-100%, ~23 books/match | 55-68% listed, **$203K median volume** | most matches never print |
+| price vs book consensus | — | 1.5pt | **4.2pt** (covered leagues: 0.7pt) |
+| cost of functioning | 7.2% vig (vs ~4% covered) | taker fee ~1% | 1c spread where quoted |
+
+Three lessons. (1) **Presence follows the complex/clientele, not the
+sport**: Polymarket's Brazilian user base gives it six-figure volume on
+matches where Kalshi's book never prints — the two exchanges chose
+different tails, so "exchanges can't do niche" is false; THIS exchange's
+complex didn't deploy here. (2) **Precision follows the professional
+book**: Kalshi's thin-tail prints sit 4.2pt from consensus, six times
+the covered-league 0.7pt, while its pooled calibration there is still
+unbiased (slope 0.98, gradient leg) — repetition keeps prices right on
+average, the liquidity complex compresses the noise around them. (3)
+**The books' price of functioning everywhere is vig**: their niche
+overround is 7.2% vs ~4% on covered leagues. Combined with the
+mm_involvement result, the decomposition of market quality is now:
+repetition → unbiasedness; MM complex → existence and precision;
+institution type → what you pay for it.
+
 ## "Betting against the house": testing the MPU/class-action claim (2026-08-04)
 
 The More Perfect Union investigation and the 2025-26 class actions
