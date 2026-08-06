@@ -61,7 +61,9 @@ NULLS = [
     ("Minute-scale first-passage leads", "median 0.0, sign-test p=1.0"),
     ("Niche-sport games (no benchmark): excess ECE", "0.00pt vs noise floor; slope CI 0.84-1.15"),
     ("Exchanges vs PINNACLE at close (n=5,294)", "all n.s.; 90% CIs within ±0.34e-3 (TOST-equiv)"),
-    ("Levitt shading vs sharp line (24 books)", "sub-1pt deviations, both signs"),
+    ("Levitt shading vs sharp line (24 EU books)", "sub-1pt deviations, both signs"),
+    ("Levitt shading, US retail (DK/FD/MGM +8, n=2.6K)", "-0.22..-0.01pt on home favs: none"),
+    ("Book-by-book Brier vs Kalshi (11 US books)", "all n.s.; dead heat holds per book"),
     ("Poly outrights alone (22 fields)", "direction matches Kalshi, underpowered"),
 ]
 

@@ -543,6 +543,25 @@ limitation, and the one place the paper must rely on the documentary
 record (KalshiEX rulebook; CFTC proposal of 2026-07-30) rather than
 measurement.
 
+## The books Americans use: per-book US record (2026-08-05)
+
+The credit endgame banked a random half-sample of per-book US closing
+quotes before the subscription lapses (`src/collect/sportsbook_us_books.py`,
+2,609 games, 11 books, ~13.4K credits; seeded-shuffle buckets so the
+half is unbiased). Three closures (`src/analysis/us_books.py`):
+
+1. **No Levitt shading at the US retail books either.** Deviation from
+   Pinnacle on home favorites: DraftKings -0.06pt, FanDuel -0.13pt,
+   BetMGM -0.13pt; all 11 books between -0.22 and -0.01pt — magnitudes
+   near zero and the SIGN is opposite to bias-exploitation. With the EU
+   table, shading is now dead at 30+ books on two continents including
+   every major US brand.
+2. **The dead heat holds book by book.** Every individual US book ties
+   Kalshi on clustered DM (|z| <= 1.9, all n.s.; book Briers 0.2218 to
+   0.2239). The equivalence was never an averaging artifact.
+3. **Dispersion**: median cross-book range 2.0pt; Kalshi prices inside
+   the US-book envelope in 70% of games.
+
 ## How markets FUNCTION with and without the complex (2026-08-05)
 
 Same niche-league matches (Brasileiro, Eliteserien, NRL), three
