@@ -37,7 +37,7 @@ DISCOVERIES = [
     ("MLB PIT rejects for Kalshi (KS p<0.001)",                  1e-3,   "margin_dist.log"),
     ("Books beat Kalshi ladders as DISTRIBUTIONS (RPS z=+5.36)",  1e-7,   "multi_outcome.log (MLB z=+5.4, NBA z=+2.3, NHL z=+0.05 TIE — edge is MLB-concentrated)"),
     ("Sports FUTURES longshots overpriced ($0.33/$1, pooled)",    6e-3,   "futures_calibration.log [modest n]"),
-    ("BOOKS' outright longshots overpriced ($0.24/$1, 0-3mo)",    1e-6,   "book_outrights.log [cluster-t, 20 sport-seasons 2020-26, se 0.06; Shin-robust $0.27]"),
+    ("BOOKS' outright longshots overpriced ($0.34/$1, 0-3mo)",    1e-5,   "book_outrights.log [cluster-t, 20 sport-seasons 2020-26 playoff-densified, se 0.08; = Kalshi's $0.33]"),
     ("Cross-venue 15-min predictability K<->P, book->P (z<=3.3)", 1e-3,  "lead_lag.log"),
     ("Late flow predicts beyond closing book (clustered z=3.43)", 1e-3,  "late_flow.log"),
     ("Books lead Kalshi at T-24h (clustered DM, z=+1.86)",       6.3e-2, "horizon_equivalence.log [softened on completed 84%-coverage T-24h sample; was z=+2.32 p=0.020]"),

@@ -173,12 +173,13 @@ Fig: `model_benchmark.png`.
 
 ### 5.9 The boundary of discipline: repetition, not institution
 **Fig 3: `oneshot_returns.png`** (sub-10c $1 returns: ladders $1.22 vs
-outrights $0.33 / $0.53 / $0.24). **Fig 4: `niche_gradient.png`**.
+outrights $0.33 / $0.53 / $0.34). **Fig 4: `niche_gradient.png`**.
 - BDW's platform pathologies vanish in game markets (moneylines at mid
   -0.45%) [why_sports.log].
 - They return in one-shot outrights AT EVERY INSTITUTION: Kalshi $0.33
   (fresh prints: 0 winners in 114, $0.00), Polymarket $0.53, the BOOKS
-  $0.24 at 0-3 months (se 0.06, 20 sport-seasons 2020-26, Shin-robust)
+  $0.34 at 0-3 months (se 0.08, n=1,614, 20 sport-seasons 2020-26
+  playoff-densified, Shin-robust — statistically identical to the exchange)
   [futures_calibration.log, book_outrights.log]. Both-tail overconfidence
   on the exchange (75c+ favorites won 62.5% vs 86.3% priced); book
   overrounds 1.20-1.27 vs exchange 1.03.
@@ -240,7 +241,7 @@ E. Data dictionary.
 | RPS | MLB z=+5.4, NBA z=+2.3, NHL z=+0.05 | multi_outcome |
 | MLB cell | K +8.5pt vs B +0.4pt (z=+10) | ladder_vs_books |
 | Taker P&L | -5.0% gross / -7.7% net, $95.7M | retail_fingerprint |
-| Outright longshots | K $0.33 / P $0.53 / B $0.24 (se .06, 20 seasons) | futures_calibration, book_outrights |
+| Outright longshots | K $0.33 / P $0.53 / B $0.34 (se .08, 20 seasons) | futures_calibration, book_outrights |
 | Niche gradient | excess ECE 0.00, slope 0.98 | niche_gradient |
 | Footprint | $817K vs $6K vs $235K per market | liquidity_footprint |
 | Functioning | 0.7pt vs 4.2pt from consensus; books 7.1% niche vig | market_functioning |

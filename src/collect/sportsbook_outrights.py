@@ -47,6 +47,24 @@ SEASONS = {
         ["2021-07"],
 }
 
+# mid-month prints in playoff/pennant months: densifies the 0-3-month
+# horizon bucket behind the outright-longshot result
+PLAYOFF_15THS = (
+    [f"{y}-{m:02d}-15" for y in (2021, 2022, 2023, 2024, 2025, 2026)
+     for m in (4, 5, 6)] +          # NBA + NHL postseasons
+    [f"{y}-{m:02d}-15" for y in (2020, 2021, 2022, 2023, 2024, 2025)
+     for m in (9, 10)] +            # MLB pennant races / WS
+    [f"{y}-12-15" for y in (2020, 2021, 2022, 2023, 2024, 2025)] +
+    [f"{y}-01-15" for y in (2021, 2022, 2023, 2024, 2025, 2026)])
+SEASONS["basketball_nba_championship_winner"] += [
+    d for d in PLAYOFF_15THS if d[5:7] in ("04", "05", "06")]
+SEASONS["icehockey_nhl_championship_winner"] += [
+    d for d in PLAYOFF_15THS if d[5:7] in ("04", "05", "06")]
+SEASONS["baseball_mlb_world_series_winner"] += [
+    d for d in PLAYOFF_15THS if d[5:7] in ("09", "10")]
+SEASONS["americanfootball_nfl_super_bowl_winner"] += [
+    d for d in PLAYOFF_15THS if d[5:7] in ("12", "01")]
+
 
 def build(out=OUT):
     done = set()
@@ -58,7 +76,7 @@ def build(out=OUT):
         for ym in months:
             if (sk, ym) in done:
                 continue
-            date = f"{ym}-01T12:00:00Z"
+            date = (f"{ym}T12:00:00Z" if len(ym) == 10 else f"{ym}-01T12:00:00Z")
             r = _session.get(f"{BASE}/historical/sports/{sk}/odds", params={
                 "apiKey": KEY, "regions": "us,eu", "markets": "outrights",
                 "oddsFormat": "decimal", "date": date}, timeout=30)

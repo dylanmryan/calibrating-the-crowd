@@ -709,10 +709,10 @@ prices that form are good ones.
 (`src/collect/sportsbook_outrights.py`, `src/analysis/book_outrights.py`).
 Monthly in-season snapshots, 12 resolved sport-seasons (NBA/NFL/MLB/NHL,
 2023-24 through 2025-26), 20 books including Pinnacle. De-vigged consensus
-sub-10c longshots returned **$0.24 per $1** at 0-3 months out
-(sport-season-clustered se 0.06 across 20 seasons, 2020-21 through
-2025-26 after the back-season extension) and $0.39 at 3-12 months —
-bracketing Kalshi's $0.33. Robust to Shin de-vig ($0.27/$0.38). Meanwhile the books
+sub-10c longshots returned **$0.34 per $1** at 0-3 months out
+(sport-season-clustered se 0.08, n=1,614, 20 seasons 2020-26 with
+playoff-month densification) and $0.39 at 3-12 months — statistically
+identical to Kalshi's $0.33. Shin-robust. Meanwhile the books
 charge outright overrounds of 1.20 (Pinnacle) to 1.27 vs Kalshi's
 1.03-1.06. An apparent 10-20c "value pocket" (+9pt) is not claimable:
 with 12 champions total, whichever bucket happens to hold the eventual

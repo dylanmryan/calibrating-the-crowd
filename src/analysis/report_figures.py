@@ -75,10 +75,10 @@ def forest():
 def oneshot():
     labels = ["Kalshi ladders\n(repeated games)\nn=1,467",
               "Kalshi outrights\nn=344", "Polymarket outrights\nn=98",
-              "Sportsbook outrights\nn=1,003"]
+              "Sportsbook outrights\nn=1,614"]
     # ladder tails: obs 9.07% vs priced 7.46% (coherence.log) -> $1.22
-    vals = [0.0907 / 0.0746, 0.33, 0.53, 0.24]
-    errs = [None, 0.28 * 1.645, 0.37 * 1.645, 0.06 * 1.645]
+    vals = [0.0907 / 0.0746, 0.33, 0.53, 0.34]
+    errs = [None, 0.28 * 1.645, 0.37 * 1.645, 0.08 * 1.645]
     cols = ["tab:green", "tab:red", "tab:orange", "tab:purple"]
     fig, ax = plt.subplots(figsize=(7.6, 5))
     xs = np.arange(len(vals))

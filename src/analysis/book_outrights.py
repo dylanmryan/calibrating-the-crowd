@@ -68,7 +68,7 @@ def main():
     d["won"] = (d.team == d.champ).astype(int)
     dec = pd.to_datetime(pd.Series([CHAMPS[(s, se)][1] for s, se in
                                     zip(d.sport, d.season)], index=d.index))
-    snap_dt = pd.to_datetime(d.snap + "-01")
+    snap_dt = pd.to_datetime(np.where(d.snap.str.len() == 7, d.snap + "-01", d.snap))
     d["months_out"] = ((dec - snap_dt).dt.days / 30.4).round(1)
     d = d[d.months_out > 0]
 
