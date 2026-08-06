@@ -545,19 +545,19 @@ measurement.
 
 ## The books Americans use: per-book US record (2026-08-05)
 
-The credit endgame banked a random half-sample of per-book US closing
-quotes before the subscription lapses (`src/collect/sportsbook_us_books.py`,
-2,609 games, 11 books, ~13.4K credits; seeded-shuffle buckets so the
-half is unbiased). Three closures (`src/analysis/us_books.py`):
+The credit endgame banked the per-book US closing record before the
+subscription lapses (`src/collect/sportsbook_us_books.py`, 4,664 games
+= 86% of the joint set, 11 books, ~23.9K credits; seeded-shuffle bucket
+order, floor-stopped at the live-feed reserve). Three closures (`src/analysis/us_books.py`):
 
 1. **No Levitt shading at the US retail books either.** Deviation from
-   Pinnacle on home favorites: DraftKings -0.06pt, FanDuel -0.13pt,
+   Pinnacle on home favorites: DraftKings -0.08pt, FanDuel -0.15pt,
    BetMGM -0.13pt; all 11 books between -0.22 and -0.01pt — magnitudes
    near zero and the SIGN is opposite to bias-exploitation. With the EU
    table, shading is now dead at 30+ books on two continents including
    every major US brand.
 2. **The dead heat holds book by book.** Every individual US book ties
-   Kalshi on clustered DM (|z| <= 1.9, all n.s.; book Briers 0.2218 to
+   Kalshi on clustered DM (|z| <= 1.9, all n.s.; book Briers 0.2195 to
    0.2239). The equivalence was never an averaging artifact.
 3. **Dispersion**: median cross-book range 2.0pt; Kalshi prices inside
    the US-book envelope in 70% of games.

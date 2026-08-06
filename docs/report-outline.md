@@ -61,7 +61,7 @@ or a big platform.
 - Sources table: Kalshi (book-mid post-cutoff / validated trade-recon
   pre-cutoff), Polymarket Global (CLOB), Polymarket US (DCM tape),
   sportsbooks (Odds API: US consensus, EU per-book incl. Pinnacle/Betfair,
-  US per-book half-sample, T-24h, alt-spreads, outrights 2020-26), ESPN
+  US per-book (86% of joint set), T-24h, alt-spreads, outrights 2020-26), ESPN
   anchor. Master 9,419 games / 7 leagues; three-way clean n=5,328.
 - External validation: trade-recon vs archived books 99% within 1pt; Poly
   CLOB vs archived books median error 0.00pt.
@@ -210,8 +210,8 @@ to stand. Discipline comes from repetition and feedback; nothing about
 Sports scope; consensus timing (60-min buckets vs exchange T-0 — documented
 direction); Kalshi 60-day decay (harvest protocol); trade-recon staleness
 (caps + robustness); small-league power (MDE table); niche name-matching
-lower bounds; Poly resolved-market candle coarseness; US per-book is a
-seeded half-sample; outright inference = 20 season-clusters; 15-min panel
+lower bounds; Poly resolved-market candle coarseness; US per-book covers 86% of the joint set
+(floor-stopped); outright inference = 20 season-clusters; 15-min panel
 era-limited; informal pre-registration (freeze + out-of-sample verification
 planned ~Aug 22).
 
@@ -235,7 +235,7 @@ E. Data dictionary.
 | Three-way Briers | 0.2196 / 0.2199 / 0.2196 (n=5,328) | three_way |
 | TOST pooled | all CIs within ±0.53e-3 | rigor |
 | vs Pinnacle | CIs within ±0.34e-3 (n=5,294) | sharp_books |
-| US book-by-book | 11 books, all n.s. | us_books |
+| US book-by-book | 11 books, 4,664 games, all n.s. | us_books |
 | Four-way | δ_min ≤ 0.74e-3 | four_way |
 | Elo premium | +13.3e-3, z≈7.4 | model_benchmark |
 | RPS | MLB z=+5.4, NBA z=+2.3, NHL z=+0.05 | multi_outcome |
