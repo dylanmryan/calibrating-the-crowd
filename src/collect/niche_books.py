@@ -43,16 +43,32 @@ TITLE = re.compile(r"^(.+?) vs\.? (.+?)(?::| Winner| Tie| Draw|\?)", re.I)
 
 
 def matches():
+    """All settled matches in the covered niche leagues: the priced sample
+    plus everything else Kalshi settled (enumerated live), so the book leg
+    covers matches Kalshi's own book never priced."""
+    from src.collect.kalshi_niche import _get, _start_ts
     n = pd.read_csv("data/processed/kalshi_niche_prices.csv").drop_duplicates("ticker")
     n = n[n.series.isin(SPORT)]
     rows = {}
     for r in n.itertuples(index=False):
         g = TITLE.search(str(r.title) or "")
-        if not g:
-            continue
-        ev = rows.setdefault(r.event_ticker, {
-            "series": r.series, "event_ticker": r.event_ticker,
-            "start_utc": r.start_utc, "t1": g.group(1), "t2": g.group(2)})
+        if g:
+            rows.setdefault(r.event_ticker, {
+                "series": r.series, "event_ticker": r.event_ticker,
+                "start_utc": r.start_utc, "t1": g.group(1), "t2": g.group(2)})
+    for sr in SPORT:
+        j = _get("/markets", {"series_ticker": sr, "status": "settled", "limit": 200})
+        for m in j.get("markets", []):
+            if m["event_ticker"] in rows or m.get("result") not in ("yes", "no"):
+                continue
+            g = TITLE.search(str(m.get("title") or ""))
+            if not g:
+                continue
+            start, _ = _start_ts(m["event_ticker"], m["close_time"], 2.5)
+            rows[m["event_ticker"]] = {
+                "series": sr, "event_ticker": m["event_ticker"],
+                "start_utc": str(start), "t1": g.group(1), "t2": g.group(2)}
+        time.sleep(0.35)
     return pd.DataFrame(rows.values())
 
 

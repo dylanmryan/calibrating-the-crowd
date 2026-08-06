@@ -32,16 +32,19 @@ _session = requests.Session()
 
 SEASONS = {
     "basketball_nba_championship_winner":
-        [f"{y}-{m:02d}" for y in (2023, 2024, 2025) for m in (10, 11, 12)] +
-        [f"{y}-{m:02d}" for y in (2024, 2025, 2026) for m in (1, 2, 3, 4, 5, 6)],
+        [f"{y}-{m:02d}" for y in (2020, 2021, 2022, 2023, 2024, 2025) for m in (10, 11, 12)] +
+        [f"{y}-{m:02d}" for y in (2021, 2022, 2023, 2024, 2025, 2026) for m in (1, 2, 3, 4, 5, 6)] +
+        ["2021-07"],
     "americanfootball_nfl_super_bowl_winner":
-        [f"{y}-{m:02d}" for y in (2023, 2024, 2025) for m in (9, 10, 11, 12)] +
-        [f"{y}-{m:02d}" for y in (2024, 2025, 2026) for m in (1, 2)],
+        [f"{y}-{m:02d}" for y in (2020, 2021, 2022, 2023, 2024, 2025) for m in (9, 10, 11, 12)] +
+        [f"{y}-{m:02d}" for y in (2021, 2022, 2023, 2024, 2025, 2026) for m in (1, 2)],
     "baseball_mlb_world_series_winner":
-        [f"{y}-{m:02d}" for y in (2023, 2024, 2025) for m in (4, 5, 6, 7, 8, 9, 10)],
+        [f"{y}-{m:02d}" for y in (2021, 2022, 2023, 2024, 2025) for m in (4, 5, 6, 7, 8, 9, 10)] +
+        ["2020-08", "2020-09", "2020-10"],
     "icehockey_nhl_championship_winner":
-        [f"{y}-{m:02d}" for y in (2023, 2024, 2025) for m in (10, 11, 12)] +
-        [f"{y}-{m:02d}" for y in (2024, 2025, 2026) for m in (1, 2, 3, 4, 5, 6)],
+        [f"{y}-{m:02d}" for y in (2020, 2021, 2022, 2023, 2024, 2025) for m in (10, 11, 12)] +
+        [f"{y}-{m:02d}" for y in (2021, 2022, 2023, 2024, 2025, 2026) for m in (1, 2, 3, 4, 5, 6)] +
+        ["2021-07"],
 }
 
 

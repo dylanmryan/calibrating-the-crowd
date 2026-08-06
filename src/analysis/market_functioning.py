@@ -26,16 +26,24 @@ def main():
     pl = pd.read_csv("data/processed/niche_poly_check.csv")
     ni = pd.read_csv("data/processed/kalshi_niche_prices.csv").drop_duplicates("ticker")
 
-    # 1) PRESENCE on the same matches (priced sample + unpriced sample)
+    # 1) PRESENCE on the same matches: the full settled universe of the
+    # covered niche leagues (book odds now collected for ALL of them,
+    # Kalshi-priced or not)
     print("=== does a pre-game price exist? (same niche-league matches) ===", flush=True)
-    bk_p = bk[bk.book.notna()].groupby("event_ticker").book.nunique()
-    print(f"  Kalshi-priced matches (n=40): books quoted {len(bk_p)}/40 "
-          f"(median {bk_p.median():.0f} books/match); Polymarket listed "
-          f"{pl[pl.kalshi_priced].poly_listed.mean():.0%}", flush=True)
-    print(f"  Kalshi-UNpriced matches (n=60): books quoted "
-          f"{un.book_listed.mean():.0%} | Polymarket listed "
-          f"{pl[~pl.kalshi_priced].poly_listed.mean():.0%} with median "
-          f"${pl[~pl.kalshi_priced].poly_vol.median():,.0f} volume/match", flush=True)
+    kp = set(ni.event_ticker)
+    ev = bk.groupby("event_ticker").agg(
+        n_books=("book", lambda x: x.notna().sum())).reset_index()
+    ev["kalshi_priced"] = ev.event_ticker.isin(kp)
+    for flag, lab in ((True, "Kalshi-priced"), (False, "Kalshi-UNpriced")):
+        g = ev[ev.kalshi_priced == flag]
+        pres = (g.n_books >= 3).mean()
+        med = g[g.n_books >= 3].n_books.median()
+        pls = pl[pl.kalshi_priced == flag] if flag in set(pl.kalshi_priced) else pl.iloc[0:0]
+        ptxt = f"; Polymarket listed {pls.poly_listed.mean():.0%}" if len(pls) else ""
+        print(f"  {lab} matches (n={len(g)}): books quoted (>=3) {pres:.0%}, "
+              f"median {med:.0f} books/match{ptxt}", flush=True)
+    print(f"  Polymarket volume where listed: median "
+          f"${pl.poly_vol.median():,.0f}/match", flush=True)
     print("  (name-matching misses make book/Poly presence LOWER bounds;", flush=True)
     print("   Kalshi presence is exact — its own settled markets)", flush=True)
 

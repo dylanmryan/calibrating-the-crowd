@@ -551,9 +551,9 @@ book leg `src/collect/niche_books.py`, ~2.8K credits, EU/Pinnacle):
 
 | | books | Polymarket | Kalshi |
 |---|---|---|---|
-| presence (same matches) | 80-100%, ~23 books/match | 55-68% listed, **$203K median volume** | most matches never print |
+| presence (287 settled matches) | 55-85% quoted, 16-23 books/match (name-match lower bound) | 55-68% listed, **$203K median volume** | prices form on 14% |
 | price vs book consensus | — | 1.5pt | **4.2pt** (covered leagues: 0.7pt) |
-| cost of functioning | 7.2% vig (vs ~4% covered) | taker fee ~1% | 1c spread where quoted |
+| cost of functioning | 7.1% vig (vs ~4% covered) | taker fee ~1% | 1c spread where quoted |
 
 Three lessons. (1) **Presence follows the complex/clientele, not the
 sport**: Polymarket's Brazilian user base gives it six-figure volume on
@@ -691,8 +691,9 @@ prices that form are good ones.
 Monthly in-season snapshots, 12 resolved sport-seasons (NBA/NFL/MLB/NHL,
 2023-24 through 2025-26), 20 books including Pinnacle. De-vigged consensus
 sub-10c longshots returned **$0.24 per $1** at 0-3 months out
-(sport-season-clustered se 0.09) and $0.42 at 3-12 months — bracketing
-Kalshi's $0.33. Robust to Shin de-vig ($0.32/$0.42). Meanwhile the books
+(sport-season-clustered se 0.06 across 20 seasons, 2020-21 through
+2025-26 after the back-season extension) and $0.39 at 3-12 months —
+bracketing Kalshi's $0.33. Robust to Shin de-vig ($0.27/$0.38). Meanwhile the books
 charge outright overrounds of 1.20 (Pinnacle) to 1.27 vs Kalshi's
 1.03-1.06. An apparent 10-20c "value pocket" (+9pt) is not claimable:
 with 12 champions total, whichever bucket happens to hold the eventual

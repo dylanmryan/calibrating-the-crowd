@@ -22,6 +22,18 @@ import pandas as pd
 from scipy import stats
 
 CHAMPS = {
+    ("basketball_nba_championship_winner", 2021): ("Milwaukee Bucks", "2021-07-20"),
+    ("basketball_nba_championship_winner", 2022): ("Golden State Warriors", "2022-06-16"),
+    ("basketball_nba_championship_winner", 2023): ("Denver Nuggets", "2023-06-12"),
+    ("americanfootball_nfl_super_bowl_winner", 2021): ("Tampa Bay Buccaneers", "2021-02-07"),
+    ("americanfootball_nfl_super_bowl_winner", 2022): ("Los Angeles Rams", "2022-02-13"),
+    ("americanfootball_nfl_super_bowl_winner", 2023): ("Kansas City Chiefs", "2023-02-12"),
+    ("baseball_mlb_world_series_winner", 2020): ("Los Angeles Dodgers", "2020-10-27"),
+    ("baseball_mlb_world_series_winner", 2021): ("Atlanta Braves", "2021-11-02"),
+    ("baseball_mlb_world_series_winner", 2022): ("Houston Astros", "2022-11-05"),
+    ("icehockey_nhl_championship_winner", 2021): ("Tampa Bay Lightning", "2021-07-07"),
+    ("icehockey_nhl_championship_winner", 2022): ("Colorado Avalanche", "2022-06-26"),
+    ("icehockey_nhl_championship_winner", 2023): ("Vegas Golden Knights", "2023-06-13"),
     ("basketball_nba_championship_winner", 2024): ("Boston Celtics", "2024-06-17"),
     ("basketball_nba_championship_winner", 2025): ("Oklahoma City Thunder", "2025-06-22"),
     ("basketball_nba_championship_winner", 2026): ("New York Knicks", "2026-06-19"),
@@ -43,7 +55,9 @@ def season_of(sport, snap):
     y, m = int(snap[:4]), int(snap[5:7])
     if "mlb" in sport:
         return y
-    return y + 1 if m >= 7 else y
+    # August boundary: the COVID-delayed 2021 NBA/NHL finals ran into July,
+    # which still belongs to the 2020-21 season
+    return y + 1 if m >= 8 else y
 
 
 def main():
