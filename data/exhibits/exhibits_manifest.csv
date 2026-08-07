@@ -1,0 +1,5 @@
+game_id,league,sport,start,home,away,tag,book_rows,books,kalshi_fills,poly_points
+401859967,NBA,basketball_nba,2026-06-14T00:30:00Z,San Antonio Spurs,New York Knicks,nba_finals_g5,235,32,50000,727
+401772988,NFL,americanfootball_nfl,2026-02-08T23:30:00Z,New England Patriots,Seattle Seahawks,super_bowl_lx,227,27,0,1752
+401772937,NFL,americanfootball_nfl,2025-09-19T00:15:00Z,Buffalo Bills,Miami Dolphins,buf_mia_tnf,233,28,50000,34
+401814965,MLB,baseball_mlb,2026-04-16T16:35:00Z,Pittsburgh Pirates,Washington Nationals,pit_wsh_walkoff,254,31,34465,21

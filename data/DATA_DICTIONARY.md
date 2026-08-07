@@ -116,3 +116,23 @@ resolved-market histories only serve ~12h candles (fine at day-scale
 horizons, coarse at T-0). Audit gates (`src/analysis/data_audit.py`,
 `deep_audit.py`) run before every suite regeneration; `results/MANIFEST.md`
 records the last clean run.
+
+## Case-study exhibits (`data/exhibits/`)
+
+Four named games captured in full cross-venue detail for the report's
+narrative openings (see `exhibits_manifest.csv` for coverage counts):
+- `nba_finals_g5_*` — 2026 NBA Finals Game 5 (SAS-NYK, the Knicks'
+  clincher): 32 books at 7 horizons (T-72h..start), 50K Kalshi fills,
+  Polymarket path.
+- `super_bowl_lx_*` — Super Bowl LX (SEA 29-13 NE): 27 books, full
+  Polymarket paths for all three game markets. Kalshi tape unavailable
+  (the SB game market is not locatable via the public API).
+- `buf_mia_tnf_*` — the tape's highest-notional regular game ($4.5M in
+  24h): 28 books, 50K fills.
+- `pit_wsh_walkoff_*` — 10-inning 1-run walk-off (the MLB blind-spot
+  exhibit): 31 books incl. close-time spreads/totals, 34K fills.
+Notes: `*_books.csv` horizons are snapshots at T-72/24/12/6/3/1/0h
+(decimal odds, us+eu regions); Kalshi tapes are the newest <=50K fills
+through start+6h (post-cutoff games served by the live trades endpoint,
+older ones by the historical endpoint); Polymarket paths for
+long-resolved markets are coarse (12h candles) — day-scale only.
