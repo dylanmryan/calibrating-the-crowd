@@ -20,15 +20,24 @@ import statsmodels.api as sm
 SRCS = ["kalshi", "polymarket", "sportsbook"]
 
 
-def panel(path="data/live/vps_mirror/snapshots.csv"):
+def panel(path="data/live/vps_mirror/snapshots.csv", freq="15min", since=None):
+    """Snapshot panel of home-side prices on a regular grid, one row per step.
+
+    freq  — grid size. 15min is the historical default (the collector ran at
+            */15 until 2026-07-31); "5min" is valid only on the later era.
+    since — ISO date; drop snapshots before it (use with freq="5min" so the
+            fine grid is not padded with NaN from the */15 era).
+    """
     s = pd.read_csv(path)
     s = s[s.minutes_to_start > 0]
-    s["t"] = pd.to_datetime(s.snapshot_utc, utc=True, format="ISO8601").dt.floor("15min")
+    s["t"] = pd.to_datetime(s.snapshot_utc, utc=True, format="ISO8601").dt.floor(freq)
+    if since is not None:
+        s = s[s.t >= pd.Timestamp(since, tz="UTC")]
     w = (s.pivot_table(index=["game_id", "t"], columns="source", values="p1", aggfunc="last")
          .reset_index().sort_values(["game_id", "t"]))
     frames = []
     for gid, g in w.groupby("game_id"):
-        g = g.set_index("t").resample("15min").asfreq()
+        g = g.set_index("t").resample(freq).asfreq()
         d = g[SRCS].diff()
         d = d[(d.abs() <= 0.2)]
         d["game_id"] = gid

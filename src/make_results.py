@@ -29,7 +29,7 @@ MODULES = [
     "model_benchmark", "encompassing",
     "late_flow", "informed", "horizon", "horizon_equivalence", "horizon_cross",
     "close_efficiency", "layer2", "one_price", "multiple_testing",
-    "fee_experiment", "fee_liquidity", "tick_pricing", "referee", "lead_lag", "book_moves", "minute_lead_lag",
+    "fee_experiment", "fee_liquidity", "tick_pricing", "referee", "lead_lag", "book_moves", "minute_lead_lag", "five_min", "immediacy",
     "hierarchical_calibration",   # PyMC; ~90s, the suite's slowest module
 ]
 

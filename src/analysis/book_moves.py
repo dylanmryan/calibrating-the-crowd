@@ -27,31 +27,31 @@ W = 4               # +-4 steps of 15 min = +-1h
 THRESH = 0.02
 
 
-def windows(d, event_src, thresh=THRESH):
+def windows(d, event_src, thresh=THRESH, w=W):
     """Signed change matrices around non-overlapping big moves of event_src."""
     out = {s: [] for s in SRCS}
     sizes, mts = [], []
     for gid, g in d.groupby("game_id"):
         g = g.sort_values("t").reset_index(drop=True)
         ev = g.index[g[event_src].abs() >= thresh].tolist()
-        last = -10
+        last = -10 * max(w, 1)
         for i in ev:
-            if i - last <= W or i - W < 0 or i + W >= len(g):
+            if i - last <= w or i - w < 0 or i + w >= len(g):
                 continue
             last = i
             sgn = np.sign(g.loc[i, event_src])
             for s in SRCS:
-                out[s].append(sgn * g.loc[i - W:i + W, s].to_numpy(float))
+                out[s].append(sgn * g.loc[i - w:i + w, s].to_numpy(float))
             sizes.append(abs(g.loc[i, event_src]))
             mts.append(gid)
     return {s: np.array(v) for s, v in out.items()}, np.array(sizes)
 
 
-def decompose(mat):
+def decompose(mat, w=W):
     """(pre, at, post) mean signed response and the anticipation share."""
-    pre = np.nansum(mat[:, :W], axis=1)
-    at = mat[:, W]
-    post = np.nansum(mat[:, W + 1:], axis=1)
+    pre = np.nansum(mat[:, :w], axis=1)
+    at = mat[:, w]
+    post = np.nansum(mat[:, w + 1:], axis=1)
     total = pre + at + post
     ok = ~np.isnan(total)
     antic = pre[ok] > 0
@@ -59,14 +59,14 @@ def decompose(mat):
             np.nanmean(total), antic.mean(), int(ok.sum()))
 
 
-def report(label, mats, sizes):
+def report(label, mats, sizes, w=W):
     print(f"\n=== events: {label} (n={len(sizes)}, mean size "
           f"{sizes.mean()*100:.1f}pts) ===", flush=True)
     print(f"  {'responder':12} {'pre(-1h)':>9} {'at':>7} {'post(+1h)':>10} "
           f"{'total':>7} {'antic%':>7}", flush=True)
     res = {}
     for s in SRCS:
-        pre, at, post, tot, antic, n = decompose(mats[s])
+        pre, at, post, tot, antic, n = decompose(mats[s], w)
         res[s] = (pre, at, post, tot, antic)
         print(f"  {s:12} {pre*100:>+8.2f} {at*100:>+6.2f} {post*100:>+9.2f} "
               f"{tot*100:>+6.2f} {antic:>6.0%}", flush=True)

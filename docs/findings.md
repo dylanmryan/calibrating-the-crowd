@@ -303,8 +303,7 @@ analyses on our sports data:
    sample — it vanishes with data (own-lag z=−0.3); books are simply stickier
    (>0.4pt move in 4.4% of steps vs ~8–10% on the exchanges). Cross-venue
    Granger terms are statistically real but economically tiny: the exchanges
-   predict each other (K→P z=+3.3, P→K z=+3.0) and book→Poly (z=+4.0 after
-   the 2026-07-30 grid-alignment fix), while nothing significantly predicts
+   predict each other, while nothing significantly predicts
    the book's next move (z≤+1.2) — yet every
    coefficient is ~0.03, i.e. ~3% of a move transmits one step ahead. Event
    study on big moves (|d|≥2pts; n=65–123 events per source): the other
@@ -313,8 +312,22 @@ analyses on our sports data:
    simultaneous at 15-min resolution; no venue front-runs another**. Coheres
    with the T−24h horizon result (books fractionally ahead, gap closed by
    start) and with maker-driven discovery on public news.
+   **Panel refresh 2026-08-10 (528 games, 23.9k complete steps):** the
+   cross-venue terms partly dissolved as the sample grew — only P→K survives
+   (+0.031, z=+4.4); **the book→Poly term this section previously reported is
+   now −0.004 (z=−0.1) and is retired**, and the FDR entry has been rewritten
+   accordingly. Nothing predicts the book (all |z|≤0.9). The event-study
+   picture is unchanged and sharper: every venue's response to every other
+   concentrates at offset 0 (n=122–328 events).
    (`src/analysis/lead_lag.py`)
-   **Book-line-move event study (2026-07-31, 347-game panel):** around the
+   **Book-line-move event study (refreshed 2026-08-10, 528-game panel):**
+   around the 70 book-consensus jumps of ≥2pts (mean 4.1pts), the exchanges'
+   anticipation-direction share is 34% for Kalshi (sign-test p=0.012, now
+   significant — it was 37%, p=0.076, on the 347-game panel) and 23% for
+   Polymarket (p<0.001): **both significantly below chance — before a book
+   move the exchanges are, if anything, drifting the other way.** The
+   same-step/no-chase shape is unchanged. Original pass (2026-07-31,
+   347-game panel) for reference: around the
    54 book-consensus jumps of ≥2pts (mean 4.6pts), the exchanges' *total*
    response over ±1h is only ~1pt (Kalshi +1.03, Poly +0.69) — ~80% of a big
    book move is never echoed by the exchanges at all. What is echoed arrives
@@ -351,15 +364,74 @@ analyses on our sports data:
    the books (live feed verified fresh — median quote age 0.6 min — but
    consensus-composition noise attenuates measured book leadership), so
    "books lead slightly, exchanges never lead" is if anything understated.
-   The one honestly open cell: book-vs-exchange at sub-15-min resolution,
-   closing via the 5-min live cadence (deployed 2026-07-31). **No leader–follower relay at any resolution
+   **No leader–follower relay at any resolution
    measured.** Scheduled-news check: MLB intensity shows no discrete
    lineup-window burst (T−4h→T−1.5h flat ≈0.007pt/min at both venues;
    per-game release-time variation may smear one) — repricing ramps into the
    final 75 minutes instead, in lockstep; the 5pm-ET injury-report hour
    (NBA/WNBA, n=78) is suggestive only. (`src/collect/minute_paths.py`,
    `src/analysis/minute_lead_lag.py`, `results/minute_lead_lag.png`)
-4. **Cost asymmetry — 3-venue table now complete**: sportsbook overround ~4.2%
+   **The last open cell is now closed (2026-08-10, `src/analysis/five_min.py`,
+   `results/five_min.png`).** The VPS cron moved to */5 on 2026-07-31, so
+   book-vs-exchange can finally be read below a quarter of an hour: 181 games,
+   19,272 five-minute steps with all three venues.
+   (a) *Resolution ladder* — the same battery on the same games at 5/10/15/30
+   min. A genuine lead is a fixed wall-clock delay and must sharpen as the grid
+   approaches it; none does (every cross-lag correlation sits in +0.006…+0.059
+   with no monotone pattern), and nothing predicts the book at any grid. **The
+   no-leader result is not a resolution artifact.**
+   (b) What the finer clock *does* reveal is a small one-step book→exchange
+   coefficient invisible at 15 min: Kalshi +0.047 (z=+2.4), Polymarket +0.164
+   (z=+4.5), game-clustered. Three cuts identify it as drift alignment rather
+   than news transmission: it is **exactly zero in the final two hours before
+   start** (K +0.006 z=+0.1; P −0.008 z=−0.1) — the window where information
+   actually arrives and where every headline horizon result lives; it lives in
+   sub-half-point book moves, not news-sized ones (the ≥0.5pt cut has only 192
+   steps — the consensus is that sticky); and for Polymarket it is as strong
+   from a quote frozen for 30 minutes (+0.176) as from an active one (+0.138),
+   which is catch-up, not response. Kalshi, by contrast, only responds when its
+   quote is already awake (+0.089 vs +0.001) — a real if tiny repricing.
+   (c) *Event study on the fine clock.* A 2pt book move essentially never lands
+   in one 5-min step, so events are defined on the book's rolling 15-min change
+   and responses read at 5-min resolution (n=19 — suggestive, not a claim):
+   the exchanges are already moving **during** the book's window, and 31–38% of
+   their (small) total arrives in the following half hour. The 15-min study's
+   "same step" was not hiding a lag.
+4. **The price of immediacy (2026-08-10, `src/analysis/immediacy.py`,
+   `results/immediacy.png`; 66,996 book snapshots, 274 games since the
+   2026-07-25 depth deployment).** Every cost number elsewhere in this document
+   is a *touch* number. The depth captures give a two-anchor execution curve
+   (size at the touch, size resting within 5¢) and answer what capacity sits
+   behind the quote.
+   - **Immediacy is free at the size the market is actually traded in.** Median
+     cost is half the tick — 0.50¢, ≈0.9% of notional — for orders up to 10,000
+     units on both venues. The median customer order from the fills tape (30
+     contracts, ~$16 at stake) sits **inside the touch in 89% of Kalshi
+     snapshots and 95% of Polymarket's**. For the customer this project
+     measures, depth is never the binding cost; the spread and the fee are.
+     This is the missing justification for treating the −4.2% taker figure as
+     the whole retail story.
+   - **Capacity, not price, is what runs out.** Cost stays near the half-spread
+     as size grows, but the share of books that can absorb the order collapses:
+     Kalshi fills a 10,000-unit order inside 5¢ in 61% of snapshots, 50,000 in
+     44%, 200,000 in 36%; Polymarket 96% / 67% / 21%. Polymarket's cost also
+     rises where Kalshi's does not (0.86¢ at 50K, 1.64¢ at 200K).
+   - **The venues invert as the game approaches.** A day out Polymarket is far
+     deeper (median 107.7K units within 5¢ vs Kalshi's 17.9K); inside 30
+     minutes Kalshi is five times deeper than Polymarket (377K vs 76K). The
+     raw cross-bucket table overstates this — the late buckets contain a more
+     liquid mix of games — so the ramp is measured **within game**: Kalshi
+     late/early depth ratio 2.29× (deeper late in 87% of 235 games),
+     Polymarket 1.58× (62% of 233). Both thicken; Kalshi's professional
+     complex ramps roughly twice as hard, which is the microstructure
+     counterpart of the liquidity-footprint and maker-structure results.
+   - **Touch asymmetry replicates the two-layer book.** A ≤10-unit order is the
+     best quote on some side in 22.4% of Kalshi snapshots but only 1.9% of
+     Polymarket's; Kalshi's touch imbalance (0.21) departs from its 5¢-band
+     imbalance (0.27) while Polymarket's are both ≈0.5. Kalshi wears a
+     retail-sized surface over a professional layer; Polymarket's touch is
+     itself professional-sized.
+5. **Cost asymmetry — 3-venue table now complete**: sportsbook overround ~4.2%
    everywhere; Kalshi bid/ask overround ~1.0%; and Polymarket's archived books
    (OddPool, n=93 games, all four in-season leagues) show a median quoted spread
    of exactly 1.00pt — equal to Kalshi's on the same games. Both exchanges are
@@ -369,10 +441,10 @@ analyses on our sports data:
    archived Polymarket book mids match our CLOB-derived closing prices with
    median error 0.00pts — both prediction-market price pipelines are now
    independently confirmed against external archives.
-5. **The ordinary gambler's ROI** on Kalshi: −3 to −4.5% across strategies
+6. **The ordinary gambler's ROI** on Kalshi: −3 to −4.5% across strategies
    (everything/favorites/longshots/home) ≈ transaction costs. Efficient market, not
    a beatable casino — and also not a rigged one.
-6. **Thin markets are noisier**: Kalshi calibration error rises sharply with quoted
+7. **Thin markets are noisier**: Kalshi calibration error rises sharply with quoted
    spread (ECE 0.013 tight → 0.11 wide; reliability 0.25 → 18.1 ×1000; reruns
    2026-07-10 and 2026-07-21 on the re-harvested master), but thin markets do not
    drive any headline result: on liquid
@@ -981,14 +1053,13 @@ single-source studies cannot.
 
 ## In progress
 
-- **Lead–lag price discovery**: two-week pass analyzed (nuance 3); the series
-  keeps accumulating on the VPS — rerun near season end for power. The World
-  Cup 3-way leg ended with the final and is frozen (see case study).
-- **Order-book depth capture** (deployed to the VPS collector 2026-07-25):
-  every 15-min snapshot now records touch sizes and depth-within-5¢ for both
-  exchanges (and live Polymarket quoted spreads for the first time — 1¢ at
-  the touch, matching the archived-book measurements). Feeds a
-  price-of-immediacy curve by season end.
+- **Lead–lag price discovery** — *complete as of 2026-08-10*. The panel now
+  runs to 528 games; the 15-min pass was refreshed (one cross-venue term
+  retired), the sub-15-min cell was closed on the 5-min cadence (nuance 3c),
+  and the depth captures produced the price-of-immediacy curve (nuance 4).
+  The World Cup 3-way leg ended with the final and is frozen (see case study).
+  The panel keeps growing ~18 games/day; one final refresh before the number
+  freeze will roughly double the n=19 fine-clock event study.
 - Advisor input pending on: HAC/cluster choices, multiple-testing policy,
   equivalence-margin convention, 3-way calibration methodology.
 
