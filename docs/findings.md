@@ -177,6 +177,24 @@ this table is not luck. (`results/plain_calibration.png`)
   consensus in every league) — equally informative, not just equally
   calibrated; calibration alone could be gamed by hedging to the base rate,
   identical sharpness + identical Brier cannot. (`src/analysis/league_tost.py`)
+- **Power, so the nulls can be read (2026-08-10, `src/analysis/power.py`).**
+  Minimum detectable effect at α=.05 / 80% power, computed from the same
+  date-clustered SE the DM tests use, against the δ=1e-3 margin:
+  - **Pooled the equivalence is genuinely powered**: MDE 0.36–0.51e-3 across
+    the three pairs, i.e. roughly a third to half the margin we declare
+    equivalence at. A true gap of 0.4e-3 — a forecaster mispricing every game
+    by about 2pt in a fixed direction — would have been caught.
+  - **MLB, NBA and NHL are individually powered** (worst-pair MDE 0.58 / 0.95 /
+    0.64e-3). Their per-league nulls carry information.
+  - **CFB (2.74e-3) and WNBA (2.47e-3) are not, and NFL (1.57e-3) is not
+    either.** They would need ~7.5×, ~6× and ~2.5× their current games to
+    reach MDE=δ. Their nulls are *consistent with* equivalence and cannot
+    establish it — the report says so wherever they appear.
+  Note δ_min (league_tost) and MDE answer different questions: δ_min is how
+  wide the realized CI happened to be, MDE is how wide it would need to be to
+  catch a true effect. A subgroup can read "EQUIV" on a lucky near-zero point
+  estimate while still being underpowered — which is exactly why both are
+  reported.
 - Robust to de-vig method (Shin vs multiplicative: book Brier 0.2181→0.2182,
   conclusions unchanged).
 - Figure: `results/three_way_calibration.png`.

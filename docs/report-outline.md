@@ -77,8 +77,12 @@ or a big platform.
 - Inference: date-clustered DM; TOST at δ=1.0e-3 Brier (≈0.5pt/game);
   interval-randomized tie-consistent PIT; exact binomials for tail buckets;
   cluster bootstrap for niche ECE/slope; BH-FDR two-family policy.
-- Power: MDE table for subgroup equivalences (to add; NFL n=278, WNBA n=412
-  are consistent-but-underpowered).
+- Power: MDE table for every subgroup equivalence [power.log]. Pooled MDE
+  0.36-0.51e-3 vs delta=1e-3 (powered); MLB/NBA/NHL individually powered
+  (0.58/0.95/0.64e-3); CFB 2.74, WNBA 2.47, NFL 1.57 are NOT — reported as
+  consistent-but-unable-to-detect, with the n multiple each would need
+  (7.5x / 6.1x / 2.5x). Stated reading rule: quote MDE beside every subgroup
+  null.
 
 ## 5. Results
 
@@ -114,11 +118,20 @@ Fig: `horizon_calibration.png`.
 ### 5.4 How prices form
 - No venue leads at 15-min or 1-min; symmetric few-minute echo (z≈7 both
   directions); big repricings simultaneous [minute_lead_lag.log].
+- **Resolution ladder (5/10/15/30 min, same games): no cross-lag correlation
+  sharpens as the clock sharpens, and nothing predicts the book at any grid —
+  the no-leader result is not an artifact of a coarse clock** [five_min.log].
+  The fine clock does surface a small book→exchange coefficient (K +0.047
+  z=2.4, P +0.164 z=4.5) that is ZERO in the final 2h, lives in sub-0.5pt book
+  moves, and for Poly is as strong from a 30-min-frozen quote: drift alignment
+  away from game time, not news transmission. Reported with its cuts.
 - Markouts flat across size; taker imbalance predicts nothing → discovery
   is maker-driven, information enters via quote revision [informed].
 - Book-move event study: exchanges neither anticipate nor follow with a lag
-  — parallel processing of the same information [book_moves.log].
-Fig: `minute_lead_lag.png`.
+  — parallel processing of the same information. On the refreshed 528-game
+  panel the anticipation-direction share is 34% Kalshi (p=0.012) and 23%
+  Polymarket (p<0.001), both significantly BELOW chance [book_moves.log].
+Figs: `minute_lead_lag.png`, `five_min.png`.
 
 ### 5.5 Where the surfaces crack: distributions
 - RPS head-to-head on shared rungs (n=3,690): books better, but LOCALIZED —
@@ -142,7 +155,18 @@ Figs: `margin_distribution.png`, `margin_pit.png`.
   with the touch pinned at 1c [fee_liquidity.log]. Tick design: the touch
   IS the tick; Kalshi's uniform 1c makes tails ~10x costlier than Poly's
   0.001 regime [tick_pricing.log].
-Figs: `retail_fingerprint.png`, `fee_liquidity.png`, `tick_pricing.png`.
+- **The price of immediacy** [immediacy.log]: the touch numbers above are the
+  whole retail story, and here is why — a 30-unit order (the tape's median)
+  sits inside the touch in 89% (K) / 95% (P) of book snapshots, and median
+  cost stays at half the tick (0.50c, ~0.9% of notional) up to 10,000 units.
+  What runs out is capacity, not price: fill-inside-5c drops to 61/44/36% (K)
+  and 96/67/21% (P) at 10K/50K/200K units. The venues invert into the event —
+  Poly is deeper a day out, Kalshi ~5x deeper inside 30 min; measured
+  within-game the ramp is 2.29x (K) vs 1.58x (P). Touch asymmetry replicates
+  the two-layer book (a <=10-unit order is the best quote 22.4% of the time on
+  Kalshi vs 1.9% on Poly).
+Figs: `retail_fingerprint.png`, `fee_liquidity.png`, `tick_pricing.png`,
+`immediacy.png`.
 
 ### 5.7 Who supplies the market (the affiliated-dealer question)
 - Documentary: Kalshi Trading on the exchange since 2021; CFTC bona fide MM
@@ -252,6 +276,22 @@ E. Data dictionary.
 ## Open items before the final draft
 1. Advisor: venue (grant report vs arXiv) and turnaround — memo pending.
 2. Claim registration + out-of-sample verification on late-Aug data (~Aug 22).
-3. 5-min book event study + price-of-immediacy curve (~Aug 14).
-4. MDE table (fold into §4/Appendix B).
-5. Number freeze: final suite run stamps every figure/table.
+3. ~~5-min book event study + price-of-immediacy curve~~ — DONE 2026-08-10
+   (five_min.py, immediacy.py; §5.4 and §5.6 above).
+4. ~~MDE table~~ — DONE 2026-08-10 (power.py; §4 above).
+5. Number freeze: final suite run stamps every figure/table. One last VPS
+   panel refresh first — the fine-clock event study is at n=19 and the panel
+   adds ~18 games/day.
+6. Kalshi price re-harvest ~Aug 18 (60-day cutoff) before the freeze.
+
+## Numbers added 2026-08-10 (append to the locked table at freeze)
+| Claim | Number | Log |
+|---|---|---|
+| Resolution ladder | no lead sharpens 30->5 min; nothing predicts the book | five_min |
+| 5-min book->exchange | K +0.047 (z=2.4) / P +0.164 (z=4.5); ZERO in final 2h | five_min |
+| Immediacy at retail size | 0.50c (~0.9% notional); inside touch 89%/95% | immediacy |
+| Capacity at 200K units | fills inside 5c in 36% (K) / 21% (P) of books | immediacy |
+| Within-game depth ramp | 2.29x (K) vs 1.58x (P) | immediacy |
+| Pooled MDE | 0.36-0.51e-3 vs delta=1e-3 | power |
+| Underpowered leagues | CFB 2.74, WNBA 2.47, NFL 1.57 (e-3) | power |
+| FDR | 17 claims, 15 keep at q=.05 | multiple_testing |
