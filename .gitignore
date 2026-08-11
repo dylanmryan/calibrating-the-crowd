@@ -17,3 +17,4 @@ results/*
 !results/.gitkeep
 .ipynb_checkpoints/
 .venv-icloud-broken/
+data/backups/
