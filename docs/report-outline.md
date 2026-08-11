@@ -143,7 +143,16 @@ Figs: `minute_lead_lag.png`, `five_min.png`.
   biases harbored inside cost bands, exactly like books inside vig.
 - PIT: books pass where Kalshi fails (MLB); NHL book ladders fail where
   Kalshi passes (sparse-rung caveat, noted not claimed) [book_pit.log].
-Figs: `margin_distribution.png`, `margin_pit.png`.
+- **The mechanism, isolated by a third market layer** [totals.log]: totals run
+  over the same scoring process but extras push totals UP instead of
+  truncating margins, and no stop-the-game rule applies. On 1,244 IDENTICAL
+  MLB games the totals PIT PASSES (KS=0.017, p=0.84) where the margin PIT
+  REJECTS (KS=0.073, p=2.9e-6) — with 11 rungs vs 3-5, i.e. the passing test
+  is the better-powered one. Totals contract calibration ECE 0.0046, ladders
+  95.2% monotone, zero executable arb, no right-tail bias (all |z|<=1.01).
+  **Kalshi does not mismodel baseball; it mismodels the rule that stops the
+  game.** Kalshi-only layer (no book benchmark — budget spent).
+Figs: `margin_distribution.png`, `margin_pit.png`, `totals.png`.
 
 ### 5.6 What participation costs, and who pays
 - Cost table: taker all-in Kalshi ≈ -4.2% ≈ books' vig -4.1%; maker path
@@ -295,3 +304,6 @@ E. Data dictionary.
 | Pooled MDE | 0.36-0.51e-3 vs delta=1e-3 | power |
 | Underpowered leagues | CFB 2.74, WNBA 2.47, NFL 1.57 (e-3) | power |
 | FDR | 17 claims, 15 keep at q=.05 | multiple_testing |
+| Totals vs margins PIT (same 1,244 MLB games) | totals p=0.84 pass / margins p=2.9e-6 reject | totals |
+| Totals contract calibration (MLB) | Brier 0.1780, ECE 0.0046, n=15,124 | totals |
+| Re-harvested master (2026-08-11) | 9,778 games; three-way clean n=5,327 | build_master, three_way |

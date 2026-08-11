@@ -30,14 +30,21 @@ LEAGUE_SERIES = {
 _session = requests.Session()
 
 
-def get(path: str, params: dict | None = None, retries: int = 3) -> dict:
-    """GET with light retry/backoff on transient errors and rate limits."""
+def get(path: str, params: dict | None = None, retries: int = 6) -> dict:
+    """GET with retry/backoff on transient errors and rate limits.
+
+    Backoff is exponential (1s, 2s, 4s, ...) rather than linear: the 2026-08-11
+    totals harvest showed that a parallel collector which keeps retrying every
+    ~1.5s under a sustained 429 never lets the limiter's window drain, so the
+    run stalls instead of slowing down. Patience here is what keeps a long
+    parallel harvest alive.
+    """
     for attempt in range(retries):
         r = _session.get(f"{BASE}{path}", params=params, timeout=45)
         if r.status_code == 200:
             return r.json()
         if r.status_code in (429, 500, 502, 503):
-            time.sleep(1.5 * (attempt + 1))
+            time.sleep(min(2 ** attempt, 30))
             continue
         r.raise_for_status()
     r.raise_for_status()

@@ -58,6 +58,8 @@ NULLS = [
     ("FLB: all slope CIs include 1 (home-side)", "-"),
     ("Layer-2 main-line calibration (push-corrected)", "MLB 50.4% vs 49.9%; NBA n.s. — 45.0% claim retracted"),
     ("Book PIT MLB/NBA (tie-consistent)", "p=0.084/0.165 (marginal pass vs Kalshi p<0.001)"),
+    ("Kalshi TOTALS PIT, MLB", "KS=0.017 p=0.84 PASSES on the same 1,244 games where the MARGIN PIT rejects (p=2.9e-6) — and with more rungs, so better powered; isolates the defect to the margin, not the run process"),
+    ("Kalshi totals right-tail bias (MLB)", "no threshold off by more than 2.8pt, all |z|<=1.01"),
     ("T-24h encompassing (K beyond book a day out)", "p=0.68"),
     ("Minute-scale first-passage leads", "median 0.0, sign-test p=1.0"),
     ("Resolution ladder 30->5 min: any venue leads", "no cross-lag corr sharpens as the clock sharpens; nothing predicts the book at any grid"),

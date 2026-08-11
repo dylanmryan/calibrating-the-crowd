@@ -60,8 +60,12 @@ def _price_one(job):
             "won": 1 if result == "yes" else 0}
 
 
-def build(out="data/processed/kalshi_total_prices.csv", workers=12,
-          max_contracts=40_000) -> None:
+def build(out="data/processed/kalshi_total_prices.csv", workers=4,
+          max_contracts=40_000, series=None) -> None:
+    """workers=4 is deliberate: 12 drew sustained 429s from Kalshi on
+    2026-08-11 and the run stalled. `series` restricts the harvest to given
+    series tickers (e.g. ["KXMLBTOTAL"]) so the decisive league can finish
+    first."""
     from concurrent.futures import ThreadPoolExecutor
 
     matches = pd.read_csv("data/processed/kalshi_espn_matches.csv")
@@ -76,6 +80,8 @@ def build(out="data/processed/kalshi_total_prices.csv", workers=12,
 
     work = []
     for tseries, (lg, _gseries) in TOTAL_TO_GAME.items():
+        if series and tseries not in series:
+            continue
         mk = fetch_settled_markets(tseries)
         mk = [m for m in mk if m.get("ticker") not in done]
         n_join = 0

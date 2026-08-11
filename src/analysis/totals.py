@@ -150,6 +150,52 @@ def pit_test(t, label_extra=""):
     return out
 
 
+def _margin_pits(game_ids, rng):
+    """Margin PIT for a given game set, rebuilt here so the contrast is PAIRED.
+
+    Mirrors margin_dist.main's ladder construction (home/away rungs plus the
+    moneyline at 0). Computing it live rather than quoting the log means the
+    comparison cannot go stale the way the FDR inventory once did.
+    """
+    from src.analysis.margin_dist import implied_cdf as margin_cdf
+    from src.collect.kalshi_hist_prices import _rule_home
+
+    sp = pd.read_csv("data/processed/kalshi_spread_prices.csv")
+    sp = sp[sp.game_id.isin(game_ids)]
+    esp = (pd.read_csv("data/processed/espn_games.csv")
+           [["espn_id", "home_score", "away_score"]]
+           .rename(columns={"espn_id": "game_id"}).set_index("game_id"))
+    ml = pd.read_csv("data/processed/games_master.csv").set_index("game_id")
+
+    us = []
+    for gid, g in sp.groupby("game_id"):
+        if gid not in esp.index:
+            continue
+        row = esp.loc[gid]
+        if row.home_score != row.home_score:
+            continue
+        margin = int(row.home_score - row.away_score)
+        codes = sorted(set(g["team"]))
+        if len(codes) != 2:
+            continue
+        rh = _rule_home(g["event_ticker"].iloc[0], codes)
+        if rh is None:
+            continue
+        home = {r.threshold: r.prob for r in g[g.team == rh].itertuples(index=False)
+                if r.prob == r.prob}
+        away = {r.threshold: r.prob for r in g[g.team != rh].itertuples(index=False)
+                if r.prob == r.prob}
+        if not home or not away:
+            continue
+        pml = ml.kalshi_p1.get(gid)
+        if pml is not None and pml != pml:
+            pml = None
+        u = pit(margin_cdf(home, away, pml), margin, rng)
+        if u is not None:
+            us.append(u)
+    return np.array(us)
+
+
 def head_to_head(t):
     """The decisive contrast: totals vs margins on the SAME MLB games."""
     print("\n=== 4. THE MECHANISM TEST: totals vs margins, same games ===", flush=True)
@@ -167,7 +213,7 @@ def head_to_head(t):
         return
     sub = mlb_t[mlb_t.game_id.isin(shared)]
     rng = np.random.default_rng(23)
-    us = []
+    us, rungs_used = [], []
     for gid, gg in sub.groupby("game_id"):
         rungs = {r.threshold: r.prob for r in gg.itertuples(index=False)
                  if r.prob == r.prob}
@@ -175,14 +221,34 @@ def head_to_head(t):
             continue
         u = pit(implied_cdf(rungs), int(gg.total.iloc[0]), rng)
         if u is not None:
-            us.append(u)
+            us.append(u); rungs_used.append(len(rungs))
     us = np.array(us)
-    ks = stats.kstest(us, "uniform")
-    print(f"  totals PIT on those games: n={len(us):,}, KS={ks.statistic:.4f}, "
-          f"p={ks.pvalue:.2e}, mean u={us.mean():.3f}", flush=True)
-    print("  compare margin_dist.log for the MARGIN PIT on the same league", flush=True)
-    print("  (MLB margins: KS=0.072, p<0.001 — rejects, mean u 0.496 = unbiased", flush=True)
-    print("   location, wrong shape).", flush=True)
+    kt = stats.kstest(us, "uniform")
+    um = _margin_pits(shared, np.random.default_rng(29))
+    km = stats.kstest(um, "uniform") if len(um) else None
+
+    print(f"  {'layer':>10} {'games':>7} {'KS':>8} {'p':>10} {'mean u':>8} {'med rungs':>10}",
+          flush=True)
+    print(f"  {'TOTALS':>10} {len(us):>7,} {kt.statistic:>8.4f} {kt.pvalue:>10.2e} "
+          f"{us.mean():>8.3f} {int(np.median(rungs_used)):>10}", flush=True)
+    if km is not None:
+        print(f"  {'MARGINS':>10} {len(um):>7,} {km.statistic:>8.4f} {km.pvalue:>10.2e} "
+              f"{um.mean():>8.3f}", flush=True)
+        verdict = ("TOTALS PASS where MARGINS REJECT"
+                   if kt.pvalue >= 0.05 > km.pvalue else
+                   "both reject" if km.pvalue < 0.05 and kt.pvalue < 0.05 else
+                   "both pass" if km.pvalue >= 0.05 and kt.pvalue >= 0.05 else
+                   "margins pass, totals reject")
+        print(f"\n  VERDICT: {verdict}.", flush=True)
+        if kt.pvalue >= 0.05 > km.pvalue:
+            print("  On the SAME games, the implied distribution of total runs is", flush=True)
+            print("  correct while the implied distribution of the margin is not.", flush=True)
+            print("  The defect is therefore not a general failure to model", flush=True)
+            print("  baseball's scoring — it is specific to the margin, which is", flush=True)
+            print("  exactly what the walk-off/extras truncation story predicts.", flush=True)
+            print("  Note the totals test is the BETTER-POWERED of the two (median", flush=True)
+            print(f"  {int(np.median(rungs_used))} rungs vs the margin ladders' 3-5), so", flush=True)
+            print("  passing here is not a resolution artifact.", flush=True)
 
 
 def extras(t):

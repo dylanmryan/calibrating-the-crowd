@@ -271,6 +271,38 @@ analyses on our sports data:
    (Brier 0.1764 vs 0.1785). NBA ladders show no such gap (±1–2pts).
    (`src/analysis/ladder_vs_books.py`, sportsbook alternate spreads for 2,480
    MLB/NBA ladder games)
+   **THE MECHANISM IS NOW ISOLATED (2026-08-11, `src/analysis/totals.py`,
+   `src/collect/kalshi_totals.py`, `results/totals.png`).** Totals are a third
+   market layer over the *same* run-scoring process, but extras push totals UP
+   rather than truncating margins toward zero, and no stop-the-game rule
+   applies. So the walk-off story makes a falsifiable prediction: the implied
+   *total-runs* distribution should be fine on exactly the games where the
+   implied *margin* distribution is not. It is. On 1,244 identical MLB games,
+   with the margin PIT recomputed live inside the same module so the contrast
+   cannot go stale:
+
+   | layer | games | KS | p | mean u | median rungs |
+   |---|---|---|---|---|---|
+   | **totals** | 1,245 | 0.0173 | **0.843 — passes** | 0.501 | 11 |
+   | **margins** | 1,244 | 0.0734 | **2.9e-6 — rejects** | 0.501 | 3–5 |
+
+   The totals test is the *better-powered* of the two (11 rungs resolve the CDF
+   far more finely than the margin ladders' 3–5), so passing is not a
+   resolution artifact — a finer grid makes rejection easier, not harder.
+   Contract-level calibration on 15,124 MLB totals contracts is excellent
+   (Brier 0.1780, **ECE 0.0046**), ladders are 95.2% monotone with 0.58%
+   adjacent violations and **zero executable arbitrage**, and the right tail —
+   the region extras feed — shows no systematic bias at any threshold (largest
+   gap +2.8pt at the 14.5 rung, every |z| ≤ 1.01). NBA totals also pass
+   (n=165, KS p=0.49 — underpowered, consistent).
+   **Reading: Kalshi does not mismodel baseball. It mismodels the rule that
+   stops the game.** The defect is specific to the margin — precisely what the
+   walk-off/extras truncation account predicts, and the strongest available
+   evidence against the alternative "the exchange is simply bad at baseball's
+   scoring tail." Kalshi-only by design: the Odds API budget is spent, so this
+   layer has no book benchmark; the comparisons that matter here
+   (Kalshi-vs-reality, totals-vs-margins on the same games) are both internal.
+
    Two completions of this story: **(a) the books' full margin distributions
    pass the same PIT that rejects Kalshi's** (tie-consistent PIT, corrected
    2026-07-30: book MLB KS p=0.084, NBA p=0.165 vs Kalshi MLB p<0.001 — the
