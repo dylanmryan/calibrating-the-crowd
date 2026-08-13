@@ -1101,6 +1101,64 @@ exclusions. **The pre-fix data showed "Kalshi significantly lags the books"
 profit is a data-quality alarm, and market-vs-market cross-checks catch errors
 single-source studies cannot.
 
+## The demand side: what these products return to someone using them as a plan
+
+*(2026-08-11, `src/analysis/horizon_translation.py`,
+`results/horizon_translation.png`)*
+
+Betterment's 2026 Retail Investor Survey (n=1,000, fielded Mar 27–Apr 3 2026)
+reports that **26% of Gen Z investors treat sports betting as a deliberate part
+of a long-term financial strategy** and **52% redirected money earmarked for
+investing into it** in the past year; Northwestern Mutual puts Gen Z
+participation-or-consideration at 32%. Both Betterment's CEO ("when a prediction
+market or sportsbook starts to feel like a retirement strategy, we have a
+problem") and Schwab's ("we'll leave the sports gambling to the gambling
+houses") treat *prediction market* and *sportsbook* as a single category — which
+is precisely this paper's measured object. Reporting also puts **~95% of
+prediction-market volume in sports**, so the sports focus here is the main case,
+not a narrow one.
+
+Those claims are about **horizon**; everything else in this document measures
+**per-position** returns. The bridge is one line — per-position rate × re-stake
+frequency — and it produces the finding that the accuracy results cannot:
+
+- **Rates (recomputed here, never quoted).** The *structural* taker cost is
+  **−4.5% per position** (half-spread + fee as a share of notional; n=47,766
+  live quotes, IQR −5.4% to −4.0%). This is the anchor, because it is fixed by
+  the quote and the fee schedule before any ball is thrown. The *realized*
+  taker P&L (−5.0% gross, −7.7% net) agrees, but its game-clustered 90% CI runs
+  −19.5% to +2.9% — outcomes are noisy over 513 games; the cost is not. **The
+  two agreeing to within a couple of points is the point.**
+- **Cadence is a scenario grid, not a measurement.** Kalshi's public tape
+  carries no account identifiers, so no outside researcher can observe how often
+  one person bets. Nothing here estimates anyone's behaviour.
+- **Bankroll remaining after a ~26-week season, re-staking proceeds:** monthly
+  76%, fortnightly 55%, **weekly 30%**, twice-weekly 9%, daily ~0%. A customer
+  who instead stakes a fixed sum loses 4.5% of everything they put through,
+  linearly.
+- **The horizon-matched line.** One futures ticket held from a week out returns
+  **−43.7%** ($0.56 per $1, matching `futures_calibration`). Reaching the same
+  place through the *well-priced* game markets takes **12.4 settled positions**.
+  So roughly a dozen game bets is equivalent to buying the one product this
+  paper shows is badly priced at every institution — and a weekly bettor gets
+  there 48% of the way through a single season.
+
+**Calibration disciplines the price; it does not protect the participant.**
+Every accuracy result here is about the price: the game markets are
+TOST-equivalent to Pinnacle and to 30+ books, their ladders are coherent and
+arbitrage-free, no venue leads another. None of that reaches the customer, whose
+outcome is set by the spread, the fee and turnover. This is the institutional
+thesis stated in the units the demand-side surveys use, and it is why
+"well-calibrated" and "fine as a wealth strategy" are unrelated claims.
+
+*Caveats, all stated in text:* Betterment is a robo-advisor with a commercial
+interest in the finding, and the measure is self-reported; the surveys do not
+cleanly separate sportsbooks from prediction markets; **this paper has no
+demographic data at all**, so the survey framing is motivation, not
+identification — no generational claim is made. The equity yardstick used for
+scale is a fixed textbook constant, not an estimate from this project, and no
+recommendation is made or implied.
+
 ## In progress
 
 - **Lead–lag price discovery** — *complete as of 2026-08-10*. The panel now

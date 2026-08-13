@@ -271,6 +271,35 @@ outrights $0.33 / $0.53 / $0.34). **Fig 4: `niche_gradient.png`**.
 ### 5.10 Case study: the World Cup 3-way (descriptive, n=9 matches) and the
 draw priced within 0.3pt across venues.
 
+### 5.11 Horizon-matched translation: the answer to the demand-side surveys
+**Fig: `horizon_translation.png`** [horizon_translation.log]. §2.1's respondents
+describe a HORIZON (long-term wealth); this paper measures per-position returns.
+The bridge is one line: per-position rate x re-stake frequency.
+- Rates, recomputed not quoted. STRUCTURAL taker cost -4.5% per position
+  (half-spread + fee over notional, n=47,766 live quotes, IQR -5.4 to -4.0) —
+  this is the anchor because it is fixed by the quote and fee schedule before
+  any ball is thrown. REALIZED taker P&L -5.0% gross / -7.7% net agrees, but
+  its game-clustered 90% CI (-19.5% to +2.9%) spans zero: outcomes are noisy,
+  the cost is not. The two agreeing to within a couple of points IS the finding.
+- Cadence is a SCENARIO GRID, explicitly not a measurement — the public tape has
+  no account identifiers, so no outsider can observe per-person frequency.
+- Bankroll left after a 26-week season, re-staking: monthly 76%, fortnightly
+  55%, weekly 30%, twice-weekly 9%, daily ~0%.
+- **The horizon-matched line**: one futures ticket held from a week out returns
+  -43.7% ($0.56/$1, matching futures_calibration). Reaching the same place
+  through the well-priced game markets takes 12.4 positions — so ~12 game bets
+  equals buying the one product this paper shows is badly priced at EVERY
+  institution, and a weekly bettor gets there 48% of the way through a season.
+- **What it adds beyond the calibration results**: every accuracy result in the
+  paper is about the PRICE, and none of it reaches the customer. A market that
+  is TOST-equivalent to Pinnacle, coherent and arbitrage-free still returns
+  close to nothing to a taker at any cadence a "financial plan" implies.
+  **Calibration disciplines the price; it does not protect the participant.**
+  That is the institutional finding in the units the surveys use.
+- Framing discipline: descriptive comparison of measured returns, no
+  recommendation; the equity yardstick is a fixed textbook constant, not an
+  estimate from this project.
+
 ## 6. Institutional synthesis
 For a market-order retail bettor, the exchange's sports section functions
 as a sportsbook: same prices, same realized cost, same sheltered biases,
@@ -360,3 +389,6 @@ E. Data dictionary.
 | Totals vs margins PIT (same 1,244 MLB games) | totals p=0.84 pass / margins p=2.9e-6 reject | totals |
 | Totals contract calibration (MLB) | Brier 0.1780, ECE 0.0046, n=15,124 | totals |
 | Re-harvested master (2026-08-11) | 9,778 games; three-way clean n=5,327 | build_master, three_way |
+| Structural taker cost | -4.5%/position (IQR -5.4 to -4.0, n=47,766 quotes) | horizon_translation |
+| Bankroll left, weekly re-stake, one season | 30% | horizon_translation |
+| Game bets equal to one futures ticket | 12.4 | horizon_translation |
