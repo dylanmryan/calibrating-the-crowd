@@ -57,6 +57,41 @@ or a big platform.
 - Regulatory: CFTC bona fide MM proposal (2026-07-30), the MPU investigation
   and 2025-26 class actions — §5.7 speaks directly to the live policy question.
 
+### 2.1 The demand side: who is using these, and as what (new, Aug 2026)
+The public debate is conducted almost entirely in the language of CATEGORIES —
+every participant asserts whether this is investing or gambling, and none of
+them measures. This paper is the measurement. Sources, all 2026:
+- **Betterment 2026 Retail Investor Survey** ("The Guidance Gap"; n=1,000 US
+  retail investors, fielded Mar 27-Apr 3 2026 via Sago, four generations, all
+  holding at least one qualifying investment; full report at
+  betterment.com/retail-report): **52% of Gen Z investors redirected money
+  earmarked for investing into sports betting in the past year**; **26% treat
+  sports betting as a deliberate part of a long-term financial strategy**
+  (vs 14% millennials, 6% Gen X, 1% boomers); among those who feel financially
+  behind, 32% of Gen Z and 24% of millennials are in or considering prediction
+  markets or sports betting, ~80% of them believing high-risk speculative
+  products beat traditional ones. CEO Sarah Levy: "When a prediction market or
+  sportsbook starts to feel like a retirement strategy, we have a problem."
+  CAVEAT to state in text: Betterment is a robo-advisor and has a commercial
+  interest in this finding; the measure is self-reported.
+- **Schwab** (Rick Wurster, CEO): "We'll leave the sports gambling... to the
+  gambling houses — the FanDuels, the DraftKings and the Robinhoods," while
+  distinguishing sports event contracts from economic-indicator ones. A second
+  institution performing the same categorization, in the opposite direction.
+- **Northwestern Mutual 2026**: 32% of Gen Z have invested in or are
+  considering sports betting / prediction markets, vs 24% of millennials.
+- **Scale**: Robinhood processed >16bn event contracts through June 2026
+  ($156m Q2-2026 revenue, ~10x YoY); reporting puts **~95% of prediction-market
+  volume in sports**. This retires "sports scope" as a limitation and makes it
+  the main case: sports is not a corner of this industry, it is the industry.
+
+USE: this section supplies the stakes, and the paper supplies the missing
+measurement. Levy and Wurster both treat "prediction market" and "sportsbook"
+as one category; §5.1-§5.6 show that conflation is RIGHT about cost and
+clientele and WRONG about information. And Betterment's finding is about
+HORIZON — people using these for long-term wealth — which is exactly the axis
+§5.9 shows the discipline breaking on.
+
 ## 3. Data and pipeline
 - Sources table: Kalshi (book-mid post-cutoff / validated trade-recon
   pre-cutoff), Polymarket Global (CLOB), Polymarket US (DCM tape),
@@ -205,6 +240,15 @@ Figs: `retail_fingerprint.png`, `fee_liquidity.png`, `tick_pricing.png`,
 Fig: `model_benchmark.png`.
 
 ### 5.9 The boundary of discipline: repetition, not institution
+**Lead this section with the horizon collision (see §2.1).** A quarter of Gen Z
+investors report treating sports betting as part of a long-term financial
+strategy. The market type a "strategy" horizon implies is precisely the one
+this section shows failing at every institution: one-shot, long-horizon
+outrights return $0.33/$1 (Kalshi) and $0.34/$1 (the books) on sub-10c
+longshots, while the repeated, fast-resolving game markets return ~$1.00 at
+mid. The discipline documented in this paper does not extend to the horizon on
+which people say they are using these products. That is the single most
+policy-relevant sentence the data supports.
 **Fig 3: `oneshot_returns.png`** (sub-10c $1 returns: ladders $1.22 vs
 outrights $0.33 / $0.53 / $0.34). **Fig 4: `niche_gradient.png`**.
 - BDW's platform pathologies vanish in game markets (moneylines at mid
@@ -240,7 +284,16 @@ to stand. Discipline comes from repetition and feedback; nothing about
 "prediction markets" or "sportsbooks" as institutions manufactures it.
 
 ## 7. Limitations
-Sports scope; consensus timing (60-min buckets vs exchange T-0 — documented
+**No demographic data.** The Betterment/Northwestern Mutual framing in §2.1 is
+motivation, NOT identification: Kalshi's public fill tape carries no age,
+location, or account attributes, so this paper cannot and does not claim its
+traders are Gen Z. What it can say is what the product costs and returns to
+whoever is using it, and what the usage pattern looks like (median $14 stake,
+53% of fills in the final 3h, evening-leisure concentration) — consumption-
+shaped, whoever is doing it. Any generational claim would need account-level
+data no outside researcher has.
+Sports scope (but see §2.1: ~95% of prediction-market volume is sports, so this
+is the main case rather than a narrow one); consensus timing (60-min buckets vs exchange T-0 — documented
 direction); Kalshi 60-day decay (harvest protocol); trade-recon staleness
 (caps + robustness); small-league power (MDE table); niche name-matching
 lower bounds; Poly resolved-market candle coarseness; US per-book covers 86% of the joint set
