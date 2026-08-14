@@ -97,6 +97,25 @@ def coherence(t):
     print("  (monotone = P(total>t) never rises with t; exec arb = a crossing a", flush=True)
     print("   taker could actually lift, using stored bid/ask)", flush=True)
 
+    # violations are partly a RECONSTRUCTION artifact: a ladder priced from
+    # last-trade prints inherits the prints' timing noise, while a live-book
+    # ladder is a simultaneous snapshot. Same caveat the spread-ladder
+    # coherence work carries; split it so the reader can see the size.
+    print("\n  monotone share by price source (reconstruction noise check):", flush=True)
+    print(f"  {'league':>7} {'book-mid':>18} {'trade-recon':>18}", flush=True)
+    for lg, g in sorted(t.groupby("league"), key=lambda x: -len(x[1])):
+        cells = []
+        for src in ("book-mid", "trade-recon"):
+            n = mono = 0
+            for gid, gg in g[g.src == src].groupby("game_id"):
+                gg = gg.sort_values("threshold")
+                if len(gg) < MIN_RUNGS:
+                    continue
+                n += 1
+                mono += int((np.diff(gg.prob.to_numpy()) <= 1e-9).all())
+            cells.append(f"{mono/n:.1%} (n={n:,})" if n else "-")
+        print(f"  {lg:>7} {cells[0]:>18} {cells[1]:>18}", flush=True)
+
 
 def calibration(t):
     print("\n=== 2. CONTRACT-LEVEL CALIBRATION (every threshold contract) ===", flush=True)
@@ -147,6 +166,33 @@ def pit_test(t, label_extra=""):
         print(f"  {lg:>7} {len(us):>7,} {ks.statistic:>7.4f} {ks.pvalue:>9.2e} "
               f"{us.mean():>8.3f}   {verdict}", flush=True)
         out[lg] = us
+
+    # a rejection can fail in two very different ways, and the paper must not
+    # conflate them: a shifted mean u is a LEVEL error (the market priced the
+    # whole distribution too low or too high), while mean u ~ 0.5 with a large
+    # KS is a SHAPE error (right location, wrong spread/tails). MLB's MARGIN
+    # rejection is the latter; check which kind any totals rejection is.
+    n_tested = len(out)
+    for lg, us in out.items():
+        ks = stats.kstest(us, "uniform")
+        if ks.pvalue >= 0.05:
+            continue
+        se = (1 / 12 / len(us)) ** 0.5
+        z = (us.mean() - 0.5) / se
+        print(f"\n  --- {lg} rejects: where does the mass sit? ---", flush=True)
+        print(f"  mean u {us.mean():.3f} (z={z:+.1f} vs 0.5) — a pure LEVEL miss "
+              f"shifts this, a pure SHAPE miss leaves it at 0.5.", flush=True)
+        dec = np.histogram(us, bins=10, range=(0, 1))[0]
+        exp = len(us) / 10
+        print("  decile counts of u (expected "
+              f"{exp:.0f} each): " + " ".join(f"{c}" for c in dec), flush=True)
+        print(f"  bottom decile {dec[0]/exp:.2f}x expected, "
+              f"top decile {dec[-1]/exp:.2f}x", flush=True)
+        print(f"  NOTE n={len(us)} is the smallest league here and this is the only", flush=True)
+        print(f"  rejection among {n_tested} tested; a Bonferroni threshold across", flush=True)
+        print(f"  {n_tested} leagues is {0.05/n_tested:.4f}, which p={ks.pvalue:.4f} "
+              f"{'still clears' if ks.pvalue < 0.05/n_tested else 'does NOT clear'}.",
+              flush=True)
     return out
 
 

@@ -290,11 +290,47 @@ analyses on our sports data:
    far more finely than the margin ladders' 3–5), so passing is not a
    resolution artifact — a finer grid makes rejection easier, not harder.
    Contract-level calibration on 15,124 MLB totals contracts is excellent
-   (Brier 0.1780, **ECE 0.0046**), ladders are 95.2% monotone with 0.58%
-   adjacent violations and **zero executable arbitrage**, and the right tail —
-   the region extras feed — shows no systematic bias at any threshold (largest
-   gap +2.8pt at the 14.5 rung, every |z| ≤ 1.01). NBA totals also pass
-   (n=165, KS p=0.49 — underpowered, consistent).
+   (Brier 0.1780, **ECE 0.0046**), and the right tail — the region extras feed
+   — shows no systematic bias at any threshold (largest gap +2.8pt at the 14.5
+   rung, every |z| ≤ 1.01).
+
+   **Full four-league sample (2026-08-11, collection complete: 36,552 contracts
+   over 4,260 games — MLB 15,124 / NBA 12,929 / NHL 6,850 / WNBA 1,649).** The
+   controls came in as the mechanism predicts, and on real samples rather than
+   the preliminary n=165:
+
+   | league | ladders | PIT KS | p | mean u | verdict |
+   |---|---|---|---|---|---|
+   | MLB | 1,466 | 0.0149 | 0.896 | 0.500 | passes |
+   | NBA | 1,284 | 0.0167 | 0.861 | 0.500 | passes |
+   | NHL | 1,211 | 0.0290 | 0.254 | 0.504 | passes |
+   | WNBA | 234 | 0.1083 | 0.0076 | 0.536 | **rejects** |
+
+   Contract-level ECE is 0.0046 (MLB), 0.0040 (NBA), 0.0125 (NHL), 0.0408
+   (WNBA). **Three of four leagues' implied total-scoring distributions are
+   correct**, including the two whose margin distributions also pass — so the
+   MLB margin failure remains the isolated defect.
+   *WNBA is the one rejection* and deserves care rather than a story: it is the
+   smallest sample (n=234), it clears a Bonferroni threshold across the four
+   leagues (0.0076 < 0.0125) so it is not simply multiplicity, and its direction
+   is a mild upward tilt (mean u 0.536, z=+1.9; decile counts pile up at u=0.7–0.9
+   with a deficit mid-CDF) — realized totals came in a little above what was
+   priced. Contract reliability agrees, under-predicting in the low-probability
+   (high-threshold) buckets: 0.194→0.248 and 0.376→0.460. That is consistent
+   with a market slow to re-price a rising scoring environment, but n=234 and
+   one season cannot establish it. **Reported as an open observation, not a
+   claim.**
+
+   **Coherence is a reconstruction artifact, not a market defect.** Raw
+   monotone shares (MLB 95.2%, NBA 86.9%, NHL 94.6%, WNBA 99.1%) split cleanly
+   by price source: ladders priced from a **live book are 99.3–100% monotone in
+   every league**, while trade-reconstructed ladders run 86.9–95.6%. NBA's low
+   raw figure is entirely this (only 10 of its 1,290 ladders are book-mid).
+   A reconstructed ladder inherits the timing noise of last-trade prints; a
+   live-book ladder is a simultaneous snapshot. This is the same caveat the
+   spread-ladder coherence work carries, and it points the same way: **when the
+   book is observed simultaneously, these ladders are essentially perfectly
+   coherent.** Executable arbitrage is 0.00% everywhere except NBA at 0.16%.
    **Reading: Kalshi does not mismodel baseball. It mismodels the rule that
    stops the game.** The defect is specific to the margin — precisely what the
    walk-off/extras truncation account predicts, and the strongest available

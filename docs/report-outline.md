@@ -183,10 +183,17 @@ Figs: `minute_lead_lag.png`, `five_min.png`.
   truncating margins, and no stop-the-game rule applies. On 1,244 IDENTICAL
   MLB games the totals PIT PASSES (KS=0.017, p=0.84) where the margin PIT
   REJECTS (KS=0.073, p=2.9e-6) — with 11 rungs vs 3-5, i.e. the passing test
-  is the better-powered one. Totals contract calibration ECE 0.0046, ladders
-  95.2% monotone, zero executable arb, no right-tail bias (all |z|<=1.01).
+  is the better-powered one. Totals contract calibration ECE 0.0046, no
+  right-tail bias (all |z|<=1.01).
   **Kalshi does not mismodel baseball; it mismodels the rule that stops the
   game.** Kalshi-only layer (no book benchmark — budget spent).
+  Full four-league sample (36,552 contracts / 4,260 games): totals PIT passes
+  in MLB (p=.90), NBA (p=.86) and NHL (p=.25) and REJECTS only in WNBA
+  (p=.0076, n=234, mild upward tilt, mean u .536) — reported as an open
+  observation, not a claim. Coherence splits by price source: live-book
+  ladders are 99.3-100% monotone in every league, trade-reconstructed ones
+  86.9-95.6% — the violations are reconstruction noise, same as the spread
+  ladders.
 Figs: `margin_distribution.png`, `margin_pit.png`, `totals.png`.
 
 ### 5.6 What participation costs, and who pays
