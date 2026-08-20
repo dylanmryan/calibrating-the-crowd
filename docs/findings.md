@@ -166,8 +166,16 @@ this table is not luck. (`results/plain_calibration.png`)
 - No pairwise Diebold–Mariano difference is significant; with **date-clustered SEs**
   (383 clusters): p = 0.15 / 0.26 / 0.54.
 - **TOST equivalence:** every pairwise ΔBrier 90% CI lies within ±0.00052 → the three
-  sources are formally *equivalent* at margin δ = 0.001 Brier (≈0.5% per-game
-  probability error).
+  sources are formally *equivalent* at margin δ = 0.001 Brier. **Scale correction
+  (2026-08-20):** δ is 0.46% *of the Brier level*, which is a systematic
+  probability offset of **3.16pt**, not the 0.5pt this line previously implied —
+  ΔBrier = ε² exactly. The margin does not move (it was pre-stated 2026-07-21)
+  but is now read against the cost-anchored ladder: δ = 0.11 / 0.44 / 0.99e-3 at
+  contract prices 0.25 / 0.50 / 0.75, being the edge that a 4.2% all-in taker
+  cost makes unmonetisable. At the mid-price anchor (0.44e-3) **Kalshi–Sportsbook
+  remains equivalent (|CI|max 0.234e-3 = 1.53pt)** while the two Polymarket pairs
+  (0.530 / 0.521e-3) resolve only at the favourite-price anchor. See
+  `docs/methodology-decisions.md` D2 and `rigor.log`.
 - **Per-league TOST (2026-07-21):** equivalence at δ=0.001 also holds formally
   *within each* of the three big leagues — all 9 pairwise CIs in MLB/NBA/NHL
   (n≥1,206 each) sit inside ±0.84e-3. CFB/WNBA/NFL show no detectable

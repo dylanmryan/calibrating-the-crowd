@@ -54,8 +54,15 @@ def forest():
 
     fig, ax = plt.subplots(figsize=(8, 6.5))
     ys = np.arange(len(rows))[::-1]
-    ax.axvspan(-1, 1, color="tab:green", alpha=0.10,
-               label="equivalence margin (±1.0e-3 Brier ≈ 0.5pt per game)")
+    # Two margins. The outer band is the pre-stated TOST margin (fixed
+    # 2026-07-21); the inner is the strictest economically defensible reading —
+    # an edge below (4.2% taker cost x 0.50 price) cannot be monetised.
+    # Both are labelled on the probability scale: dBrier = eps^2, so a margin
+    # admits a systematic offset of sqrt(delta). See methodology-decisions D2.
+    ax.axvspan(-1, 1, color="tab:green", alpha=0.08,
+               label="pre-stated margin ±1.0e-3  (systematic error ≤3.16pt)")
+    ax.axvspan(-0.441, 0.441, color="tab:green", alpha=0.18,
+               label="unmonetisable at mid-price ±0.44e-3  (≤2.10pt)")
     ax.axvline(0, color="k", lw=0.8)
     for (lab, d, ci, n, sub), yy in zip(rows, ys):
         col = "tab:gray" if sub else "tab:blue"
@@ -65,7 +72,8 @@ def forest():
                 color="dimgray" if sub else "black")
     ax.set(yticks=[], xlim=(-3.5, 3.5),
            xlabel="Brier difference ×1000 (negative = first source better), 90% CI",
-           title="Closing accuracy: every comparison lands inside the equivalence band")
+           title="Closing accuracy: every headline comparison sits inside the pre-stated margin\n"
+                 "gray = league subgroups; a CI leaving the band there is low power, not a gap")
     ax.legend(loc="lower right", fontsize=8)
     fig.tight_layout()
     fig.savefig("results/equivalence_forest.png", dpi=130)

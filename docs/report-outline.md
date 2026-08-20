@@ -109,7 +109,7 @@ HORIZON — people using these for long-term wealth — which is exactly the axi
 - Scoring: Brier + log score; Murphy decomposition; CORP; Murphy diagrams
   with sup-t bands. De-vig: multiplicative default, Shin for tail-sensitive
   claims (tail artifact documented).
-- Inference: date-clustered DM; TOST at δ=1.0e-3 Brier (≈0.5pt/game);
+- Inference: date-clustered DM; TOST at δ=1.0e-3 Brier (admits a systematic 3.16pt offset; ΔBrier=ε²), reported against the cost-anchored ladder δ=0.11/0.44/0.99e-3 at prices 0.25/0.50/0.75;
   interval-randomized tie-consistent PIT; exact binomials for tail buckets;
   cluster bootstrap for niche ECE/slope; BH-FDR two-family policy.
 - Power: MDE table for every subgroup equivalence [power.log]. Pooled MDE
