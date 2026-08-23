@@ -25,6 +25,7 @@ import requests
 from scipy import stats
 
 from src.analysis.margin_dist import implied_cdf
+from src.analysis.ladder_convention import BOOK
 from src.analysis.rigor import cluster_dm
 from src.collect.kalshi_hist_prices import _rule_home
 
@@ -89,7 +90,7 @@ def margin_rps(return_cdfs=False):
         row = ml[ml.game_id == gid]
         pml = float(row.kalshi_p1.iloc[0]) if len(row) and row.kalshi_p1.notna().iloc[0] else None
         if home and away:
-            kcdf[gid] = implied_cdf(home, away, pml)
+            kcdf[gid] = implied_cdf(home, away, pml, g.league.iloc[0])
 
     # book per-game CDF (alt lines: point<0 = home laying, prob_home = P(cover))
     bcdf = {}
@@ -99,7 +100,7 @@ def margin_rps(return_cdfs=False):
         row = ml[ml.game_id == gid]
         pml = float(row.book_p1.iloc[0]) if len(row) and row.book_p1.notna().iloc[0] else None
         if home and away:
-            bcdf[gid] = implied_cdf(home, away, pml)
+            bcdf[gid] = implied_cdf(home, away, pml, BOOK)
 
     both = sorted((set(kcdf) & set(bcdf)))
     esp_m = esp.set_index("game_id")
@@ -135,8 +136,9 @@ def margin_rps(return_cdfs=False):
         print(f"  {lg:5} n={len(g):5}  RPS Kalshi={g.rps_k.mean():.4f}  "
               f"book={g.rps_b.mean():.4f}  diff={dbar*1000:+.2f}e-3  z={z:+.2f}"
               f"  ({'book better' if dbar > 0 else 'Kalshi better'})", flush=True)
-    print("  (dead heat on WHO wins; this asks BY HOW MUCH — the one place the", flush=True)
-    print("   books hold a real distributional edge should be MLB)", flush=True)
+    print("  (dead heat on WHO wins; this asks BY HOW MUCH. After the ladder-", flush=True)
+    print("   convention fix the MLB gap is n.s.; what survives is a small NBA", flush=True)
+    print("   edge to the books -- see src/analysis/ladder_convention.py)", flush=True)
     if return_cdfs:
         return kcdf, bcdf, esp_m, ml_m
 
@@ -153,8 +155,11 @@ def distribution_figure(kcdf, bcdf, esp_m, ml_m):
     import matplotlib.pyplot as plt
 
     # grids chosen from the thresholds BOTH sources actually quote
-    grids = {"MLB": [-3.5, -2.5, 0.0, 2.5, 3.5],
-             "NBA": [-5.5, -2.5, 0.0, 2.5, 5.5]}
+    # CDF x-positions (cover-based), chosen to cut the SAME six cells as before:
+    #   MLB home rungs 2.5/3.5/4.5 -> x 1/2/3 ; away -> x -2/-3/-4
+    #   NBA home rungs 2.5/5.5     -> x 2/5   ; away -> x -3/-6
+    grids = {"MLB": [-4.0, -3.0, 0.0, 2.0, 3.0],
+             "NBA": [-6.0, -3.0, 0.0, 2.0, 5.0]}
     labels = {"MLB": ["away 4+", "away 3", "away 1-2", "home 1-2", "home 3", "home 4+"],
               "NBA": ["away 6+", "away 3-5", "away 1-2", "home 1-2", "home 3-5", "home 6+"]}
     fig, axes = plt.subplots(1, 2, figsize=(13.5, 5.2))

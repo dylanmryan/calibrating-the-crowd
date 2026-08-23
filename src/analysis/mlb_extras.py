@@ -23,6 +23,7 @@ import numpy as np
 import pandas as pd
 
 from src.collect.kalshi_hist_prices import _rule_home
+from src.analysis.ladder_convention import cover_line
 
 
 def load_games():
@@ -77,12 +78,15 @@ def ladder_decomposition(g):
             rungs = {r.threshold: r.prob for r in
                      grp[(grp.team == rh) == (side == "home")].itertuples(index=False)
                      if r.prob == r.prob}
-            if 2.5 not in rungs:
+            # index by cover line: "win by 1-2" is P(>=1) - P(>=3), and for MLB
+            # the cover-3 rung is threshold 3.5, not 2.5
+            bc = {cover_line("MLB", t): p for t, p in rungs.items()}
+            if 3 not in bc:
                 continue
             pwin = pml if sgn == 1 else 1 - pml
             sm = sgn * margin
             rows.append({"side": side, "extras": extras,
-                         "imp": pwin - rungs[2.5], "emp": float(sm in (1, 2))})
+                         "imp": pwin - bc[3], "emp": float(sm in (1, 2))})
     d = pd.DataFrame(rows)
 
     print(f"\n=== ladder 'win by 1-2' cell: implied vs empirical (n={len(d):,} sides) ===", flush=True)
@@ -97,16 +101,22 @@ def ladder_decomposition(g):
         print(f"{name:>18} {len(s):>6,} {s.imp.mean():>9.4f} {s.emp.mean():>10.4f} "
               f"{gap*100:>+9.2f} {gap/se:>+6.2f}", flush=True)
 
-    # How much of the total gap do extras explain? Counterfactual: give
-    # extra-inning games the regulation empirical rate.
+    # Regulation and extras pull in OPPOSITE directions once the ladder
+    # convention is right, so a "share of the total gap" is meaningless: the
+    # aggregate is a near-cancellation, not a small effect. Report both regimes
+    # and their contributions instead of a ratio with a vanishing denominator.
     emp_all, imp_all = d.emp.mean(), d.imp.mean()
-    emp_reg = d[~d.extras].emp.mean()
+    reg, ext = d[~d.extras], d[d.extras]
+    gap_reg = reg.emp.mean() - reg.imp.mean()
+    gap_ext = ext.emp.mean() - ext.imp.mean()
     share_x = d.extras.mean()
-    emp_cf = (1 - share_x) * emp_reg + share_x * emp_reg
-    explained = (emp_all - emp_cf) / (emp_all - imp_all)
-    print(f"\n  gap = {(emp_all-imp_all)*100:+.2f}pts; counterfactual (extras priced like "
-          f"regulation) removes {(emp_all-emp_cf)*100:.2f}pts -> extras explain "
-          f"{explained:.0%} of the under-pricing", flush=True)
+    print(f"\n  aggregate gap {(emp_all-imp_all)*100:+.2f}pts is a CANCELLATION, not an absence:", flush=True)
+    print(f"    regulation {gap_reg*100:+.2f}pts on {100*(1-share_x):.1f}% of sides "
+          f"-> contributes {(1-share_x)*gap_reg*100:+.2f}pts", flush=True)
+    print(f"    extras     {gap_ext*100:+.2f}pts on {100*share_x:.1f}% of sides "
+          f"-> contributes {share_x*gap_ext*100:+.2f}pts", flush=True)
+    print(f"  the extras cell is the real effect; ladder_vs_books shows the BOOKS "
+          f"miss it\n  by a matching ~+22pts, making it baseball-wide, not Kalshi-specific", flush=True)
     hs, as_ = d[d.side == "home"], d[d.side == "away"]
     print(f"  home-side gap {(hs.emp.mean()-hs.imp.mean())*100:+.2f}pts vs away-side "
           f"{(as_.emp.mean()-as_.imp.mean())*100:+.2f}pts (walk-off asymmetry)", flush=True)

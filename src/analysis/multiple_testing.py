@@ -13,6 +13,24 @@ Nulls/equivalences are not discoveries and are controlled by their own TOST
 margins; listed separately. Benjamini-Hochberg at q = 0.05 and 0.10.
 
 RETIRED CLAIMS (kept here as the honest record):
+  - LADDER-CONVENTION CORRECTION (2026-08-20). MLB/WNBA spread rungs settle at
+    "wins by t-0.5 or more"; NBA/NHL at "wins by more than t". The analysis
+    layer applied the NBA rule everywhere, shifting MLB's implied margin CDF by
+    a full run. Four claims below were that bug, not the market. Verified
+    against Kalshi's own settlement field; guarded now by a data_audit gate and
+    by src/analysis/ladder_convention.py.
+      * "MLB ladder under-prices 1-2-run margins z=+10.05" -> +8.40pts becomes
+        -1.10pts (z=-1.31). RETRACTED.
+      * "MLB PIT rejects for Kalshi, KS p<0.001" -> KS 0.0709 becomes 0.0343,
+        p=0.104. RETRACTED; every league's margin PIT now passes.
+      * "Books beat Kalshi ladders as DISTRIBUTIONS, RPS z=+5.36" -> the MLB
+        term was the artifact (+3.96e-3 z=+5.42 becomes +0.33e-3 z=+1.29).
+        REVISED, not retracted: a smaller pooled edge survives (+0.49e-3,
+        z=+2.44) and it is now carried by NBA (+1.14e-3, z=+2.27), whose
+        convention was correct all along.
+      * "Totals pass where margins reject" (the walk-off mechanism story) ->
+        both layers now pass on the same 1,244 games (totals p=0.84, margins
+        p=0.10). The CONTRAST is retracted; the totals result itself stands.
   - "Book consensus momentum z=17.5" (2026-07-21): 3-day small-sample
     artifact; matured panel own-lag z=-0.3.
   - "NBA carries the encompassing increment" (2026-07-30): p=0.006 on Jul-10
@@ -28,14 +46,21 @@ from __future__ import annotations
 
 # (claim, p-value, provenance: results/logs file, 2026-07-30 run)
 DISCOVERIES = [
-    ("MLB ladder under-prices 1-2-run margins (z=+10.05)",       1e-10,  "ladder_vs_books.log"),
+    ("MLB extra-inning 1-2-run cell under-priced, BOTH venues (K z=+5.94)", 1e-8,
+     "mlb_extras.log, ladder_vs_books.log [K +20.15pts / books +21.99pts on the "
+     "same games -- baseball-wide, NOT Kalshi-specific. Replaces the retracted "
+     "Kalshi-only +8.4pt claim; regulation runs the other way at -3.07pts]"),
     ("Extras end within 1 run 70% vs 25% (cell z~8.9)",          1e-10,  "mlb_extras.log"),
     ("Markets beat walk-forward Elo floor (z=+7.3..+7.4)",       1e-10,  "model_benchmark.log"),
     ("Minute-scale bidirectional K<->P predictability (z~7)",    1e-10,  "minute_lead_lag.log"),
-    ("Ladder-cost: selling the bias LOSES money (z=-4.6)",       1e-5,   "ladder_cost.log"),
+    ("Ladder-cost: selling MLB ladder rungs LOSES money (z=-4.6)", 1e-5,
+     "ladder_cost.log [unchanged — uses each contract's own settlement — but it "
+     "no longer tests a Kalshi-specific bias, since that bias was the artifact]"),
     ("Poly relative volume -41% at fee date (z=-3.6)",           3e-4,   "fee_liquidity.log"),
-    ("MLB PIT rejects for Kalshi (KS p<0.001)",                  1e-3,   "margin_dist.log"),
-    ("Books beat Kalshi ladders as DISTRIBUTIONS (RPS z=+5.36)",  1e-7,   "multi_outcome.log (MLB z=+5.4, NBA z=+2.3, NHL z=+0.05 TIE — edge is MLB-concentrated)"),
+
+    ("Books beat Kalshi ladders as DISTRIBUTIONS (RPS z=+2.44)",  1.5e-2,
+     "multi_outcome.log [post-convention-fix: MLB z=+1.29 n.s., NBA z=+2.27, "
+     "NHL z=+0.05 TIE — the edge is now NBA-carried and much smaller]"),
     ("Sports FUTURES longshots overpriced ($0.33/$1, pooled)",    6e-3,   "futures_calibration.log [modest n]"),
     ("BOOKS' outright longshots overpriced ($0.34/$1, 0-3mo)",    1e-5,   "book_outrights.log [cluster-t, 20 sport-seasons 2020-26 playoff-densified, se 0.08; = Kalshi's $0.33]"),
     ("Cross-venue 15-min predictability, P->K only (z=+4.4)",     1e-5,  "lead_lag.log [REVISED 2026-08-10 on the 528-game panel: the book->P term this claim used to include is now z=-0.1 and is retired; only the exchange-to-exchange term survives]"),

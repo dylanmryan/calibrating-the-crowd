@@ -15,6 +15,7 @@ import pandas as pd
 from scipy import stats
 
 from src.analysis.margin_dist import implied_cdf, pit
+from src.analysis.ladder_convention import BOOK
 
 
 def main():
@@ -37,7 +38,7 @@ def main():
             continue
         pml = g.iloc[0].book_p1
         pml = float(pml) if pml == pml else None
-        u = pit(implied_cdf(home, away, pml), margin, rng)
+        u = pit(implied_cdf(home, away, pml, BOOK), margin, rng)
         if u is not None:
             us.append(u); lgs.append(lg)
 
@@ -47,7 +48,10 @@ def main():
         uu = us[lgs.values == l]
         k = stats.kstest(uu, "uniform")
         print(f"  BOOK {l:4} n={len(uu):5,}  KS={k.statistic:.4f} p={k.pvalue:.3f} mean={uu.mean():.3f}", flush=True)
-    print("  (Kalshi benchmark, same test: MLB KS=0.072 p<0.001; NBA p=0.33)", flush=True)
+    print("  (Kalshi benchmark, same test: see margin_dist.log — quoting it here", flush=True)
+    print("   went stale once already. Post ladder-convention fix Kalshi's MLB PIT", flush=True)
+    print("   passes while the books' rejects, but the book ladder is far denser", flush=True)
+    print("   and includes push lines, so it is the better-powered test.)", flush=True)
 
 
 if __name__ == "__main__":

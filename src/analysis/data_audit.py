@@ -124,6 +124,31 @@ def main():
         vals = h[cols].stack().dropna()   # pandas 3.0 stack keeps NaN
         check(f"{f}: horizons in (0,1)", vals.between(0, 1).all())
 
+    # ---------- ladder settlement conventions ----------
+    # Guards the bug that produced the phantom +8.4pt MLB result: MLB/WNBA
+    # spread rungs settle at "wins by t-0.5 or more", NBA/NHL at "wins by more
+    # than t". A silent drift here shifts an implied margin CDF by a full unit.
+    from src.analysis.ladder_convention import resolves
+    sp_ = pd.read_csv(f"{P}/kalshi_spread_prices.csv")
+    esp_ = pd.read_csv(f"{P}/espn_games.csv")
+    sp_["game_id"] = pd.to_numeric(sp_.game_id, errors="coerce")
+    esp_["espn_id"] = pd.to_numeric(esp_.espn_id, errors="coerce")
+    j = sp_.merge(esp_[["espn_id", "home_abbr", "away_abbr", "home_score", "away_score"]],
+                  left_on="game_id", right_on="espn_id", how="inner")
+    j = j[(j.team == j.home_abbr) | (j.team == j.away_abbr)]
+    sm_ = np.where(j.team == j.home_abbr, j.home_score - j.away_score,
+                   j.away_score - j.home_score)
+    pred = np.array([resolves(lg, m_, t_) for lg, m_, t_ in zip(j.league, sm_, j.threshold)])
+    acc = (pred.astype(int) == j.won.values).mean()
+    check("ladders: cover_line() reproduces Kalshi settlement >99%", acc > 0.99,
+          f"only {acc:.2%}")
+    for lg_, g_ in j.groupby("league"):
+        sm_g = np.where(g_.team == g_.home_abbr, g_.home_score - g_.away_score,
+                        g_.away_score - g_.home_score)
+        p_ = np.array([resolves(lg_, m_, t_) for m_, t_ in zip(sm_g, g_.threshold)])
+        a_ = (p_.astype(int) == g_.won.values).mean()
+        check(f"ladders: {lg_} settlement convention", a_ > 0.99, f"only {a_:.2%}")
+
     # ---------- trades ----------
     t = pd.read_csv(f"{P}/kalshi_trades_24h.csv")
     check("trades: price in (0,1)", t.yes_price.dropna().between(0, 1).all())

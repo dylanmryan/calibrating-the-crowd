@@ -1,11 +1,14 @@
 """Distributional calibration of spread-ladder implied margin distributions (PIT).
 
 Each game's ladder implies a CDF over the final margin M = home - away:
-  home rung t:  F(t)  = 1 - P(home wins by > t)
-  away rung t:  F(-t) = P(away wins by > t)
-  moneyline:    F(0)  = 1 - P(home wins)          (no ties in these leagues)
-Margins are integers and rungs sit at half-integers, so P(M <= m) = F(m + 0.5)
-exactly. Randomized PIT: u = F(m-.5) + V*(F(m+.5)-F(m-.5)), V~U(0,1).
+  home rung t:  F(x) = 1 - p   at x = cover_line - 1
+  away rung t:  F(x) = p       at x = -cover_line
+  moneyline:    F(0) = 1 - P(home wins)          (no ties in these leagues)
+where cover_line is the smallest signed margin that wins the contract. That
+indirection is load-bearing: MLB and WNBA rungs settle at "wins by t-0.5 or
+more" while NBA and NHL settle at "wins by more than t", and treating them
+alike shifts the MLB CDF a full run (see src/analysis/ladder_convention.py).
+Randomized PIT: u ~ U(F(a), F(b)) over the tightest grid interval containing m.
 If the implied distributions are correct, u ~ Uniform(0,1)  (KS test).
 """
 from __future__ import annotations
@@ -13,20 +16,26 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 from scipy import stats
+from src.analysis.ladder_convention import cdf_x_home, cdf_x_away
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 
-def implied_cdf(home_rungs: dict, away_rungs: dict, p_home_win: float | None):
-    """Grid {x: F(x)} at half-integers (and 0 from the moneyline), isotonic-clipped."""
+def implied_cdf(home_rungs: dict, away_rungs: dict, p_home_win: float | None,
+                league: str):
+    """Grid {x: F(x)} (plus 0 from the moneyline), isotonic-clipped.
+
+    Rung positions come from ladder_convention so that the league's settlement
+    rule, not an assumed one, decides where each price pins the CDF.
+    """
     pts = {}
     for t, p in away_rungs.items():
-        pts[-t] = p                      # F(-t) = P(M < -t)
+        pts[cdf_x_away(league, t)] = p           # F(-cover) = P(away covers)
     if p_home_win is not None:
         pts[0.0] = 1 - p_home_win
     for t, p in home_rungs.items():
-        pts[t] = 1 - p                   # F(t) = 1 - P(M > t)
+        pts[cdf_x_home(league, t)] = 1 - p       # F(cover-1) = 1 - P(home covers)
     xs = sorted(pts)
     fs = np.maximum.accumulate([pts[x] for x in xs])   # enforce monotone CDF
     return dict(zip(xs, np.clip(fs, 0, 1)))
@@ -85,7 +94,7 @@ def main():
         pml = float(mlrow.iloc[0].kalshi_p1) if len(mlrow) else None
         if pml is not None and pml != pml:
             pml = None
-        u = pit(implied_cdf(home, away, pml), margin, rng)
+        u = pit(implied_cdf(home, away, pml, lg), margin, rng)
         if u is not None:
             us.append(u); leagues.append(lg)
 

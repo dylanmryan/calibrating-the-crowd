@@ -1,18 +1,20 @@
 """Cross-source margin curves: Kalshi alternate-spread ladders vs the books'
 alternate spread lines on the same games (MLB + NBA).
 
-Mapping (home margin M):
-  Kalshi home-side threshold t  = P(M > t)
-  book home line at point -t    = P(home covers -t) = P(M > t)          (same event)
-  Kalshi away-side threshold t  = P(M < -t) = 1 - P(home covers +t)
+Mapping: both sources are reduced to a COVER LINE -- the smallest signed
+margin, for the contract's own side, that wins it -- and joined on that.
+Joining on the raw threshold instead silently pairs different events in MLB,
+where Kalshi quotes integer run lines ("wins by 2+") against the books'
+half-point lines ("wins by more than 2.5"). That one-rung offset, not the
+market, produced the +8.4pt MLB cell. See src/analysis/ladder_convention.py.
 
 Questions:
   1. Do the curves agree point-by-point? (level + correlation by league/threshold)
   2. Tail calibration of the BOOK ladders (Brier/ECE vs realized margins) —
      benchmark for Kalshi's 0.186 / 0.008.
-  3. THE test: the MLB 'win by 1-2' cell. Kalshi under-prices it by +8.4pts
-     (walk-off/extras spike). Compute the same cell from book prices:
-     shared blind spot (baseball-wide) or Kalshi-specific?
+  3. THE test: the MLB 'win by 1-2' cell, computed from the cover=3 rung on
+     both sides so the same event is priced. Historically reported as a
+     Kalshi-specific +8.4pt under-pricing; that was the join bug.
 """
 from __future__ import annotations
 
@@ -21,6 +23,7 @@ import pandas as pd
 
 from src.analysis.compare import brier, ece
 from src.collect.kalshi_hist_prices import _rule_home
+from src.analysis.ladder_convention import cover_line, book_cover_line, is_push_line
 
 
 def _kalshi_ladder():
@@ -39,7 +42,9 @@ def _kalshi_ladder():
                 continue
             rows.append({"game_id": gid, "league": r.league,
                          "side": "home" if r.team == rh else "away",
-                         "threshold": float(r.threshold), "k_prob": float(r.prob)})
+                         "threshold": float(r.threshold),
+                         "cover": cover_line(r.league, r.threshold),
+                         "k_prob": float(r.prob)})
     return pd.DataFrame(rows)
 
 
@@ -50,7 +55,12 @@ def _book_ladder():
                                    b_prob=lambda d: d.prob_home)
     away = ab[ab.point > 0].assign(side="away", threshold=lambda d: d.point,
                                    b_prob=lambda d: 1 - d.prob_home)
-    return pd.concat([home, away])[["game_id", "league", "side", "threshold", "b_prob", "n_books"]]
+    out = pd.concat([home, away])
+    # whole-number lines can push; they are not the same event as any Kalshi
+    # rung and must not be joined to one
+    out = out[~is_push_line(out.threshold)].copy()
+    out["cover"] = book_cover_line(out.threshold)
+    return out[["game_id", "league", "side", "threshold", "cover", "b_prob", "n_books"]]
 
 
 def _margins():
@@ -63,11 +73,12 @@ def _margins():
 def main():
     k, b = _kalshi_ladder(), _book_ladder()
     mg = _margins()
-    d = k.merge(b, on=["game_id", "league", "side", "threshold"], how="inner")
+    d = k.merge(b, on=["game_id", "league", "side", "cover"], how="inner",
+                suffixes=("_k", "_b"))
     d = d[d.game_id.isin(mg.index)].copy()
     d["margin"] = d.game_id.map(mg)
     d["sm"] = np.where(d.side == "home", d.margin, -d.margin)
-    d["won"] = (d.sm > d.threshold).astype(float)
+    d["won"] = (d.sm >= d.cover).astype(float)
     print(f"matched ladder contracts: {len(d):,} "
           f"({d.game_id.nunique():,} games; MLB {len(d[d.league=='MLB']):,} / NBA {len(d[d.league=='NBA']):,})", flush=True)
 
@@ -86,7 +97,7 @@ def main():
     # --- THE cell test: MLB win-by-1-2, book version ------------------------
     print("\n=== MLB 'win by 1-2' cell: Kalshi vs book (same games, same rungs) ===", flush=True)
     m = pd.read_csv("data/processed/games_master.csv")[["game_id", "kalshi_p1", "book_p1"]]
-    mlb = d[(d.league == "MLB") & (d.threshold == 2.5)].merge(m, on="game_id")
+    mlb = d[(d.league == "MLB") & (d.cover == 3)].merge(m, on="game_id")
     inn = pd.read_csv("data/processed/mlb_innings.csv")[["game_id", "innings"]]
     mlb = mlb.merge(inn, on="game_id", how="left")
     mlb["extras"] = mlb.innings > 9

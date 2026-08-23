@@ -1,13 +1,17 @@
-"""Does the MLB ladder mispricing survive transaction costs?
+"""Does any MLB ladder mispricing survive transaction costs?
 
-The referee's question about the Kalshi-specific +8.4pt under-pricing of 1-2-run
-margins: if the books price it correctly, why hasn't it been traded away? This is
-an EFFICIENCY test, not a strategy: a bias that clears executable costs is a
-genuine inefficiency (bounded arbitrage / thin books); one inside the cost band
-is "harbored" the way books harbor biases inside their vig.
+NOTE (2026-08-20): the premise of this module has changed. It was written to
+probe a Kalshi-specific +8.4pt under-pricing of 1-2-run margins; that result
+was a ladder-convention artifact (see src/analysis/ladder_convention.py) and
+is gone. What survives is an extra-innings effect that the BOOKS share, so
+this is no longer a test of a Kalshi-specific edge.
 
-Trade construction: the mispricing implies Kalshi's P(win by >2.5) is too HIGH,
-so the natural position is SELL YES at the bid on threshold-2.5 contracts
+The ROI arithmetic below is unaffected -- it uses each contract's own
+settlement -- and remains a valid efficiency test: a bias that clears
+executable costs is a genuine inefficiency; one inside the cost band is
+"harbored" the way books harbor biases inside their vig.
+
+Trade construction: SELL YES at the bid on threshold-2.5 contracts
 (equivalently backing "loses or wins by 1-2"). Costs: cross the spread (sell at
 bid, value at mid) + Kalshi taker fee 0.07*P*(1-P) at execution price P.
 Per contract shorted at bid b:  profit = b*1{no} - (1-b)*1{yes} - fee,

@@ -18,6 +18,7 @@ from scipy import stats
 from src.analysis.compare import brier
 from src.analysis.three_way import load, dm
 from src.collect.kalshi_hist_prices import _rule_home
+from src.analysis.ladder_convention import cover_line
 
 
 def mlb_margins():
@@ -44,20 +45,24 @@ def mlb_margins():
         pml = float(mlr.iloc[0].kalshi_p1) if len(mlr) and mlr.iloc[0].kalshi_p1 == mlr.iloc[0].kalshi_p1 else None
         if pml is None:
             continue
-        # per side, decompose the win probability into margin cells using the
-        # dense rungs (2.5/3.5/4.5): implied P(win by 1-2) = P(win) - P(by>2.5), etc.
+        # Per side, decompose the win probability into margin cells. Index the
+        # rungs by COVER LINE (smallest winning margin) rather than by raw
+        # threshold: MLB rung 2.5 is "wins by 2 or more", so pairing it with
+        # P(win) yields P(margin==1), not P(margin in 1-2). Indexing by cover
+        # is what keeps each cell equal to its label.
         for side_rungs, sgn in ((home, +1), (away, -1)):
             pwin = pml if sgn == 1 else 1 - pml
             sm = sgn * margin
-            if 2.5 in side_rungs:
-                rows.append({"cell": "margin 1-2", "imp": pwin - side_rungs[2.5],
+            bc = {cover_line("MLB", t): p for t, p in side_rungs.items()}
+            if 3 in bc:                       # P(>=1) - P(>=3)
+                rows.append({"cell": "margin 1-2", "imp": pwin - bc[3],
                              "emp": float(sm in (1, 2))})
-            if 2.5 in side_rungs and 3.5 in side_rungs:
-                rows.append({"cell": "margin 3", "imp": side_rungs[2.5] - side_rungs[3.5],
+            if 3 in bc and 4 in bc:           # P(>=3) - P(>=4)
+                rows.append({"cell": "margin 3", "imp": bc[3] - bc[4],
                              "emp": float(sm == 3)})
-            if 3.5 in side_rungs and 4.5 in side_rungs:
-                rows.append({"cell": "margin 4", "imp": side_rungs[3.5] - side_rungs[4.5],
-                             "emp": float(sm == 4)})
+            if 4 in bc:                       # P(>=4)
+                rows.append({"cell": "margin 4+", "imp": bc[4],
+                             "emp": float(sm >= 4)})
     d = pd.DataFrame(rows)
     print(f"=== MLB margin autopsy ({d.game if hasattr(d,'game') else len(d):,} cell-observations) ===", flush=True)
     print(f"{'cell':>11} {'n':>6} {'implied':>9} {'empirical':>10} {'gap(pts)':>9} {'z':>6}", flush=True)

@@ -236,7 +236,7 @@ def _margin_pits(game_ids, rng):
         pml = ml.kalshi_p1.get(gid)
         if pml is not None and pml != pml:
             pml = None
-        u = pit(margin_cdf(home, away, pml), margin, rng)
+        u = pit(margin_cdf(home, away, pml, g.league.iloc[0]), margin, rng)
         if u is not None:
             us.append(u)
     return np.array(us)
