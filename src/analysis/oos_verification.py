@@ -398,10 +398,10 @@ def figure():
         ax.text(0.00, yy, row["id"], fontsize=9, weight="bold", transform=ax.transAxes)
         ax.text(0.05, yy, row["claim"], fontsize=9, transform=ax.transAxes)
         stat = row["stat"]
-        if len(stat) > 110:
-            stat = stat[:107] + "..."
-        ax.text(0.40, yy, stat, fontsize=7, color="#52514e", transform=ax.transAxes)
-        ax.text(0.92, yy, row["verdict"], fontsize=9, weight="bold",
+        if len(stat) > 76:
+            stat = stat[:73] + "..."
+        ax.text(0.34, yy, stat, fontsize=7, color="#52514e", transform=ax.transAxes)
+        ax.text(0.995, yy, row["verdict"], fontsize=9, weight="bold", ha="right",
                 color=colors.get(row["verdict"], "#0b0b0b"), transform=ax.transAxes)
     fig.tight_layout()
     fig.savefig("results/oos_scorecard.png", dpi=160)

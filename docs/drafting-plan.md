@@ -241,8 +241,8 @@ means writing its beats in order and nothing else.
 - **¶2 The books benchmark is not one thing.** US consensus, EU per-book
   including Pinnacle and Betfair, US per-book at 86% of the joint set, T-24h,
   alt-spreads, outrights 2020–26. Say plainly which claims rest on which.
-- **¶3 Master and joint set.** 9,778 games / 7 leagues; three-way clean
-  n=5,327. Explain the attrition from master to joint set explicitly — a
+- **¶3 Master and joint set.** 10,118 games / 7 leagues; three-way clean
+  n=5,333 (frozen 2026-08-29). Explain the attrition from master to joint set explicitly — a
   reader will ask, and answering pre-emptively buys credibility.
 - **¶4 External validation.** Trade-recon vs archived books 99% within 1pt;
   Poly CLOB vs archived books median error 0.00pt.

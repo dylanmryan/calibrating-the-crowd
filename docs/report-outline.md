@@ -101,7 +101,7 @@ HORIZON — people using these for long-term wealth — which is exactly the axi
   pre-cutoff), Polymarket Global (CLOB), Polymarket US (DCM tape),
   sportsbooks (Odds API: US consensus, EU per-book incl. Pinnacle/Betfair,
   US per-book (86% of joint set), T-24h, alt-spreads, outrights 2020-26), ESPN
-  anchor. Master 9,419 games / 7 leagues; three-way clean n=5,328.
+  anchor. Master 10,118 games / 7 leagues; three-way clean n=5,333 (frozen).
 - External validation: trade-recon vs archived books 99% within 1pt; Poly
   CLOB vs archived books median error 0.00pt.
 - Audit-gate architecture (73 checks, suite halts on failure) + the
