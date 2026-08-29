@@ -21,7 +21,7 @@ mechanisms and asks whether they differ.
 
 ## The finding
 
-On 5,327 games priced by all sources, a CFTC-regulated exchange (Kalshi), an
+On 5,333 games priced by all sources, a CFTC-regulated exchange (Kalshi), an
 offshore crypto CLOB (Polymarket Global), a second US-regulated exchange
 (Polymarket US), and the professional sportsbook complex — including Pinnacle
 and eleven major US retail books — are a **statistical dead heat**.
@@ -49,9 +49,9 @@ Three things follow, and they are the actual contribution:
    repetition and fast resolution, not regulation, liquidity, or the presence
    of a professional benchmark.
 3. **Calibration disciplines the price; it does not protect the participant.**
-   Structural taker cost is −4.5% per position. A weekly bettor keeps 30% of
-   bankroll across a season. Twelve well-priced game bets cost the same as one
-   badly-priced futures ticket.
+   Structural taker cost is −4.6% per position. A weekly bettor keeps about
+   30% of bankroll across a season. Twelve well-priced game bets cost the
+   same as one badly-priced futures ticket.
 
 One genuine anomaly survives every correction: extra-inning baseball games.
 Extras end within one run 70% of the time (the ghost-runner rule), and the
@@ -65,10 +65,16 @@ everywhere, exactly like one-shot outrights.
 
 ## Status
 
-Evidence collection and analysis are **complete**: 57 analysis modules, 0
-failures, audit-gated. The written report is **in progress** (target: end of
-August 2026). This repository is the reproducibility artifact promised in the
-grant proposal.
+Evidence collection and analysis are **complete and frozen** (2026-08-29
+freeze run: 59 analysis modules, 0 failures, audit-gated; every figure and
+table regenerates from the frozen logs). A **registered out-of-sample
+verification** — claims committed in `docs/registered-claims.md` before the
+holdout was pulled — confirmed the exchange dead heat at full registered
+power on fresh games (|ΔBrier| 0.04e-3 against an MDE of 0.81e-3),
+replicated the extra-innings blind spot (+19.6pt vs +20.2pt frozen) and the
+structural cost, and resolved the one open observation (WNBA totals) as a
+false alarm. The written report is **in progress**. This repository is the
+reproducibility artifact promised in the grant proposal.
 
 ## Reproducing
 
@@ -112,7 +118,7 @@ Four games are included in full cross-venue detail under `data/exhibits/`
 src/collect/     API collectors (Kalshi, Polymarket Global + US, Odds API, ESPN)
 src/normalize/   venue-specific price construction
 src/match/       cross-venue game matching
-src/analysis/    57 analysis modules, one concern each
+src/analysis/    59 analysis modules, one concern each
 src/make_results.py   regenerates everything
 results/         figures + MANIFEST (per-module runtime and status)
 docs/            findings log, report outline, drafting plan, methodology decisions
@@ -135,12 +141,14 @@ Each of those choices, including the ones declined and why, is written up in
 
 Underpowered subgroups are reported with their MDE, not as evidence of sameness
 (CFB, WNBA, and NFL cannot detect the effect size at issue). Suggestive results
-are labelled suggestive and do not become claims. Eight findings have been
-**retracted or downgraded in place** as the sample grew or the pipeline was
-audited — four of them on 2026-08-23, when a league-specific settlement
-convention turned out to be generating the project's one "venue defect." The
-full record is kept at the top of `src/analysis/multiple_testing.py` rather
-than quietly dropped.
+are labelled suggestive and do not become claims. Ten claims have been
+**retracted, downgraded, or resolved as false alarms in place** as the sample
+grew or the pipeline was audited — four on 2026-08-23, when a league-specific
+settlement convention turned out to be generating the project's one "venue
+defect," and one on 2026-08-29, when the WNBA totals rejection dissolved on
+the frozen sample and flipped sign on the registered holdout. The full record
+is kept at the top of `src/analysis/multiple_testing.py` rather than quietly
+dropped.
 
 ## License and use
 

@@ -218,11 +218,11 @@ Figs: `minute_lead_lag.png`, `five_min.png`.
   totals-pass/margins-reject contrast this layer was collected to test is
   retracted — both layers pass, which upgrades the conclusion: the whole
   run-scoring process is priced correctly outside the extras cell. WNBA
-  totals reject (p=.0076, n=234, mild upward tilt, mean u .536) — and the
-  registered holdout RESOLVED it: on 47 fresh post-cutoff ladders the tilt
-  flipped sign (mean u 0.404, z=−2.3) [oos_verification.log], so the
-  observation is treated as sampling noise, not a market defect. Report the
-  original rejection and its non-replication together. Coherence splits by price source: live-book
+  totals: RESOLVED as a false alarm, twice over. The 2026-08-11 rejection
+  (p=.0076, n=234) DISSOLVED as the frozen sample grew (KS 0.062, p=0.21,
+  n=290) and FLIPPED SIGN on the registered holdout (mean u 0.404, z=−2.3,
+  n=47) [totals.log, oos_verification.log]. Retired from the FDR inventory
+  with the retraction record; report it as the machinery working. Coherence splits by price source: live-book
   ladders 99.3-100% monotone in every league; violations are
   reconstruction noise.
 - **Self-correction, corrected** [time_stability.log §2, migrated
@@ -390,25 +390,44 @@ E. Data dictionary.
 
 ---
 
-## Numbers locked for the draft (single source of truth)
+## Numbers locked at the freeze — 2026-08-29 (single source of truth)
+*Regenerated from the freeze suite (59 modules, 0 failures; results/MANIFEST.md).
+Every §5 prose number must be read from this table or the named log; the
+2026-08-06/08-10 tables this replaces are superseded in full.*
+
 | Claim | Number | Log |
 |---|---|---|
-| Three-way Briers | 0.2196 / 0.2199 / 0.2196 (n=5,328) | three_way |
-| TOST pooled | all CIs within ±0.53e-3 | rigor |
-| vs Pinnacle | CIs within ±0.34e-3 (n=5,294) | sharp_books |
-| US book-by-book | 11 books, 4,664 games, all n.s. | us_books |
-| Four-way | δ_min ≤ 0.74e-3 | four_way |
-| Elo premium | +13.3e-3, z≈7.4 | model_benchmark |
-| RPS post convention fix | pooled +0.49e-3 (z=+2.44), NBA-carried +1.14e-3 (z=+2.27); MLB n.s. | multi_outcome |
-| Extras 1-2-run cell | K +20.2pt (z=+5.9) / books +22.0pt; aggregate cells n.s. | mlb_extras, ladder_vs_books |
-| Taker P&L | -5.0% gross / -7.7% net, $95.7M | retail_fingerprint |
-| Outright longshots | K $0.33 / P $0.53 / B $0.34 (se .08, 20 seasons) | futures_calibration, book_outrights |
-| Niche gradient | excess ECE 0.00, slope 0.98 | niche_gradient |
-| Footprint | $817K vs $6K vs $235K per market | liquidity_footprint |
-| Functioning | 0.7pt vs 4.2pt from consensus; books 7.1% niche vig | market_functioning |
-| Shading | 30+ books, sub-1pt, sign opposite | sharp_books, us_books |
-| Fee incidence | volume -41%, touch pinned | fee_liquidity |
-| FDR | 17 claims, 15 keep at q=.05 | multiple_testing |
+| Three-way Briers | 0.2196 / 0.2198 / 0.2196 (n=5,333) | three_way |
+| TOST pooled | all 90% CIs within ±0.52e-3; K-B ±0.22e-3 passes the mid-price anchor | rigor |
+| vs Pinnacle | all CIs within ±0.33e-3 (n=5,284) | sharp_books |
+| US book-by-book | 11 books, 4,655 games, all n.s. | us_books |
+| Four-way | δ_min ≤ 0.74e-3; US-Global median gap 0.50pt | four_way |
+| Elo premium | +13.1e-3, z≈+7.3 (n=4,887) | model_benchmark |
+| Shared deviations | calibration-deviation corr K-P +0.99, K-B +0.93, P-B +0.91 | plain_calibration |
+| Season split | regular season EQUIV@1e-3 (δ_min 0.51e-3, n=5,094); postseason consistent, MDE 3.23e-3 (n=228) | referee §4b |
+| RPS post convention fix | pooled +0.48e-3 (z=+2.41), NBA-carried +1.14e-3 (z=+2.27); MLB n.s. | multi_outcome |
+| Extras 1-2-run cell | K +20.2pt (z=+7.5, n=339); books +22.0pt on matched rungs; aggregate cells n.s. | mlb_extras, ladder_vs_books |
+| Margin + totals PIT | margins pooled p=0.81 (MLB p=0.087, n=1,962); totals pass ALL FOUR leagues (WNBA p=0.21, n=290) | margin_dist, totals |
+| Taker P&L | -5.0% gross / -7.7% net on $95.7M (game-clustered CI spans zero) | retail_fingerprint |
+| Outright longshots | K $0.33 / P $0.53 / B $0.34 (se .08, 20 seasons; books $0.52 under Shin) | futures_calibration, book_outrights |
+| Niche gradient | excess ECE 0.00 vs noise floor, slope 0.98 | niche_gradient |
+| Footprint | $817K vs $6K vs $235K per market; 74% of outright tail unquoted | liquidity_footprint |
+| Functioning | 0.7pt vs 4.2pt from consensus; books ~7% niche vig vs ~4% covered | market_functioning |
+| Shading | 30+ books, sub-1pt, sign mostly opposite | sharp_books, us_books |
+| Fee incidence | volume -41% at the fee date, touch pinned at 1c | fee_liquidity |
+| Resolution ladder | no lead sharpens 30→5 min; nothing predicts the book at any grid | five_min |
+| 5-min book→exchange | K +0.047 (z=+2.4) / P +0.164 (z=+4.5); ZERO in final 2h | five_min |
+| Immediacy at retail size | 30-unit order inside the touch 92.4% (K) / 95.0% (P); median cost 0.50c ≈ 1% of notional to 10K units | immediacy |
+| Capacity at 200K units | fills inside 5c: 38% (K) / 22% (P) | immediacy |
+| Within-game depth ramp | 2.14x (K) vs 1.58x (P) | immediacy |
+| Pooled MDE | 0.36-0.51e-3 vs δ=1e-3 (powered) | power |
+| Underpowered leagues | CFB 2.74, WNBA 2.45, NFL 1.57 (e-3), with n-multiples needed | power |
+| FDR | 16 claims, 13 keep at q=.05 (all 16 at q=.10); WNBA totals claim retired | multiple_testing |
+| Structural taker cost | -4.6%/position (IQR -5.5 to -4.0, n=95,654 quotes) | horizon_translation |
+| Bankroll, weekly re-stake, one season | 29.5% | horizon_translation |
+| Game bets equal to one futures ticket | 12.2 | horizon_translation |
+| Master | 10,118 games / 7 leagues; three-way clean n=5,333 | build_master, three_way |
+| Registered holdout | R2 dead heat \|ΔB\|=0.04e-3 at MDE 0.81e-3 (POWERED); extras +19.6pt; cost -4.6%; WNBA tilt sign-flipped; R1/R5 not evaluable (book feed ended 08-07) | oos_verification, registered-claims.md |
 
 ## Open items before the final draft
 1. Advisor: venue (grant report vs arXiv) and turnaround — memo pending.
@@ -422,21 +441,3 @@ E. Data dictionary.
 5. ~~Number freeze~~ — RUN 2026-08-28 after the final VPS panel refresh and
    re-harvest; MANIFEST + logs stamp every figure/table.
 6. ~~Kalshi price re-harvest~~ — RUN 2026-08-28 with the freeze.
-
-## Numbers added 2026-08-10 (append to the locked table at freeze)
-| Claim | Number | Log |
-|---|---|---|
-| Resolution ladder | no lead sharpens 30->5 min; nothing predicts the book | five_min |
-| 5-min book->exchange | K +0.047 (z=2.4) / P +0.164 (z=4.5); ZERO in final 2h | five_min |
-| Immediacy at retail size | 0.50c (~0.9% notional); inside touch 89%/95% | immediacy |
-| Capacity at 200K units | fills inside 5c in 36% (K) / 21% (P) of books | immediacy |
-| Within-game depth ramp | 2.29x (K) vs 1.58x (P) | immediacy |
-| Pooled MDE | 0.36-0.51e-3 vs delta=1e-3 | power |
-| Underpowered leagues | CFB 2.74, WNBA 2.47, NFL 1.57 (e-3) | power |
-| FDR | 17 claims, 15 keep at q=.05 | multiple_testing |
-| Margin + totals PIT (convention-corrected) | margins pooled p=0.718 (MLB p=0.104); totals MLB p=0.90 — both pass | margin_dist, totals |
-| Totals contract calibration (MLB) | Brier 0.1780, ECE 0.0046, n=15,124 | totals |
-| Re-harvested master (2026-08-11) | 9,778 games; three-way clean n=5,327 | build_master, three_way |
-| Structural taker cost | -4.5%/position (IQR -5.4 to -4.0, n=47,766 quotes) | horizon_translation |
-| Bankroll left, weekly re-stake, one season | 30% | horizon_translation |
-| Game bets equal to one futures ticket | 12.4 | horizon_translation |

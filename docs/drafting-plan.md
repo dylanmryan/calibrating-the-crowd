@@ -381,9 +381,9 @@ two scales — and the last "venue defect" died on inspection.*
   Collected to test the walk-off contrast; the contrast is retracted, and
   what the layer shows instead is stronger: the entire run-scoring process
   is priced correctly in every densely-sampled dimension. WNBA rejection:
-  one sentence — the original rejection (p=.0076, n=234) AND its registered
-  non-replication (fresh mean u 0.404, z=−2.3, n=47): resolved as noise
-  [oos_verification].
+  one sentence — resolved as a false alarm twice over: dissolved in the
+  frozen sample (p=0.21 at n=290) and sign-flipped on the registered holdout
+  (u 0.404, z=−2.3, n=47) [totals, oos_verification].
 - **¶7 Self-correction, corrected.** The "+7.5 to +11.2pt non-correcting
   bias" was the artifact persisting; the corrected aggregate cell is
   near-unbiased in every era, and the extras cell recurs in both 2026

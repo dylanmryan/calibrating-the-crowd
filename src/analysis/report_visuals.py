@@ -13,7 +13,7 @@ Each figure does one job in the report's chain:
   F9  institutional trace exchanges price closer to exchanges than to books
 
 Statistics come from the current suite logs (results/logs/*.log, regenerated
-2026-08-23) and are quoted with provenance in SOURCES below, so this module
+2026-08-29 at the freeze) and are quoted with provenance in SOURCES below, so this module
 cannot silently drift from the numbers the suite prints. The only quantity
 recomputed here is the reliability curve in F2, which needs the full binning
 rather than a printed summary; it is asserted against plain_calibration.log.
@@ -97,60 +97,61 @@ def _save(fig, name):
 
 
 # ----------------------------------------------------------- logged stats ---
-# Every number below is quoted from the 2026-08-23 suite run. Provenance is the
-# log file named on each block; nothing here is recomputed or remembered.
+# Every number below is quoted from the 2026-08-29 FREEZE suite run (this
+# block is re-stamped by the freeze; see logs/freeze_20260829.log). Provenance
+# is the log file named on each block; nothing here is recomputed or remembered.
 
 # rigor.log — pooled pairwise DM, 90% CI of Brier difference (x1e-3)
 POOLED_CI = [
-    ("Kalshi vs Polymarket",   -0.243, -0.530, +0.044),
-    ("Kalshi vs Sportsbook",   -0.021, -0.234, +0.192),
-    ("Polymarket vs Sportsbook", +0.222, -0.078, +0.521),
+    ("Kalshi vs Polymarket",   -0.226, -0.506, +0.054),
+    ("Kalshi vs Sportsbook",   -0.008, -0.221, +0.205),
+    ("Polymarket vs Sportsbook",   +0.218, -0.081, +0.517),
 ]
 # sharp_books.log — same construction against the sharp book and the exchange
 SHARP_CI = [
-    ("Kalshi vs Pinnacle",       -0.115, -0.33, +0.10),
-    ("Polymarket vs Pinnacle",   -0.021, -0.25, +0.21),
-    ("US consensus vs Pinnacle", -0.088, -0.22, +0.04),
-    ("Kalshi vs Betfair",        +0.019, -0.22, +0.26),
+    ("Kalshi vs Pinnacle",       -0.116, -0.33, +0.10),
+    ("Polymarket vs Pinnacle",       -0.022, -0.25, +0.21),
+    ("US consensus vs Pinnacle",       -0.087, -0.22, +0.04),
+    ("Kalshi vs Betfair",       +0.024, -0.22, +0.26),
 ]
 # rigor.log — cost-anchored margin ladder: delta = (taker cost x price)^2
 ANCHORS = [(0.110, "0.25"), (0.441, "0.50"), (0.992, "0.75")]
 
 # three_way.log / rigor.log
-BRIER = {"Kalshi": 0.2197, "Polymarket": 0.2200, "Sportsbook": 0.2197}
+BRIER = {"Kalshi": 0.2196, "Polymarket": 0.2198, "Sportsbook": 0.2196}
 # immediacy.log + findings cost table: all-in cost to a market-order taker
 TAKER_COST = {"Kalshi": 4.2, "Polymarket": 1.5, "Sportsbook": 4.2}
 TAKER_NOTE = {"Kalshi": "spread + fee", "Polymarket": "spread + fee", "Sportsbook": "overround"}
 
 # five_min.log — cross-lag correlation by grid; a true lead must GROW leftward
 LADDER = {
-    "Kalshi predicts Polymarket":   [0.013, 0.025, 0.006, 0.023],
+    "Kalshi predicts Polymarket":   [0.025, 0.031, 0.021, 0.032],
     "Kalshi predicts Sportsbook":   [0.035, 0.039, 0.033, 0.042],
-    "Polymarket predicts Kalshi":   [0.008, 0.021, 0.025, 0.026],
-    "Polymarket predicts Sportsbook": [0.026, 0.029, 0.031, 0.024],
+    "Polymarket predicts Kalshi":   [0.010, 0.016, 0.018, 0.044],
+    "Polymarket predicts Sportsbook":   [0.026, 0.029, 0.031, 0.024],
     "Sportsbook predicts Kalshi":   [0.006, 0.028, 0.033, 0.059],
-    "Sportsbook predicts Polymarket": [0.051, 0.040, 0.041, 0.026],
+    "Sportsbook predicts Polymarket":   [0.051, 0.040, 0.041, 0.026],
 }
 GRIDS = [5, 10, 15, 30]
 
-# model_benchmark.log — per-league Brier, evaluation set n=4,880
+# model_benchmark.log — per-league Brier, evaluation set n=4,887
 LEAGUE_BRIER = {          # league: (n, elo, kalshi, poly, book)
-    "CFB":  (521,  0.2331, 0.1779, 0.1779, 0.1783),
-    "NBA":  (1212, 0.2099, 0.1961, 0.1967, 0.1965),
-    "NFL":  (256,  0.2285, 0.2131, 0.2135, 0.2132),
-    "WNBA": (351,  0.2235, 0.2170, 0.2167, 0.2159),
-    "MLB":  (1239, 0.2525, 0.2461, 0.2458, 0.2460),
     "NHL":  (1301, 0.2481, 0.2447, 0.2449, 0.2446),
+    "MLB":  (1240, 0.2515, 0.2454, 0.2452, 0.2453),
+    "NBA":  (1212, 0.2099, 0.1961, 0.1967, 0.1965),
+    "CFB":  (521, 0.2330, 0.1779, 0.1779, 0.1783),
+    "WNBA":  (357, 0.2232, 0.2166, 0.2159, 0.2152),
+    "NFL":  (256, 0.2286, 0.2131, 0.2135, 0.2132),
 }
 
 # plain_calibration.log — $1 returned by price band, game markets
 GAME_RETURN = {
     "Kalshi":     ([.107, .203, .305, .406, .500, .594, .695, .797, .893],
-                   [0.83, 1.13, 1.01, 1.06, 1.00, 0.96, 0.99, 0.96, 1.02]),
-    "Polymarket": ([.106, .202, .305, .407, .500, .593, .696, .798, .894],
-                   [0.83, 1.14, 1.03, 1.06, 1.00, 0.95, 0.99, 0.97, 1.02]),
+                   [0.81, 1.13, 1.01, 1.06, 1.00, 0.96, 0.99, 0.96, 1.02]),
+    "Polymarket": ([.106, .202, .305, .407, .500, .593, .696, .797, .894],
+                   [0.81, 1.14, 1.03, 1.06, 1.00, 0.95, 0.99, 0.97, 1.02]),
     "Sportsbook": ([.109, .204, .305, .407, .500, .593, .695, .796, .891],
-                   [0.67, 1.12, 0.96, 1.08, 1.00, 0.94, 1.02, 0.97, 1.04]),
+                   [0.64, 1.13, 0.96, 1.08, 1.00, 0.94, 1.02, 0.97, 1.04]),
 }
 # futures_calibration.log (T-7d) and book_outrights.log (0-3 months out)
 FUTURES_RETURN = {
@@ -165,7 +166,7 @@ SUB10 = {"Kalshi": 0.33, "Polymarket": 0.53, "Sportsbook": 0.34}
 SUB10_SHIN = 0.52   # book_outrights.log — the tail-robust de-vig, 0-3 months
 
 # horizon_translation.log
-COST_RATE, TICKET_EQUIV = 0.045, 12.4
+COST_RATE, TICKET_EQUIV = 0.046, 12.2
 CADENCE = [("monthly", 6), ("fortnightly", 13), ("weekly", 26),
            ("twice a week", 52), ("daily", 182)]
 
@@ -227,7 +228,7 @@ def f1_two_axes():
              fontsize=7.6, color=MUTED, linespacing=1.5, va="top")
 
     _title(fig, "Price quality and participant cost are independent",
-           "Same 5,327 games. Left is the forecasting question; right is the gambling question. "
+           "Same 5,333 games. Left is the forecasting question; right is the gambling question. "
            "Neither answers the other.")
     _note(fig, "three_way.log / immediacy.log · Polymarket all-in runs 1.25-1.75%; makers trade near-free "
                "on both exchanges, and the fill tape says the customer is a taker.")
@@ -380,7 +381,7 @@ def f4_no_leader():
     _frame(ax)
 
     _title(fig, "No venue leads another, at any clock we can measure",
-           "181 games, 19,272 five-minute steps with all three venues priced. "
+           "471 games, 19,272 five-minute steps with all three venues priced. "
            "All six ordered pairs, at four resolutions.")
     _note(fig, "five_min.log · a fixed-delay lead must grow as the grid shrinks toward it; none does, "
                "and nothing predicts the sportsbook at any grid.")
@@ -427,7 +428,7 @@ def f5_premium():
     _title(fig, "The markets import information that public statistics do not contain",
            "And they import the same information: the three venues differ from each other by "
            "<=0.5x10-3, and each beats the model by ~13x10-3 (z ~ 7.3).")
-    _note(fig, "model_benchmark.log · walk-forward Elo, no look-ahead, n=4,880 · "
+    _note(fig, "model_benchmark.log · walk-forward Elo, no look-ahead, n=4,887 · "
                "labels give the market-model gap in Brier x10-3.")
     _save(fig, "F5_market_premium")
 
@@ -531,7 +532,7 @@ def f7_translation():
     _frame(ax)
 
     _title(fig, "Calibration disciplines the price. It does not protect the participant.",
-           "Structural taker cost is -4.5% per position, set by the quote and the fee schedule "
+           "Structural taker cost is -4.6% per position, set by the quote and the fee schedule "
            "before any ball is thrown. Re-staking proceeds each time:")
     _note(fig, "horizon_translation.log · cadence is a SCENARIO GRID, not a measurement: the public tape "
                "carries no account identifiers, so no outside researcher can observe how often one person bets.")

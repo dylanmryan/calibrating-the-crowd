@@ -63,8 +63,9 @@ first-time reader who must be able to trust the honesty of the display.)
   any chart would invite inferential reading.
 - **The affiliated-dealer material.** D8 reduced it to a paragraph plus an
   appendix; a figure would re-inflate a scope cut already taken.
-- **The WNBA totals rejection.** One open rejection at n=234, reported as
-  suggestive. A figure would over-weight it.
+- **The WNBA totals rejection.** Resolved 2026-08-29 as a false alarm
+  (dissolved at n=290; sign-flipped on the registered holdout). Nothing to
+  illustrate — a fortiori.
 
 ## Caveats carried in the figures themselves
 

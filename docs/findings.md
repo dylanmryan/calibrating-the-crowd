@@ -298,10 +298,12 @@ analyses on our sports data:
    NHL (p=.25); contract ECE 0.0046 (MLB) with no right-tail bias — the
    run-scoring process is priced correctly in every densely-sampled
    dimension; only the rare conditional state is missed. WNBA totals
-   reject (p=.0076, n=234, mild upward tilt, mean u .536) — an open
-   observation the registered holdout then RESOLVED (2026-08-29): on 47
-   fresh ladders the tilt flipped sign (mean u 0.404, z=−2.3), so it is
-   treated as sampling noise, not a market defect (`oos_verification`). Coherence violations remain reconstruction
+   rejected on 2026-08-11 (p=.0076, n=234, mean u .536) and was then
+   RESOLVED as a false alarm twice over (2026-08-29): the rejection
+   dissolved as the frozen sample grew (KS 0.062, p=0.21, n=290) and the
+   tilt flipped sign on the registered holdout (mean u 0.404, z=−2.3,
+   n=47) — retired from the FDR inventory with the retraction record
+   (`totals`, `oos_verification`, `multiple_testing`). Coherence violations remain reconstruction
    noise: live-book ladders are 99.3-100% monotone in every league.
    **Self-correction, re-read** (`time_stability` §2, migrated to the
    corrected convention 2026-08-28): the previously reported "+7.5 to

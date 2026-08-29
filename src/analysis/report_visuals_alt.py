@@ -34,17 +34,17 @@ from src.analysis.report_visuals import (
 )
 
 # ----------------------------------------------------------- logged stats ---
-# horizon_cross.log — 7-horizon constant sample, n=3,905 on both exchanges
+# horizon_cross.log — 7-horizon constant sample, n=3,906 on both exchanges (2026-08-29 freeze)
 HORIZONS = ["24h", "12h", "6h", "3h", "1h", "15m", "start"]
-HZ = {"Kalshi":     [0.2211, 0.2205, 0.2202, 0.2200, 0.2199, 0.2196, 0.2197],
-      "Polymarket": [0.2207, 0.2206, 0.2202, 0.2200, 0.2198, 0.2199, 0.2198]}
-HZ_BOOK = {0: 0.2206, 6: 0.2196}          # book reference: two observations only
+HZ = {"Kalshi":     [0.2210, 0.2203, 0.2200, 0.2198, 0.2197, 0.2194, 0.2195],
+      "Polymarket": [0.2206, 0.2204, 0.2200, 0.2198, 0.2197, 0.2197, 0.2196]}
+HZ_BOOK = {0: 0.2204, 6: 0.2194}          # book reference: two observations only
 
 # why_sports.log section B — per-fill realized ROI, final-24h sample
 ROI = [("Taker, gross", -4.99, K), ("Taker, net of fee", -7.73, K),
        ("Maker, no fee", +5.64, P)]
 ROI_SE = 7.0                               # game-clustered; the wedge is structural
-STRUCTURAL = -4.5                          # horizon_translation.log
+STRUCTURAL = -4.6                          # horizon_translation.log
 
 # maker_structure.log / immediacy.log — the two-layer book (Kalshi, home side)
 LAYERS = {"at the touch": (1135, 2243), "resting within 5c": (15148, 27566)}
@@ -139,7 +139,7 @@ def f11_maker_taker():
                 fontsize=8.8, color=INK, transform=ax.get_yaxis_transform())
 
     ax.axvline(STRUCTURAL, color=CRITICAL, lw=1.3, zorder=4)
-    ax.text(STRUCTURAL - 0.4, -0.62, "structural taker cost, -4.5%" + NL +
+    ax.text(STRUCTURAL - 0.4, -0.62, "structural taker cost, -4.6%" + NL +
             "(half-spread + fee, fixed before any ball is thrown)",
             fontsize=7.7, color=CRITICAL, ha="right", va="center", linespacing=1.5)
 
@@ -203,7 +203,7 @@ def f12_two_layer():
     _frame(a2)
 
     _title(fig, "Who is actually on the other side",
-           "35,410 depth snapshots over 274 games. Two-sided size at this scale is professional "
+           "85,453 depth snapshots over 564 games. Two-sided size at this scale is professional "
            "market-making, not organic peer supply.")
     _note(fig, "maker_structure.log, immediacy.log · public trade data carries no member IDs, so the "
                "exchange affiliate's own share of this layer cannot be measured from outside - a stated "
@@ -282,7 +282,7 @@ def f14_immediacy():
             fontsize=7.8, color=INK2, linespacing=1.5)
 
     _title(fig, "For the customer this project measures, depth is never the binding cost",
-           "66,996 order-book snapshots over 274 games. The median fill is 30 contracts, about 16 dollars "
+           "162,615 order-book snapshots over 564 games. The median fill is 30 contracts, about 16 dollars "
            "at stake - it sits inside the touch in 89% of Kalshi snapshots and 95% of Polymarket's.")
     _note(fig, "immediacy.log · the spread and the fee are the whole retail cost story; the capacity "
                "limit binds on institutional-sized orders, which the fill tape shows are not what "
@@ -295,10 +295,10 @@ def f1alt_tiles():
     """The headline as three numbers rather than two panels."""
     fig = plt.figure(figsize=(7.8, 2.9))
     _title(fig, "Same games, three institutions, two questions",
-           "5,327 games priced by a CFTC-regulated exchange, an offshore crypto exchange, and the "
+           "5,333 games priced by a CFTC-regulated exchange, an offshore crypto exchange, and the "
            "professional sportsbook complex.")
     tiles = [
-        ("0.2197", "Brier score, all three venues", "identical to four decimals", K),
+        ("0.2196", "Brier score, all three venues", "within 0.0002 of each other", K),
         ("4.2%", "all-in cost to a taker", "Kalshi and the sportsbooks alike", CRITICAL),
         ("13e-3", "how far all three beat", "a public-statistics floor (z~7.3)", B),
     ]
@@ -456,7 +456,7 @@ def f7alt_two_readings():
     ax.fill_between(n, realized, struct, color=K, alpha=0.09, zorder=1)
     ax.plot(n, struct, color=K, lw=2.2, zorder=3)
     ax.plot(n, realized, color=P, lw=2.2, zorder=3)
-    ax.text(52, 0.335, "at the structural cost, -4.5% a position",
+    ax.text(52, 0.335, "at the structural cost, -4.6% a position",
             color=K, fontsize=8.4, fontweight="bold")
     ax.text(30, 0.205, "at the realized taker loss, -7.7%",
             color=P, fontsize=8.4, fontweight="bold")

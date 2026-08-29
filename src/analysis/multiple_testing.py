@@ -41,6 +41,12 @@ RETIRED CLAIMS (kept here as the honest record):
   - "Kalshi sharpens 24h->start p=3e-4" (2026-07-30): no module in the
     current suite computes this statistic (descriptive table only); removed
     pending a proper constant-sample DM if wanted.
+  - "WNBA totals PIT rejects, KS=0.108 p=.0076" (retired 2026-08-29, twice
+    over): the freeze collection grew the sample 234->290 ladders and the
+    rejection DISSOLVED in place (KS 0.062, p=0.207, mean u 0.509); and on
+    the registered post-2026-08-12 holdout the tilt FLIPPED SIGN (mean u
+    0.404, z=-2.3, n=47; oos_verification.log). A false alarm from the
+    smallest league, caught by exactly the machinery built to catch it.
 """
 from __future__ import annotations
 
@@ -64,7 +70,6 @@ DISCOVERIES = [
     ("Sports FUTURES longshots overpriced ($0.33/$1, pooled)",    6e-3,   "futures_calibration.log [modest n]"),
     ("BOOKS' outright longshots overpriced ($0.34/$1, 0-3mo)",    1e-5,   "book_outrights.log [cluster-t, 20 sport-seasons 2020-26 playoff-densified, se 0.08; = Kalshi's $0.33]"),
     ("Cross-venue 15-min predictability, P->K only (z=+4.4)",     1e-5,  "lead_lag.log [REVISED 2026-08-10 on the 528-game panel: the book->P term this claim used to include is now z=-0.1 and is retired; only the exchange-to-exchange term survives]"),
-    ("WNBA totals PIT rejects (KS=0.108)",                       7.6e-3, "totals.log [n=234, the smallest league and the only rejection of 4 tested; clears Bonferroni 0.0125; mild upward tilt (mean u 0.536). Reported as SUGGESTIVE pending replication, not a mechanism claim]"),
     ("Book consensus predicts exchanges' next 5-min move (P z=+4.5)", 1e-5, "five_min.log [effect is ZERO in the final 2h (z=+0.1/-0.1), lives in sub-0.5pt book moves, and for Poly is as strong from a 30-min-frozen quote — read as drift alignment away from game time, NOT news transmission]"),
     ("Late flow predicts beyond closing book (clustered z=3.43)", 1e-3,  "late_flow.log"),
     ("Books lead Kalshi at T-24h (clustered DM, z=+1.86)",       6.3e-2, "horizon_equivalence.log [softened on completed 84%-coverage T-24h sample; was z=+2.32 p=0.020]"),
