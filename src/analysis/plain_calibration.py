@@ -88,6 +88,25 @@ def main():
     print("\n  (50% band note: both sides of a near-coin-flip game can land in the", flush=True)
     print("   same band, so its effective sample is slightly below n.)", flush=True)
 
+    # shared-deviation statistic: are the misses from the 45-degree line the
+    # SAME misses at every venue? High correlation = the deviations are a
+    # property of the games, not of any institution (the F2alt panel shows
+    # this visually; this is its number).
+    print("\n=== shared deviations: corr of (won - priced) across price bands ===", flush=True)
+    from itertools import combinations
+    for a, b in combinations(SRC, 2):
+        ta, tb = tabs[a].set_index("band"), tabs[b].set_index("band")
+        common = ta.index.intersection(tb.index)
+        da = ta.loc[common, "gap_pts"].values
+        db = tb.loc[common, "gap_pts"].values
+        w = np.minimum(ta.loc[common, "n"], tb.loc[common, "n"]).values.astype(float)
+        wm = lambda x: np.average(x, weights=w)
+        cov = wm((da - wm(da)) * (db - wm(db)))
+        r = cov / np.sqrt(wm((da - wm(da)) ** 2) * wm((db - wm(db)) ** 2))
+        print(f"  {a:11} vs {b:11}: r={r:+.2f} over {len(common)} bands (n-weighted)", flush=True)
+    print("  (r near +1 = shared blind spots, the same result the extras cell and", flush=True)
+    print("   the WC draws give game-level; r near 0 would say venue-specific error)", flush=True)
+
     # figure at FULL resolution: one point per integer percent (1..99),
     # shown where >=10 teams were priced there, plus a 5-point centered
     # rolling mean per source so the three lines stay readable

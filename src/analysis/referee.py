@@ -19,6 +19,7 @@ from scipy import stats
 
 from src.analysis.compare import brier, cal_slope, ece, stacked
 from src.analysis.rigor import cluster_dm
+from src.analysis.power import KMDE
 from src.analysis.three_way import SRC, load
 
 
@@ -95,6 +96,36 @@ def main():
             se = np.sqrt((g ** 2).sum()) / len(dd)
             z = dd.mean() / se
             print(f"  {a} - {b}: z={z:+.2f} p={2*(1-stats.norm.cdf(abs(z))):.3f}", flush=True)
+
+    # ---------- 4b. season-segment split ----------
+    print("\n=== 4b. regular season vs postseason (ESPN season_type) ===", flush=True)
+    esp = pd.read_csv("data/processed/espn_games.csv")
+    if "season_type" not in esp.columns or esp["season_type"].isna().all():
+        print("  SKIPPED: espn_games.csv carries no season_type — "
+              "re-run src.collect.espn (collector stores it since 2026-08-28)", flush=True)
+    else:
+        st = esp.rename(columns={"espn_id": "game_id"})[["game_id", "season_type"]]
+        g3 = d3.merge(st, on="game_id", how="left")
+        for label, seg in (("regular season", g3[g3.season_type == 2]),
+                           ("postseason", g3[g3.season_type == 3])):
+            if len(seg) < 150:
+                print(f"  {label}: n={len(seg)} — too small to read", flush=True)
+                continue
+            y_ = seg["home_won"].values
+            dts = seg["start_utc"].astype(str).str[:10].values
+            briers = "  ".join(f"{n[0]}={brier(seg[c[0]], y_):.4f}" for n, c in SRC.items())
+            worst_z, worst_ci, mde = 0.0, 0.0, 0.0
+            for a, b in (("kalshi_p1", "poly_p1"), ("kalshi_p1", "book_p1"),
+                         ("poly_p1", "book_p1")):
+                dbar, se, z, pv, (lo, hi) = cluster_dm(seg[a], seg[b], y_, dts)
+                worst_z = max(worst_z, abs(z))
+                worst_ci = max(worst_ci, abs(lo), abs(hi))
+                mde = max(mde, KMDE * se)
+            eq = "EQUIV@1e-3" if worst_ci <= 1e-3 else "(not resolved)"
+            print(f"  {label:15} n={len(seg):5,}  {briers}  worst|z|={worst_z:.2f}  "
+                  f"delta_min={worst_ci*1000:.2f}e-3 {eq}  MDE={mde*1000:.2f}e-3", flush=True)
+        print("  (robustness: the dead heat is not a playoff-attention artifact;", flush=True)
+        print("   the postseason cell is the smaller one — quote its MDE)", flush=True)
 
     # ---------- 4. CORP ----------
     print("\n=== 4. CORP (isotonic) decomposition, no binning choices ===", flush=True)

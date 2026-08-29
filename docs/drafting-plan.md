@@ -108,8 +108,9 @@ remain as the appendix gallery's raw layer.
 | Fig 8 | `F7_translation` | §5D | Bankroll decay by cadence: price vs participant |
 | Fig 9 | `F1_two_axes` | §6 | Price quality and participant cost are independent |
 
-Optional §1 opener (pending build): `F0_one_game` — one game, four venues,
-one price path into the close, from `data/exhibits/`.
+§1 opener (BUILT 2026-08-28): `F0_one_game` — one game, every venue; the
+BUF-MIA exhibit's three-day book/Polymarket record plus the final-30-minute
+Kalshi tape, closing 0.5pt apart.
 
 **Pair picks (decided 2026-08-28; alternates go to the appendix gallery):**
 F1 over F1alt (the venue-coincidence proof beats stat tiles); F2 over F2alt

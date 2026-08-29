@@ -30,6 +30,8 @@ MODULES = [
     "late_flow", "informed", "horizon", "horizon_equivalence", "horizon_cross",
     "close_efficiency", "layer2", "one_price", "multiple_testing",
     "fee_experiment", "fee_liquidity", "tick_pricing", "referee", "power", "horizon_translation", "lead_lag", "book_moves", "minute_lead_lag", "five_min", "immediacy",
+    "oos_verification",           # registered holdout scorecard (docs/registered-claims.md)
+    "tables",                     # report Tables 1-5 rendered from the logs above
     "hierarchical_calibration",   # PyMC; ~90s, the suite's slowest module
 ]
 

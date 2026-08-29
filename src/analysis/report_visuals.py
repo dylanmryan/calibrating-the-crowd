@@ -619,8 +619,111 @@ def f9_institution():
     _note(fig, "sharp_books.log · same games throughout (n=5,280 Pinnacle, 3,714 Betfair)")
     _save(fig, "F9_institutional_trace")
 
+
+
+# ===================================================================== F0 ===
+
+def f0_one_game():
+    """The concrete opener: one game, every venue, one price.
+
+    Thursday Night Football, Miami at Buffalo, 2025-09-18 (ET), from the
+    frozen exhibits. Left: the final three days — 28 books at seven horizons
+    and the Polymarket path (resolved-market candles are 12-hourly, the
+    documented coarseness, so that leg is points). Right: the final thirty
+    minutes, where the exhibit's Kalshi tape lives (4,430 pre-start fills —
+    the flow arrives late, which is itself Fig 7's finding). Descriptive —
+    one game proves nothing; the inference lives in the other figures.
+    """
+    start = pd.Timestamp("2025-09-19T00:15:00Z")
+
+    bk = pd.read_csv("data/exhibits/buf_mia_tnf_books.csv")
+    bk = bk[bk.market == "h2h"].dropna(subset=["home_decimal", "away_decimal"])
+    inv_h, inv_a = 1 / bk.home_decimal, 1 / bk.away_decimal
+    bk["home_p"] = inv_h / (inv_h + inv_a)
+    bh = bk.groupby("horizon_h")["home_p"].agg(med="median",
+                                               lo=lambda s: s.quantile(.1),
+                                               hi=lambda s: s.quantile(.9))
+    n_books = bk.book.nunique()
+
+    kt = pd.read_csv("data/exhibits/buf_mia_tnf_kalshi_trades.csv")
+    kt = kt[kt.ticker.str.endswith("-BUF")].copy()            # home side
+    kt["t"] = pd.to_datetime(kt.created_time, utc=True, format="ISO8601")
+    kt = kt[kt.t <= start]
+    kt["mins"] = (start - kt.t).dt.total_seconds() / 60
+    kt = kt[kt.mins <= 30]
+
+    pp = pd.read_csv("data/exhibits/buf_mia_tnf_poly_path.csv")
+    pp = pp[pp.side == "Dolphins vs. Bills"].copy()           # the moneyline market
+    pp["t"] = pd.to_datetime(pp.ts, unit="s", utc=True)
+    pp = pp[pp.t <= start]
+    pp["hrs"] = (start - pp.t).dt.total_seconds() / 3600
+    pp = pp[pp.hrs <= 72].sort_values("hrs")
+    pp["home_p"] = 1 - pp.p        # token[0] = first-named team = the away side
+
+    book_close = bh.med.loc[0]
+    poly_close = pp.home_p.iloc[0]
+    k_close = kt.sort_values("mins").yes_price.iloc[0]
+    assert abs(poly_close - book_close) < 0.05, "poly side orientation is wrong"
+    assert abs(k_close - book_close) < 0.05, "kalshi side orientation is wrong"
+
+    fig, (ax, ax2) = plt.subplots(1, 2, figsize=(7.4, 3.9), width_ratios=[2.1, 1.0])
+    fig.subplots_adjust(top=0.72, bottom=0.17, left=0.085, right=0.975, wspace=0.14)
+
+    # ---- left: the final three days --------------------------------------
+    ax.plot(pp.hrs, pp.home_p * 100, "o--", color=P, lw=1.0, ms=5,
+            alpha=0.9, zorder=3, markeredgecolor=SURFACE, markeredgewidth=1.0)
+    ax.errorbar(bh.index.values, bh.med * 100,
+                yerr=[(bh.med - bh.lo) * 100, (bh.hi - bh.med) * 100],
+                fmt="o", color=B, ms=5.5, lw=1.3, capsize=3, zorder=5,
+                markeredgecolor=SURFACE, markeredgewidth=1.0)
+    ax.text(50, 87.9, "Polymarket (12h candles)", color=P, fontsize=7.8, weight="bold")
+    ax.text(27, 83.6, f"{n_books} sportsbooks" + NL + "(median, 10-90%)",
+            color=B, fontsize=7.6, linespacing=1.4)
+    ax.set_xlim(72, 0)
+    ax.set_ylim(81.5, 89.5)
+    ax.set_xlabel("hours before kickoff")
+    ax.set_ylabel("P(home team wins)  (%)")
+    _frame(ax)
+
+    # ---- right: the final thirty minutes ---------------------------------
+    ax2.scatter(kt.mins, kt.yes_price * 100, s=np.clip(kt["count"] / 30, 2, 26),
+                color=K, alpha=0.18, edgecolors="none", zorder=3)
+    kt["bucket"] = (kt.mins // 2).astype(int)
+    km = kt.groupby("bucket").agg(mins=("mins", "median"), p=("yes_price", "median"))
+    ax2.plot(km.mins, km.p * 100, color=K, lw=1.8, zorder=4)
+    ax2.axhline(book_close * 100, color=B, lw=1.3, ls=(0, (4, 2)), zorder=2)
+    ax2.axhline(poly_close * 100, color=P, lw=1.3, ls=(0, (1, 2)), zorder=2)
+    ax2.text(29, min(book_close, poly_close) * 100 - 0.75,
+             f"books' close {book_close*100:.1f}  ·  Polymarket {poly_close*100:.1f}",
+             color=INK2, fontsize=7.2)
+    ax2.text(29, 87.9, "Kalshi tape:" + NL + f"{len(kt):,} fills in" + NL +
+             "the last 30 min", color=K, fontsize=7.6, linespacing=1.4)
+    ax2.set_xlim(30, 0)
+    ax2.set_ylim(81.5, 89.5)
+    ax2.set_yticklabels([])
+    ax2.set_xlabel("minutes before kickoff")
+    _frame(ax2)
+
+    closes = {"Kalshi": k_close, "Polymarket": poly_close, "books": book_close}
+    spreadpt = (max(closes.values()) - min(closes.values())) * 100
+    ax2.text(29, 82.1, "at kickoff: " +
+             ", ".join(f"{k} {v*100:.1f}" for k, v in closes.items())
+             + NL + f"— {spreadpt:.1f}pt apart", fontsize=7.4, color=INK, weight="bold",
+             linespacing=1.5)
+
+    _title(fig, "One game, every venue",
+           "Thursday Night Football, Miami at Buffalo, Sep 2025. A CFTC exchange, an "
+           f"offshore crypto market, and {n_books} licensed books price one number.")
+    _note(fig, "data/exhibits (frozen) · descriptive — one game proves nothing; the inference "
+               "lives in Figs 1-9 · books de-vigged multiplicatively per book · the tape's "
+               "late arrival is itself the Fig 7 finding.")
+    _save(fig, "F0_one_game")
+
+
+
 def main():
     print("building report figures -> results/report/")
+    f0_one_game()
     f1_two_axes()
     n = f2_dead_heat()
     f3_forest()

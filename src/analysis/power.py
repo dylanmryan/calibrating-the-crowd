@@ -76,7 +76,7 @@ def main():
     d["date"] = d.start_utc.astype(str).str[:10]
     print(f"three-way clean games: {len(d):,} over {d.date.nunique()} dates", flush=True)
     print(f"equivalence margin delta = {DELTA*1000:.1f}e-3 Brier "
-          f"(~0.5pt of per-game probability)", flush=True)
+          f"(admits a systematic 3.16pt offset; dBrier=eps^2 — see D2)", flush=True)
 
     table(d, [("ALL", d)], "the pooled sample")
     table(d, sorted(d.groupby("league"), key=lambda t: -len(t[1])), "league")

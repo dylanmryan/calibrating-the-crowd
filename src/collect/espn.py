@@ -63,6 +63,8 @@ def fetch_day(league: str, yyyymmdd: str, retries: int = 3) -> list[dict]:
             "away_score": as_,
             "winner": winner,
             "status": e["status"]["type"]["name"],
+            # 1=preseason, 2=regular season, 3=postseason (ESPN convention)
+            "season_type": (e.get("season") or {}).get("type"),
         })
     return rows
 

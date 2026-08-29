@@ -8,6 +8,7 @@ is checked against `plain_calibration.log`.
 
 | Fig | Section it serves | The one thing it establishes |
 |---|---|---|
+| F0 | §1 opener | One game, every venue: 28 books, the Polymarket path, and the Kalshi tape land 0.5pt apart (built 2026-08-28 from data/exhibits) |
 | F1 | S4 — the orthogonality claim | Price quality and participant cost are two independent axes |
 | F2 | S6 — the dead heat | Priced probability tracks realized frequency, identically, at three institutions |
 | F3 | S6 — formal equivalence | The venues are equivalent inside the band where a difference could reach anyone — and where they stop resolving |
