@@ -301,8 +301,17 @@ means writing its beats in order and nothing else.
   paragraphs, not a bare list.
 - **¶8 Equally good — and equally better than public statistics.** Walk-forward
   Elo beaten by ~13.3e-3 (z≈7.4) while the venues differ by ≤0.5e-3
-  [model_benchmark]. Closes the movement: the equivalence is at a high level,
-  not a low one.
+  [model_benchmark].
+- **¶9 The registered holdout (closes the movement).** Claims were frozen in
+  docs/registered-claims.md before any post-2026-08-11 game was pulled; on
+  264 fresh games the exchange dead heat verified at full registered power
+  (|ΔBrier| 0.04e-3, p=.879, MDE 0.81e-3 against δ=1e-3), slopes cover 1,
+  the extras cell replicated (+19.6pt vs +20.2pt), the structural cost
+  matched (−4.6%), and one open observation (WNBA totals tilt) flipped sign
+  and is retired as noise. The three-way legs could not be evaluated — the
+  live book feed had stopped 2026-08-07 when its credit reserve ran out —
+  and the scorecard says so rather than re-scoping [oos_verification]. One
+  abstract sentence comes from this paragraph.
 
 ### §5B How the equivalence is produced (900 w, Fig 3, Fig 4)
 
@@ -372,7 +381,9 @@ two scales — and the last "venue defect" died on inspection.*
   Collected to test the walk-off contrast; the contrast is retracted, and
   what the layer shows instead is stronger: the entire run-scoring process
   is priced correctly in every densely-sampled dimension. WNBA rejection:
-  one sentence, open observation (p=.0076, n=234).
+  one sentence — the original rejection (p=.0076, n=234) AND its registered
+  non-replication (fresh mean u 0.404, z=−2.3, n=47): resolved as noise
+  [oos_verification].
 - **¶7 Self-correction, corrected.** The "+7.5 to +11.2pt non-correcting
   bias" was the artifact persisting; the corrected aggregate cell is
   near-unbiased in every era, and the extras cell recurs in both 2026

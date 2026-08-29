@@ -82,3 +82,32 @@ flagged wherever quoted.
 4. No statistic in this file may be changed after the pull. Any additional
    exploratory cut run on holdout data must be labeled exploratory in the
    log and cannot join this scorecard.
+
+---
+
+## Post-pull annotation (2026-08-29 — nothing above this line was edited)
+
+The pull revealed one sample failure the registration did not anticipate:
+the VPS live feed's **sportsbook leg stopped on 2026-08-07 15:35 UTC** (the
+Odds API live-feed credit reserve exhausted; the exchange legs ran to
+2026-08-28 unaffected). H-3W therefore contains zero synchronized book
+quotes, and **R1 and R5 are reported as NOT EVALUABLE** — not re-scoped.
+A paid historical top-up (~313 post-cutoff games ≈ 3–3.5K credits, IF the
+plan still has them — the local key now returns 401) could still build the
+three-way holdout; per the protocol and the standing budget rule that is a
+decision for Dylan, not something this run performs. A labeled EXPLORATORY
+same-clock K-vs-P comparison (n=252, ΔBrier +2.2e-3, p=0.45) appears in the
+log and is not on the scorecard.
+
+Scorecard as evaluated (oos_verification.log, 2026-08-29):
+
+| id | verdict | result |
+|---|---|---|
+| R1 | NOT EVALUABLE | no post-cutoff synchronized book quotes exist |
+| R2 | **CONSISTENT** | \|ΔBrier\| 0.04e-3, p=0.879, **MDE 0.81e-3 — powered at the pre-stated δ** (n=264) |
+| R3 | **CONSISTENT** | slopes 1.41/1.43 with CIs covering 1; ECE 0.021–0.022 vs noise floor 0.042 |
+| R4 | UNDERPOWERED | 26 sides per tail bucket — too thin to read |
+| R5 | NOT EVALUABLE | same sample failure as R1 |
+| R6 | **CONSISTENT** | extras cell +19.6pt (90% CI ±14.3, n=34) vs frozen +20.2pt; aggregate +0.1pt |
+| R7 | **DEVIATES** | mean u 0.404 (z=−2.3, n=47) — the tilt **flipped sign** vs the frozen 0.536; the open observation does not replicate and is treated as sampling noise, which is precisely what this test existed to determine |
+| R8 | **CONSISTENT** | −4.6% per position (n=44,525 fresh quotes) vs frozen −4.5% |

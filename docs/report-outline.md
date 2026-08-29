@@ -138,6 +138,15 @@ with 90% CIs inside ±1e-3). **Table 1**: plain calibration deciles.
   books: dead heat book-by-book, all n.s. [us_books.log].
 - Time stability: equivalence holds within every adequate quarter
   [time_stability.log].
+- **Registered out-of-sample verification (2026-08-28/29)**: claims fixed in
+  docs/registered-claims.md before the holdout was pulled; on 264 fresh
+  games the exchange dead heat verified at full registered power
+  (|ΔBrier|=0.04e-3, p=.879, MDE 0.81e-3 < δ), calibration slopes cover 1,
+  the extras blind spot replicated (+19.6pt vs +20.2pt frozen), structural
+  cost matched (−4.6% vs −4.5%), and the WNBA totals tilt failed to
+  replicate (treated as noise). The three-way legs were not evaluable — the
+  live feed's book leg stopped 2026-08-07 on credit exhaustion — and are
+  reported as such [oos_verification.log].
 
 ### 5.2 The gambling scorecard (table)
 Calibration ✓, no FLB (slopes ≈1) ✓, equal resolution ✓, coherent ladders
@@ -209,8 +218,11 @@ Figs: `minute_lead_lag.png`, `five_min.png`.
   totals-pass/margins-reject contrast this layer was collected to test is
   retracted — both layers pass, which upgrades the conclusion: the whole
   run-scoring process is priced correctly outside the extras cell. WNBA
-  totals reject (p=.0076, n=234, mild upward tilt, mean u .536) — open
-  observation, not a claim. Coherence splits by price source: live-book
+  totals reject (p=.0076, n=234, mild upward tilt, mean u .536) — and the
+  registered holdout RESOLVED it: on 47 fresh post-cutoff ladders the tilt
+  flipped sign (mean u 0.404, z=−2.3) [oos_verification.log], so the
+  observation is treated as sampling noise, not a market defect. Report the
+  original rejection and its non-replication together. Coherence splits by price source: live-book
   ladders 99.3-100% monotone in every league; violations are
   reconstruction noise.
 - **Self-correction, corrected** [time_stability.log §2, migrated

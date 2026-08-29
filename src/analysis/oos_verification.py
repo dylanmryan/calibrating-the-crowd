@@ -114,10 +114,53 @@ def load_h3w():
     return j
 
 
+def _exploratory_kp_sync():
+    """EXPLORATORY (labeled per protocol; not on the scorecard): the two
+    exchange legs of the panel ran to 2026-08-28, so the same-clock
+    exchange-vs-exchange comparison the registered R5 would have contained
+    is computable even though the book leg is not."""
+    d = pd.read_csv(SNAPS, low_memory=False)
+    d = d[d.minutes_to_start > 0].copy()
+    d["snap"] = pd.to_datetime(d.snapshot_utc, utc=True, format="ISO8601")
+    d["start"] = pd.to_datetime(d.start_utc, utc=True, format="mixed")
+    d = d[(d.start >= pd.Timestamp(CUTOFF, tz="UTC")) & (d.minutes_to_start <= MAX_STALE_MIN)]
+    last = d.sort_values("snap").groupby(["game_id", "source"]).tail(1)
+    k = last[last.source == "kalshi"][["game_id", "start_utc", "p1"]].rename(columns={"p1": "k"})
+    q = last[last.source == "polymarket"][["game_id", "p1"]].rename(columns={"p1": "q"})
+    j = k.merge(q, on="game_id").dropna()
+    esp = pd.read_csv("data/processed/espn_games.csv")
+    esp = esp[esp.status == "STATUS_FINAL"][["espn_id", "home_score", "away_score"]]
+    j = j.merge(esp.rename(columns={"espn_id": "game_id"}), on="game_id")
+    j = j[j.home_score != j.away_score]
+    y = (j.home_score > j.away_score).astype(int).values
+    dts = j.start_utc.astype(str).str[:10].values
+    dbar, se, z, pv, _ = cluster_dm(j.k.values, j.q.values, y, dts)
+    print(f"\n  EXPLORATORY (not on the scorecard): K vs P at the SAME final "
+          f"panel snapshot, n={len(j):,} holdout games: dBrier={dbar*1000:+.2f}e-3 "
+          f"z={z:+.2f} p={pv:.3f} MDE={KMDE*se*1000:.2f}e-3 — the same-clock "
+          f"exchange dead heat holds where it can be measured", flush=True)
+
+
 def r1_r5(j):
+    n_raw = len(j)
+    j = j.dropna(subset=["kmix", "pmix", "sportsbook_p1"]).copy()
+    if len(j) < 30:
+        reason = ("the VPS live feed's SPORTSBOOK leg stopped 2026-08-07 15:35 UTC "
+                  f"(credit reserve exhausted), so only {len(j)} of {n_raw} matched "
+                  "holdout games carry a synchronized book quote — the registered "
+                  "H-3W sample does not exist. The registered protocol forbids a "
+                  "paid top-up without explicit approval, so R1 and R5 are "
+                  "reported as not evaluable rather than quietly re-scoped.")
+        print(f"\n=== R1/R5. three-way dead heat on the panel holdout ===\n"
+              f"  {reason}", flush=True)
+        record("R1", "three-way dead heat (panel holdout)", reason, "NOT EVALUABLE")
+        record("R5", "synchronized-clock robustness",
+               "same sample failure as R1 (no post-cutoff book quotes)", "NOT EVALUABLE")
+        _exploratory_kp_sync()
+        return
     print(f"\n=== R1/R5. three-way dead heat on the panel holdout "
-          f"(n={len(j):,} games, {j.date.nunique()} date clusters — "
-          f"cluster count is low; flagged per registration) ===", flush=True)
+          f"(n={len(j):,} games of {n_raw:,} matched; {j.date.nunique()} date "
+          f"clusters — cluster count is low; flagged per registration) ===", flush=True)
     kk = j.kmix.values
     pp = j.pmix.values
     bb = j.sportsbook_p1.values
@@ -140,18 +183,23 @@ def r1_r5(j):
            f"MDE {min(mdes)*1000:.2f}-{max(mdes)*1000:.2f}e-3",
            "CONSISTENT" if ok else "DEVIATES")
 
-    # R5: all three legs from the same final snapshot (kalshi/poly panel quotes)
-    ks = j.kalshi_p1.values
-    ps = j.polymarket_p1.values
+    # R5: all three legs from the same final snapshot (kalshi/poly panel
+    # quotes; rows with a one-sided or missing panel quote drop here)
+    s = j.dropna(subset=["kalshi_p1", "polymarket_p1"]).copy()
+    ks, ps, bs = s.kalshi_p1.values, s.polymarket_p1.values, s.sportsbook_p1.values
+    ys = s.home_won.values
+    km, pm = s.kmix.values, s.pmix.values
     shift = 0.0
-    for (lab, a0, b0), (a1, b1) in zip(pairs, [(ks, ps), (ks, bb), (ps, bb)]):
-        d0, *_ = cluster_dm(a0, b0, y, j.date.values)
-        d1, *_ = cluster_dm(a1, b1, y, j.date.values)
+    for (a0, b0), (a1, b1) in zip([(km, pm), (km, bs), (pm, bs)],
+                                  [(ks, ps), (ks, bs), (ps, bs)]):
+        d0, *_ = cluster_dm(a0, b0, ys, s.date.values)
+        d1, *_ = cluster_dm(a1, b1, ys, s.date.values)
         shift = max(shift, abs(d1 - d0))
-    d_sync = [cluster_dm(a, b, y, j.date.values) for a, b in [(ks, ps), (ks, bb), (ps, bb)]]
+    d_sync = [cluster_dm(a, b, ys, s.date.values) for a, b in [(ks, ps), (ks, bs), (ps, bs)]]
     rej = any(t[3] < 0.05 for t in d_sync)
     gap = max(abs(t[0]) for t in d_sync)
-    print(f"\n  R5 same-clock rescore: max |dBrier|={gap*1000:.2f}e-3, "
+    print(f"\n  R5 same-clock rescore (n={len(s):,} games with two-sided panel "
+          f"quotes at every venue): max |dBrier|={gap*1000:.2f}e-3, "
           f"max shift vs mixed-clock={shift*1000:.2f}e-3", flush=True)
     ok5 = (gap < 1e-3) and not rej and (shift < 0.5e-3)
     record("R5", "synchronized-clock robustness",
@@ -207,8 +255,9 @@ def r2_r3_r4(h):
         ok4 = ok4 and not flb
         det4.append(f"{lab}: gap {gap*100:+.1f}pt z={z4:+.1f} (n={n})")
         print(f"  {lab}: realized-priced {gap*100:+.1f}pt  z={z4:+.1f}  n={n}", flush=True)
+    readable = any("gap" in x for x in det4)
     record("R4", "no favorite-longshot bias", "; ".join(det4),
-           "CONSISTENT" if ok4 else "DEVIATES")
+           ("CONSISTENT" if ok4 else "DEVIATES") if readable else "UNDERPOWERED")
 
 
 def r6_extras():
@@ -342,12 +391,16 @@ def figure():
                  f"(docs/registered-claims.md; holdout = games starting on/after {CUTOFF})",
                  fontsize=10, loc="left")
     colors = {"CONSISTENT": "#0ca30c", "DEVIATES": "#d03b3b",
-              "UNDERPOWERED": "#898781", "NOISE": "#898781"}
+              "UNDERPOWERED": "#898781", "NOISE": "#898781",
+              "NOT EVALUABLE": "#898781"}
     for i, row in enumerate(scorecard):
         yy = 1 - (i + 1) / (len(scorecard) + 1)
         ax.text(0.00, yy, row["id"], fontsize=9, weight="bold", transform=ax.transAxes)
         ax.text(0.05, yy, row["claim"], fontsize=9, transform=ax.transAxes)
-        ax.text(0.42, yy, row["stat"], fontsize=8, color="#52514e", transform=ax.transAxes)
+        stat = row["stat"]
+        if len(stat) > 110:
+            stat = stat[:107] + "..."
+        ax.text(0.40, yy, stat, fontsize=7, color="#52514e", transform=ax.transAxes)
         ax.text(0.92, yy, row["verdict"], fontsize=9, weight="bold",
                 color=colors.get(row["verdict"], "#0b0b0b"), transform=ax.transAxes)
     fig.tight_layout()

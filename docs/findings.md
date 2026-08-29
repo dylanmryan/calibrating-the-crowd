@@ -299,7 +299,9 @@ analyses on our sports data:
    run-scoring process is priced correctly in every densely-sampled
    dimension; only the rare conditional state is missed. WNBA totals
    reject (p=.0076, n=234, mild upward tilt, mean u .536) — an open
-   observation, not a claim. Coherence violations remain reconstruction
+   observation the registered holdout then RESOLVED (2026-08-29): on 47
+   fresh ladders the tilt flipped sign (mean u 0.404, z=−2.3), so it is
+   treated as sampling noise, not a market defect (`oos_verification`). Coherence violations remain reconstruction
    noise: live-book ladders are 99.3-100% monotone in every league.
    **Self-correction, re-read** (`time_stability` §2, migrated to the
    corrected convention 2026-08-28): the previously reported "+7.5 to
