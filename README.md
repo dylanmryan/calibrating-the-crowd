@@ -53,11 +53,15 @@ Three things follow, and they are the actual contribution:
    bankroll across a season. Twelve well-priced game bets cost the same as one
    badly-priced futures ticket.
 
-One genuine anomaly: Kalshi misprices small margins of victory in baseball.
-A third market layer (total runs) on the same 1,244 games isolates it — totals
-distributions are correct while margin distributions are not, so the market is
-not modeling baseball badly, it is mishandling the walk-off rule that ends the
-game the moment the home team goes ahead.
+One genuine anomaly survives every correction: extra-inning baseball games.
+Extras end within one run 70% of the time (the ghost-runner rule), and the
+win-by-1-2 cell is under-priced in that state by about 20 points — by Kalshi
+and by the sportsbooks, by the same amount. An earlier, larger version of this
+anomaly ("Kalshi misprices small MLB margins") was retracted on 2026-08-23
+when a league-specific settlement convention surfaced in the ladder data; what
+remains after the fix is smaller, shared by every institution, and a cleaner
+instance of the paper's thesis: rare, slow-feedback states are mispriced
+everywhere, exactly like one-shot outrights.
 
 ## Status
 
@@ -131,9 +135,12 @@ Each of those choices, including the ones declined and why, is written up in
 
 Underpowered subgroups are reported with their MDE, not as evidence of sameness
 (CFB, WNBA, and NFL cannot detect the effect size at issue). Suggestive results
-are labelled suggestive and do not become claims. Four findings have been
-**retracted in place** as the sample grew; they are kept in the record at the
-top of `src/analysis/multiple_testing.py` rather than quietly dropped.
+are labelled suggestive and do not become claims. Eight findings have been
+**retracted or downgraded in place** as the sample grew or the pipeline was
+audited — four of them on 2026-08-23, when a league-specific settlement
+convention turned out to be generating the project's one "venue defect." The
+full record is kept at the top of `src/analysis/multiple_testing.py` rather
+than quietly dropped.
 
 ## License and use
 

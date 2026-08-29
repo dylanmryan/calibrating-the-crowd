@@ -1,5 +1,9 @@
 # Advisor meeting prep — 2026-07-26
 
+> **Historical document.** Statements about the MLB margin anomaly predate
+> the 2026-08-23 ladder-convention retraction (see findings.md nuance 1 and
+> multiple_testing.py); the current record replaces them.
+
 *Send `docs/findings.md` + `docs/advisor-checkpoint.md` ahead tonight so the
 meeting spends time on decisions, not recap.*
 

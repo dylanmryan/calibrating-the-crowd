@@ -6,10 +6,16 @@ Two tests on existing data:
      sample into calendar quarters and run the full pairwise clustered-DM +
      TOST machinery inside each; the instrument hypothesis predicts the
      equivalence holds in EVERY period independently.
-  2. The bias half-life — the one real crack (Kalshi's MLB ladder
-     underpricing narrow wins) should SHRINK as the platform matures if
-     markets self-correct. Track the win-by-1-2 cell gap (implied vs
-     empirical) by era: 2025 season vs 2026 season halves.
+  2. The bias half-life — track the MLB win-by-1-2 cell gap (implied vs
+     empirical) by era. CORRECTED 2026-08-28: the series this section
+     previously tracked (+7.4 to +11.2pt, "not self-correcting") was the
+     ladder-convention artifact retracted on 2026-08-23, not the market —
+     an artifact naturally persists across eras. Under the settlement-
+     verified convention (ladder_convention.cover_line) the aggregate cell
+     is near-unbiased in every era; the surviving blind spot is the
+     EXTRA-INNINGS cell (~+20pt, shared with the books — see mlb_extras,
+     ladder_vs_books), which is too rare for era-level inference, so no
+     self-correction claim is made about it in either direction.
 """
 from __future__ import annotations
 
@@ -20,6 +26,7 @@ from src.analysis.compare import brier
 from src.analysis.rigor import cluster_dm
 from src.analysis.three_way import SRC, load
 from src.collect.kalshi_hist_prices import _rule_home
+from src.analysis.ladder_convention import cover_line
 
 
 def subperiod_stability():
@@ -49,78 +56,75 @@ def subperiod_stability():
 
 
 def bias_half_life():
+    """The corrected 1-2-run cell by era; construction mirrors mlb_extras."""
     sp = pd.read_csv("data/processed/kalshi_spread_prices.csv")
-    esp = pd.read_csv("data/processed/espn_games.csv")[
-        ["espn_id", "home_score", "away_score"]].rename(columns={"espn_id": "game_id"})
-    mlb = sp[sp.league == "MLB"].merge(esp, on="game_id")
-    mlb = mlb[mlb.home_score.notna()].copy()
-    mlb["start"] = pd.to_datetime(mlb.start_utc, utc=True, format="ISO8601")
+    sp = sp[sp.league == "MLB"]
+    esp = pd.read_csv("data/processed/espn_games.csv")
+    esp = esp[(esp.league == "MLB") & (esp.status == "STATUS_FINAL")].copy()
+    esp = esp.rename(columns={"espn_id": "game_id"})
+    inn = pd.read_csv("data/processed/mlb_innings.csv")[["game_id", "innings"]]
+    esp = esp.merge(inn, on="game_id", how="inner")
+    esp = esp[esp.innings >= 9]  # drop rain-shortened, as mlb_extras does
+    esp["margin"] = esp.home_score - esp.away_score
+    esp = esp[esp.margin != 0]
+    info = esp.set_index("game_id")[["margin", "innings"]]
+    ml = pd.read_csv("data/processed/games_master.csv")[["game_id", "kalshi_p1"]]
+    sp = sp.merge(ml, on="game_id", how="left")
+    sp["start"] = pd.to_datetime(sp.start_utc, utc=True, format="ISO8601")
 
-    print("\n=== 2. is the MLB narrow-margin bias shrinking? (self-correction test) ===", flush=True)
-    print(f"  {'era':>14} {'sides':>7} {'implied':>8} {'empirical':>10} {'gap':>7} {'z':>6}", flush=True)
-    # win-by-1-2 cell per side: P(0 < M_side <= 2.5) from that side's ladder
-    # cell = P(win) - P(win by 3+): use rungs 2.5 (P(M>2.5)) and the side winning
+    rows = []
+    for gid, grp in sp.groupby("game_id"):
+        if gid not in info.index:
+            continue
+        ev = grp["event_ticker"].iloc[0]
+        codes = sorted(set(grp["team"]))
+        rh = _rule_home(ev, codes) if len(codes) == 2 else None
+        pml = grp["kalshi_p1"].iloc[0]
+        if rh is None or pml != pml:
+            continue
+        margin = int(info.loc[gid, "margin"])
+        extras = bool(info.loc[gid, "innings"] > 9)
+        start = grp["start"].iloc[0]
+        for side, sgn in (("home", +1), ("away", -1)):
+            rungs = {r.threshold: r.prob for r in
+                     grp[(grp.team == rh) == (side == "home")].itertuples(index=False)
+                     if r.prob == r.prob}
+            # index by cover line: "win by 1-2" is P(>=1) - P(>=3); for MLB the
+            # cover-3 rung is threshold 3.5 (integer-line convention)
+            bc = {cover_line("MLB", t): p for t, p in rungs.items()}
+            if 3 not in bc:
+                continue
+            pwin = float(pml) if sgn == 1 else 1 - float(pml)
+            sm = sgn * margin
+            rows.append({"start": start, "extras": extras,
+                         "imp": pwin - bc[3], "emp": float(sm in (1, 2))})
+    d = pd.DataFrame(rows)
+
+    print("\n=== 2. the corrected 1-2-run cell over time (self-correction test) ===", flush=True)
+    print(f"  {'era':>14} {'sides':>7} {'implied':>8} {'empirical':>10} {'gap':>7} {'z':>6}"
+          f"  | {'extras n':>8} {'extras gap':>10} {'z':>6}", flush=True)
     eras = [("2025 season", "2025-01-01", "2025-12-01"),
             ("2026 1st half", "2026-03-01", "2026-06-01"),
             ("2026 2nd half", "2026-06-01", "2026-09-01")]
     for label, a, b in eras:
-        g = mlb[(mlb.start >= a) & (mlb.start < b)]
-        rows = []
-        for (gid, ev), gg in g.groupby(["game_id", "event_ticker"]):
-            codes = sorted(set(gg.team))
-            rh = _rule_home(ev, codes) if len(codes) == 2 else None
-            if rh is None:
-                continue
-            hs, as_ = gg.home_score.iloc[0], gg.away_score.iloc[0]
-            for side_code, won_by in ((rh, hs - as_), ([c for c in codes if c != rh][0], as_ - hs)):
-                s = gg[gg.team == side_code]
-                r25 = s[s.threshold == 2.5]
-                if len(r25) != 1:
-                    continue
-                # implied P(win by 1-2) needs P(win): approximate with ladder
-                # complement pair: P(M > -0.5)... use moneyline-free version:
-                # cell implied = P(M > 0.5)-ish unavailable -> use the matched
-                # construction from ladder_vs_books: P(win by 1-2) =
-                # P(win) - P(M > 2.5); P(win) from 0.5 rung if quoted else skip
-                r05 = s[s.threshold == 0.5]
-                if len(r05) == 1:
-                    imp = float(r05.prob.iloc[0]) - float(r25.prob.iloc[0])
-                else:
-                    continue
-                rows.append({"imp": imp, "emp": 1.0 if won_by in (1, 2) else 0.0})
-        if len(rows) < 50:
-            # fall back: use all sides with 2.5 rung + realized, implied via
-            # P(win)-P(win by 3+) where P(win) comes from the master moneyline
-            ml = pd.read_csv("data/processed/games_master.csv")[
-                ["game_id", "kalshi_p1", "kalshi_p2"]]
-            rows = []
-            for (gid, ev), gg in g.groupby(["game_id", "event_ticker"]):
-                codes = sorted(set(gg.team))
-                rh = _rule_home(ev, codes) if len(codes) == 2 else None
-                if rh is None:
-                    continue
-                mlrow = ml[ml.game_id == gid]
-                if not len(mlrow) or mlrow.kalshi_p1.isna().iloc[0]:
-                    continue
-                hs, as_ = gg.home_score.iloc[0], gg.away_score.iloc[0]
-                pwin = {rh: float(mlrow.kalshi_p1.iloc[0])}
-                other = [c for c in codes if c != rh][0]
-                pwin[other] = float(mlrow.kalshi_p2.iloc[0])
-                for side_code, won_by in ((rh, hs - as_), (other, as_ - hs)):
-                    s = gg[(gg.team == side_code) & (gg.threshold == 2.5)]
-                    if len(s) != 1:
-                        continue
-                    imp = pwin[side_code] - float(s.prob.iloc[0])
-                    rows.append({"imp": imp, "emp": 1.0 if won_by in (1, 2) else 0.0})
-        if not rows:
+        s = d[(d.start >= a) & (d.start < b)]
+        if len(s) < 50:
             continue
-        r = pd.DataFrame(rows)
-        gap = (r.emp.mean() - r.imp.mean())
-        se = np.sqrt(r.emp.var(ddof=1) / len(r))
-        print(f"  {label:>14} {len(r):>7,} {r.imp.mean()*100:>7.1f}% {r.emp.mean()*100:>9.1f}% "
-              f"{gap*100:>+6.1f}p {gap/se:>+6.1f}", flush=True)
-    print("  (a shrinking gap across eras = the market learning its own blind", flush=True)
-    print("   spot; a static gap = the cost-band shelter holding it in place)", flush=True)
+        gap = s.emp.mean() - s.imp.mean()
+        se = np.sqrt(s.emp.var(ddof=1) / len(s) + s.imp.var(ddof=1) / len(s))
+        x = s[s.extras]
+        if len(x) >= 10:
+            gx = x.emp.mean() - x.imp.mean()
+            sex = np.sqrt(x.emp.var(ddof=1) / len(x) + x.imp.var(ddof=1) / len(x))
+            xtra = f"  | {len(x):>8,} {gx*100:>+9.1f}p {gx/sex:>+6.1f}"
+        else:
+            xtra = f"  | {len(x):>8,} {'--':>10} {'--':>6}"
+        print(f"  {label:>14} {len(s):>7,} {s.imp.mean()*100:>7.1f}% {s.emp.mean()*100:>9.1f}% "
+              f"{gap*100:>+6.1f}p {gap/se:>+6.1f}{xtra}", flush=True)
+    print("  (the +7.4/+11.2pt series previously printed here was the ladder-", flush=True)
+    print("   convention artifact, retracted 2026-08-23. Corrected, the aggregate", flush=True)
+    print("   cell is near-unbiased in every era; the surviving extras blind spot", flush=True)
+    print("   is too rare per era for a self-correction claim either way.)", flush=True)
 
 
 def main():

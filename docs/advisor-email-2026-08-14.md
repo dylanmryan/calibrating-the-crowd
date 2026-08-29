@@ -2,6 +2,13 @@
 
 *Draft only. Not sent.*
 
+*SUPERSEDED 2026-08-28: the third bullet states the walk-off/totals contrast
+that was retracted on 2026-08-23 (ladder-convention artifact — see
+findings.md nuance 1). Do not send without rewriting that bullet; the honest
+replacement is: the anomaly shrank under a settlement-convention audit and
+what survives is a ~20pt extra-innings blind spot shared by Kalshi AND the
+books, which fits the paper's thesis better than the claim it replaces.*
+
 **Subject:** Calibrating the Crowd: two-week update, and a meeting next week?
 
 Hi Professor Kuyper,

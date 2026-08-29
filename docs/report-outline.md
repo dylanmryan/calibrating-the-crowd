@@ -32,16 +32,20 @@ or a big platform.
      benchmark, formal equivalence (TOST), not just "no significant difference."
   2. The benchmark upgraded to the sharp price itself (Pinnacle) and to
      book-by-book US retail.
-  3. Distributional layer: margins, ladders, PIT, RPS — where the books keep
-     a real edge and why.
+  3. Distributional layer: margins, ladders, PIT, RPS — a near-dead-heat
+     here too after the 2026-08-23 ladder-convention correction: a small
+     NBA-carried book edge (+0.49e-3 pooled RPS), and one shared blind spot
+     (extra-innings margins) that BOTH institutions miss by ~20pt.
   4. Horizon-resolved: when the equivalence forms; minute-scale price
      formation; maker-driven discovery.
   5. Institutional accounting: costs, fees, ticks, taker P&L, the affiliated
      dealer, and where the liquidity complex deploys.
   6. The discipline boundary: a futures/outrights 2x2 plus a no-benchmark
      niche tier that isolates repetition as the active ingredient.
-  7. Methods lessons: the side-assignment audit; stale-print traps in
-     resolved-market histories (two independent catches).
+  7. Methods lessons: three independent pipeline catches — the
+     side-assignment audit, stale-print traps in resolved-market histories,
+     and the league-specific ladder settlement conventions — each converted
+     into a permanent audit gate.
 
 ## 2. Literature (updated)
 - Page & Clemen 2013 (sharpening toward event date) — replicated comparatively.
@@ -169,32 +173,55 @@ Fig: `horizon_calibration.png`.
 Figs: `minute_lead_lag.png`, `five_min.png`.
 
 ### 5.5 Where the surfaces crack: distributions
-- RPS head-to-head on shared rungs (n=3,690): books better, but LOCALIZED —
-  MLB +3.9e-3 (z=+5.4), NBA +1.1e-3 (z=+2.3), NHL exact tie (z=+0.05)
-  [multi_outcome.log]. The edge lives where the margin process is
-  pathological (walk-off/extras spike).
-- MLB 1-2-run cell: Kalshi +8.5pt vs books +0.4pt (z=+10); extras mechanism
-  ~24% of it; unexploitable net of costs (selling it loses 2.9-4.5%) —
-  biases harbored inside cost bands, exactly like books inside vig.
-- PIT: books pass where Kalshi fails (MLB); NHL book ladders fail where
-  Kalshi passes (sparse-rung caveat, noted not claimed) [book_pit.log].
-- **The mechanism, isolated by a third market layer** [totals.log]: totals run
-  over the same scoring process but extras push totals UP instead of
-  truncating margins, and no stop-the-game rule applies. On 1,244 IDENTICAL
-  MLB games the totals PIT PASSES (KS=0.017, p=0.84) where the margin PIT
-  REJECTS (KS=0.073, p=2.9e-6) — with 11 rungs vs 3-5, i.e. the passing test
-  is the better-powered one. Totals contract calibration ECE 0.0046, no
-  right-tail bias (all |z|<=1.01).
-  **Kalshi does not mismodel baseball; it mismodels the rule that stops the
-  game.** Kalshi-only layer (no book benchmark — budget spent).
-  Full four-league sample (36,552 contracts / 4,260 games): totals PIT passes
-  in MLB (p=.90), NBA (p=.86) and NHL (p=.25) and REJECTS only in WNBA
-  (p=.0076, n=234, mild upward tilt, mean u .536) — reported as an open
+*(rewritten 2026-08-28, post ladder-convention correction b7a2428)*
+- **The correction, stated as a result.** Kalshi settles MLB/WNBA spread
+  rungs on integer lines ("wins by t-0.5 or more") vs NBA/NHL half-point
+  lines ("wins by more than t"); the analysis had applied one rule
+  everywhere, shifting MLB's implied margin CDF by a full run. Verified
+  against Kalshi's own settlement field (99.87% league-specific vs 97.80%
+  single-rule, n=25,146 contracts); enforced by
+  `ladder_convention.cover_line()` + a per-league data_audit gate. Four
+  claims retracted in place [multiple_testing.py header].
+- **Post-correction surface: near-dead-heat on shapes too.** Every league's
+  Kalshi margin PIT passes (pooled KS=0.011 p=0.718; MLB p=0.104)
+  [margin_dist.log]. RPS head-to-head on shared rungs (n=3,673): books
+  better by +0.49e-3 (z=+2.44) pooled, carried by NBA (+1.14e-3, z=+2.27,
+  its convention was always right); MLB n.s. (+0.33e-3, z=+1.29); NHL exact
+  tie [multi_outcome.log]. Ladder price agreement corr 0.9887; tail ECE on
+  identical contracts 0.0078 (K) vs 0.0073 (B) [ladder_vs_books.log]. The
+  books' own denser ladders (pushes excluded) fail the PIT in MLB (p<.001)
+  and NHL (p=.024) where Kalshi's sparser ones pass — test density/power,
+  not book inferiority [book_pit.log].
+- **The crack that survives is SHARED.** Extra-inning games (8.6% of 3,517
+  MLB finals; 70% end within one run under the ghost-runner rule)
+  under-price the 1-2-run cell by **+20.2pt on Kalshi (z=+5.94) and +22.0pt
+  at the books** on the same games and rungs [mlb_extras.log,
+  ladder_vs_books.log]. Regulation runs the opposite way (-3.1pt K /
+  -1.6pt B), so each venue's aggregate cell is a cancellation (K -1.1pt,
+  B +0.4pt, both n.s.). A rare, slow-feedback game state is mispriced the
+  same way at every institution — the within-game miniature of §5.9's
+  boundary, joining the WC draws and the shared 40/60 compression in the
+  shared-blind-spot column.
+- **Totals layer, retargeted** [totals.log]: totals settle uniformly
+  (verified — no convention adjustment), and now serve as the dense
+  companion surface: PIT passes MLB (p=.90), NBA (p=.86), NHL (p=.25);
+  contract ECE 0.0046 (MLB), no right-tail bias (all |z|<=1.01). The
+  totals-pass/margins-reject contrast this layer was collected to test is
+  retracted — both layers pass, which upgrades the conclusion: the whole
+  run-scoring process is priced correctly outside the extras cell. WNBA
+  totals reject (p=.0076, n=234, mild upward tilt, mean u .536) — open
   observation, not a claim. Coherence splits by price source: live-book
-  ladders are 99.3-100% monotone in every league, trade-reconstructed ones
-  86.9-95.6% — the violations are reconstruction noise, same as the spread
-  ladders.
-Figs: `margin_distribution.png`, `margin_pit.png`, `totals.png`.
+  ladders 99.3-100% monotone in every league; violations are
+  reconstruction noise.
+- **Self-correction, corrected** [time_stability.log §2, migrated
+  2026-08-28]: the previously reported "+7.5 to +11.2pt non-correcting
+  bias" was the artifact persisting (an artifact cannot self-correct).
+  Corrected, the aggregate cell is near-unbiased in every era; the extras
+  cell recurs in both 2026 halves (+18.3pt / +26.4pt, n=156/56 sides) but
+  era-level samples are too small for a self-correction claim either way.
+Figs: `margin_distribution.png`, `margin_pit.png`, `totals.png` now show
+agreement/passes — appendix gallery; §5C's main-text figure load is the
+discipline boundary (F6), with the extras cell carried in prose.
 
 ### 5.6 What participation costs, and who pays
 - Cost table: taker all-in Kalshi ≈ -4.2% ≈ books' vig -4.1%; maker path
@@ -344,9 +371,9 @@ book data banked (subscription lapses Sept 2026); VPS backups.
 
 ## Appendices
 A. Side-assignment audit. B. Robustness battery (log score, home-side,
-CORP, selection, de-vig variants, staleness). C. FDR table: 16 discovery
-claims, 13 survive BH q=.05 (encompassing whisper + books-lead-24h drop;
-reported as suggestive). D. Equivalence/null register (17 entries).
+CORP, selection, de-vig variants, staleness). C. FDR table: 17 discovery
+claims, 15 survive BH q=.05 (encompassing whispers + books-lead-24h drop;
+reported as suggestive); the retraction record stays in the module header. D. Equivalence/null register (17 entries).
 E. Data dictionary.
 
 ---
@@ -360,8 +387,8 @@ E. Data dictionary.
 | US book-by-book | 11 books, 4,664 games, all n.s. | us_books |
 | Four-way | δ_min ≤ 0.74e-3 | four_way |
 | Elo premium | +13.3e-3, z≈7.4 | model_benchmark |
-| RPS | MLB z=+5.4, NBA z=+2.3, NHL z=+0.05 | multi_outcome |
-| MLB cell | K +8.5pt vs B +0.4pt (z=+10) | ladder_vs_books |
+| RPS post convention fix | pooled +0.49e-3 (z=+2.44), NBA-carried +1.14e-3 (z=+2.27); MLB n.s. | multi_outcome |
+| Extras 1-2-run cell | K +20.2pt (z=+5.9) / books +22.0pt; aggregate cells n.s. | mlb_extras, ladder_vs_books |
 | Taker P&L | -5.0% gross / -7.7% net, $95.7M | retail_fingerprint |
 | Outright longshots | K $0.33 / P $0.53 / B $0.34 (se .08, 20 seasons) | futures_calibration, book_outrights |
 | Niche gradient | excess ECE 0.00, slope 0.98 | niche_gradient |
@@ -369,18 +396,20 @@ E. Data dictionary.
 | Functioning | 0.7pt vs 4.2pt from consensus; books 7.1% niche vig | market_functioning |
 | Shading | 30+ books, sub-1pt, sign opposite | sharp_books, us_books |
 | Fee incidence | volume -41%, touch pinned | fee_liquidity |
-| FDR | 16 claims, 13 keep at q=.05 | multiple_testing |
+| FDR | 17 claims, 15 keep at q=.05 | multiple_testing |
 
 ## Open items before the final draft
 1. Advisor: venue (grant report vs arXiv) and turnaround — memo pending.
-2. Claim registration + out-of-sample verification on late-Aug data (~Aug 22).
+   Non-blocking per drafting-plan Decision B.
+2. ~~Claim registration + out-of-sample verification~~ — EXECUTED 2026-08-28
+   (docs/registered-claims.md committed before the holdout was collected;
+   oos_verification.py; §5A closing paragraph slot per drafting plan).
 3. ~~5-min book event study + price-of-immediacy curve~~ — DONE 2026-08-10
    (five_min.py, immediacy.py; §5.4 and §5.6 above).
 4. ~~MDE table~~ — DONE 2026-08-10 (power.py; §4 above).
-5. Number freeze: final suite run stamps every figure/table. One last VPS
-   panel refresh first — the fine-clock event study is at n=19 and the panel
-   adds ~18 games/day.
-6. Kalshi price re-harvest ~Aug 18 (60-day cutoff) before the freeze.
+5. ~~Number freeze~~ — RUN 2026-08-28 after the final VPS panel refresh and
+   re-harvest; MANIFEST + logs stamp every figure/table.
+6. ~~Kalshi price re-harvest~~ — RUN 2026-08-28 with the freeze.
 
 ## Numbers added 2026-08-10 (append to the locked table at freeze)
 | Claim | Number | Log |
@@ -393,7 +422,7 @@ E. Data dictionary.
 | Pooled MDE | 0.36-0.51e-3 vs delta=1e-3 | power |
 | Underpowered leagues | CFB 2.74, WNBA 2.47, NFL 1.57 (e-3) | power |
 | FDR | 17 claims, 15 keep at q=.05 | multiple_testing |
-| Totals vs margins PIT (same 1,244 MLB games) | totals p=0.84 pass / margins p=2.9e-6 reject | totals |
+| Margin + totals PIT (convention-corrected) | margins pooled p=0.718 (MLB p=0.104); totals MLB p=0.90 — both pass | margin_dist, totals |
 | Totals contract calibration (MLB) | Brier 0.1780, ECE 0.0046, n=15,124 | totals |
 | Re-harvested master (2026-08-11) | 9,778 games; three-way clean n=5,327 | build_master, three_way |
 | Structural taker cost | -4.5%/position (IQR -5.4 to -4.0, n=47,766 quotes) | horizon_translation |

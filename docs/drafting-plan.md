@@ -26,13 +26,18 @@ Nothing is dropped. §5.10 (World Cup 3-way, n=9, descriptive) moves to
 Appendix F — at n=9 it cannot carry a numbered results section, and it
 interrupts C→D at exactly the wrong moment.
 
-Movement C is the pivotal regrouping. The MLB walk-off failure (5.5) and the
-one-shot outright failure (5.9) are currently 12 pages apart, but they are the
-same finding at two scales: **discipline is a property of the market's
-repetition structure, not of the institution.** Walk-offs are a within-game
-rule that breaks the mapping; one-shot outrights are a market type with no
-repetition to break. Put them adjacent and the paper has a thesis instead of
-two anomalies.
+Movement C is the pivotal regrouping — rebuilt 2026-08-28 after the
+ladder-convention retraction (b7a2428). The shared extra-innings blind spot
+(5.5: the 1-2-run cell missed by ~+20pt at BOTH venues) and the one-shot
+outright failure (5.9) are the same finding at two scales: **discipline is a
+property of the market's repetition structure, not of the institution.**
+Extras are a rare state inside a repeated market (8.6% of games — thin
+feedback); one-shot outrights are a market type with no repetition at all;
+both are mispriced everywhere, by the same amount at every institution. Put
+them adjacent and the paper has a thesis instead of two anomalies — and the
+retraction strengthened it: the one finding that looked Kalshi-specific
+turned out to be institution-independent once the settlement convention was
+read correctly.
 
 **Decision B — Target ~11,000 words main text, ~9 main figures, 5 main tables.**
 Format-agnostic: this is a paper that reads as a grant report with a cover
@@ -79,34 +84,45 @@ D84 (expectations), L83 (sports/gambling).
 | 4. Methods | 900 | — | Table 2 |
 | 5A. The dead heat | 1,200 | Fig 2 | Table 3 |
 | 5B. How the equivalence is produced | 900 | Fig 3, Fig 4 | — |
-| 5C. Where the surface cracks | 1,400 | Fig 5, Fig 6 | Table 4 |
+| 5C. Where the surface cracks | 1,400 | Fig 6 | Table 4 |
 | 5D. What it costs, and who is on the other side | 1,300 | Fig 7, Fig 8 | Table 5 |
 | 6. Institutional synthesis | 700 | — | — |
 | 7. Limitations | 600 | — | — |
 | 8. Reproducibility and data | 250 | — | — |
 | **Total** | **~10,870** | **8 + Fig 9 in 5D** | **5** |
 
-### Main figures (9 of 29). Everything else → Appendix B gallery.
-| # | File | Carries |
-|---|---|---|
-| 1 | `plain_calibration.png` | The hook: teams priced at X% win X% of the time, all venues |
-| 2 | `equivalence_forest.png` | Formal equivalence — every pairwise ΔBrier CI inside the margin |
-| 3 | `horizon_calibration.png` | When the equivalence forms (T-24h → close) |
-| 4 | `five_min.png` | How it forms: no leader survives the resolution ladder |
-| 5 | `margin_pit.png` | The crack: MLB margin PIT rejects |
-| 6 | `totals.png` | The diagnosis: same games, totals PIT passes |
-| 7 | `oneshot_returns.png` | The boundary: one-shot returns collapse everywhere |
-| 8 | `niche_gradient.png` | The active ingredient: repetition, not benchmark |
-| 9 | `horizon_translation.png` | The participant's units: bankroll decay by cadence |
+### Main figures — the report figure program (results/report/, built by
+`src/analysis/report_visuals.py`; see docs/figure-map.md for design notes).
+This supersedes the old 9-of-29 selection from results/*.png — those plots
+remain as the appendix gallery's raw layer.
 
-Deliberately demoted to appendix (each is good, none is load-bearing for the
-spine): `four_way`, `three_way_calibration`, `corp_reliability`, `murphy`,
-`spread_coherence`, `profitability`, `model_benchmark`, `book_moves`,
-`minute_lead_lag`, `retail_fingerprint`, `fee_liquidity`, `tick_pricing`,
-`immediacy`, `liquidity_footprint`, `why_sports`, `kalshi_nuance`,
-`hierarchical_calibration`, `horizon_cross`, `margin_distribution`,
-`kalshi_vs_polymarket`, `reliability_kalshi`, `book_moves`.
-Their numbers still appear in prose and tables — only the plots move.
+| Slot | File | Section | Carries |
+|---|---|---|---|
+| Fig 1 | `F2_dead_heat` | §1 hook | Teams priced at X% win X% of the time, all venues |
+| Fig 2 | `F3_equivalence_forest` | §5A | Every pairwise ΔBrier CI against the cost-anchored margin ladder |
+| Fig 3 | `F5_market_premium` | §5A | Markets beat the public-statistics floor — identically |
+| Fig 4 | `F10_when_equivalence_forms` | §5B | T-24h → close: lockstep sharpening, no separation |
+| Fig 5 | `F4_no_leader` | §5B | No cross-lag correlation sharpens with the clock |
+| Fig 6 | `F6_discipline_boundary` | §5C | Repeated vs one-shot: what fails is the market type |
+| Fig 7 | `F8_retail_fingerprint` | §5D | The flow is shaped like consumption |
+| Fig 8 | `F7_translation` | §5D | Bankroll decay by cadence: price vs participant |
+| Fig 9 | `F1_two_axes` | §6 | Price quality and participant cost are independent |
+
+Optional §1 opener (pending build): `F0_one_game` — one game, four venues,
+one price path into the close, from `data/exhibits/`.
+
+**Pair picks (decided 2026-08-28; alternates go to the appendix gallery):**
+F1 over F1alt (the venue-coincidence proof beats stat tiles); F2 over F2alt
+(the 45° hook; F2alt's 10x deviation view is the appendix companion to the
+shared-deviation statistic); F3 over F3alt (D2 requires reporting where the
+margin ladder stops resolving); F6 over F6alt (sparse futures buckets invite
+over-reading); F7 over F7alt (the structural rate is the anchor; the
+two-rate bracket is appendix nuance).
+
+Appendix gallery: F9_institutional_trace, F11_maker_taker,
+F12_two_layer_book, F13_scorecard, F14_immediacy, the five alternates, and
+the full results/*.png suite layer (their numbers still appear in prose and
+tables — only the plots sit in the appendix).
 
 ### Main tables
 - **Table 1** Data sources: venue, instrument, price construction, coverage, n.
@@ -230,9 +246,12 @@ means writing its beats in order and nothing else.
 - **¶4 External validation.** Trade-recon vs archived books 99% within 1pt;
   Poly CLOB vs archived books median error 0.00pt.
 - **¶5 Audit-gate architecture.** 73 checks, suite halts on failure.
-- **¶6 The side-assignment lesson.** Short here, full treatment Appendix A.
-  Two independent catches of stale-print traps in resolved-market histories.
-  This is a genuine methods contribution and should be signposted, not buried.
+- **¶6 The pipeline lessons.** Short here, full treatment Appendix A. Three
+  independent catches, one discipline: the side-assignment audit, stale-print
+  traps in resolved-market histories, and the league-specific ladder
+  settlement conventions (2026-08-23) — impossible results treated as
+  pipeline alarms, settlement data as ground truth, each catch converted into
+  a permanent audit gate. A genuine methods contribution; signpost it.
 - **¶7 Availability.** `analysis_core.csv`, DATA_DICTIONARY.md, data_tour.ipynb,
   one-command regeneration.
 
@@ -242,8 +261,10 @@ means writing its beats in order and nothing else.
   diagrams with sup-t bands.
 - **¶2 De-vigging.** Multiplicative default, Shin for tail-sensitive claims,
   with the tail artifact documented rather than hidden.
-- **¶3 Inference.** Date-clustered Diebold-Mariano; TOST at δ=1.0e-3 Brier
-  (≈0.5pt/game) with the justification for that margin; interval-randomized
+- **¶3 Inference.** Date-clustered Diebold-Mariano; TOST at δ=1.0e-3 Brier —
+  which admits a systematic 3.16pt offset (ΔBrier = ε², per D2), not the
+  0.5pt an earlier gloss claimed — read against the cost-anchored ladder
+  δ=0.11/0.44/0.99e-3 at prices 0.25/0.50/0.75; interval-randomized
   tie-consistent PIT; exact binomials for tail buckets; cluster bootstrap for
   niche ECE/slope.
 - **¶4 Multiplicity.** BH-FDR two-family policy, stated before any result is
@@ -306,59 +327,80 @@ means writing its beats in order and nothing else.
   (p=0.012) and 23% Polymarket (p<0.001), both significantly *below* chance
   [book_moves]. Parallel processing of the same information, not transmission.
 
-### §5C Where the surface cracks (1,400 w, Fig 5, Fig 6, Table 4)
+### §5C Where the surface cracks (1,400 w, Fig 6, Table 4)
 
-*The pivotal movement. Two failures, one mechanism.*
+*The pivotal movement, rebuilt 2026-08-28 post-retraction. One mechanism at
+two scales — and the last "venue defect" died on inspection.*
 
-- **¶1 Transition.** Everything so far is about the price of a binary outcome.
-  Push on the full distribution and on market type, and the equivalence stops
-  holding in two places that turn out to be the same place.
-- **¶2 The distributional edge is real but localized.** RPS on shared rungs
-  (n=3,690): books better — MLB +3.9e-3 (z=+5.4), NBA +1.1e-3 (z=+2.3), NHL
-  an exact tie (z=+0.05) [multi_outcome]. The edge lives exactly where the
-  margin process is pathological.
-- **¶3 The MLB cell.** Kalshi +8.5pt vs books +0.4pt on 1–2-run margins
-  (z=+10); extras mechanism ~24% of it [ladder_vs_books].
-- **¶4 And it is sheltered, not exploitable.** Selling it loses 2.9–4.5% net
-  of costs. The bias is harbored inside a cost band — institutionally
-  identical to how a book harbors bias inside vig. This sentence is where the
-  framing rule earns its keep.
-- **¶5 PIT (Fig 5).** Books pass where Kalshi fails (MLB); NHL book ladders
-  fail where Kalshi passes, with the sparse-rung caveat noted and not claimed
-  [book_pit].
-- **¶6–7 The diagnosis via a third market layer (Fig 6). Two paragraphs.**
-  ¶6: the design. Totals run over the same scoring process, but extras push
-  totals UP instead of truncating margins, and no stop-the-game rule applies.
-  Same 1,244 MLB games. ¶7: the result. Totals PIT passes (KS=0.017, p=0.84)
-  where the margin PIT rejects (KS=0.073, p=2.9e-6) — with 11 rungs vs 3–5,
-  so the passing test is the better-powered one. **Kalshi does not mismodel
-  baseball; it mismodels the rule that stops the game.**
-- **¶8 Scope and the open observation.** Four-league sample (36,552 contracts /
-  4,260 games): totals PIT passes in MLB (p=.90), NBA (p=.86), NHL (p=.25),
-  rejects only in WNBA (p=.0076, n=234, mild upward tilt, mean u .536).
-  Reported as an open observation. Coherence splits by price source —
-  live-book ladders 99.3–100% monotone, trade-reconstructed 86.9–95.6% — so
-  the violations are reconstruction noise, not market incoherence.
-  Kalshi-only layer: no book benchmark, budget spent. Say so.
-- **¶9 The scale-up (transition to the boundary).** A rule that breaks the
-  mapping inside a game is a small version of a market type that has no
-  repetition to learn from at all.
-- **¶10 Pathologies vanish where repetition exists.** BDW's platform-wide
-  pathologies are absent in game markets — moneylines at mid, −0.45%
+- **¶1 Transition.** Everything so far is about the price of a binary
+  outcome. Push on the full distribution and on market type, and what breaks
+  is the same thing at two scales — and it breaks at every institution at
+  once.
+- **¶2 The correction, stated as a result.** Kalshi settles MLB/WNBA spread
+  rungs on integer lines ("wins by t-0.5 or more"), NBA/NHL on half-point
+  lines ("wins by more than t"); one rule applied everywhere shifted MLB's
+  implied CDF by a full run. Caught against Kalshi's own settlement field
+  (99.87% vs 97.80% on 25,146 contracts), gated in data_audit, four claims
+  retracted in place [multiple_testing]. Present it as a result, not a
+  confession — this paragraph buys the reader's trust for everything after
+  it, and it is the §3 pipeline-lessons arc completing.
+- **¶3 The corrected surface: near-dead-heat on shapes too.** Every league's
+  margin PIT passes (pooled p=0.718; MLB p=0.104) [margin_dist]. RPS on
+  shared rungs: books +0.49e-3 (z=+2.44), carried by NBA (+1.14e-3, z=+2.27);
+  MLB n.s.; NHL exact tie [multi_outcome]. The books' denser ladders fail
+  their own PITs (MLB p<.001, NHL p=.024) where Kalshi's sparse ones pass —
+  density and power, not superiority [book_pit]. One clause on tail ECE
+  0.0078 vs 0.0073 on identical contracts [ladder_vs_books].
+- **¶4 The crack that survives is shared.** Extras (8.6% of finals; 70% end
+  within one run under the ghost-runner rule): the 1-2-run cell is
+  under-priced +20.2pt on Kalshi (z=+5.94) and +22.0pt at the books, same
+  games, same rungs [mlb_extras, ladder_vs_books]. Regulation runs the other
+  way, so each venue's aggregate cell is a cancellation (K -1.1pt, B +0.4pt,
+  both n.s.) — the bias was never visible in the aggregate, and never absent
+  from the state.
+- **¶5 Why that matters.** A rare, slow-feedback state inside a repeated
+  market is the within-game miniature of the boundary this movement ends on:
+  repetition disciplines what it samples often; what it samples rarely stays
+  wrong — at every institution. The shared-blind-spot column now holds the
+  extras cell, the WC draws, and the 40/60 compression. And it is sheltered:
+  selling any rung loses money net of costs [ladder_cost] — biases harbored
+  inside cost bands, exactly as books harbor theirs inside vig. The framing
+  rule earns its keep here.
+- **¶6 The totals layer, retargeted.** Totals settle uniformly (verified);
+  PIT passes MLB/NBA/NHL, contract ECE 0.0046, no right-tail bias [totals].
+  Collected to test the walk-off contrast; the contrast is retracted, and
+  what the layer shows instead is stronger: the entire run-scoring process
+  is priced correctly in every densely-sampled dimension. WNBA rejection:
+  one sentence, open observation (p=.0076, n=234).
+- **¶7 Self-correction, corrected.** The "+7.5 to +11.2pt non-correcting
+  bias" was the artifact persisting; the corrected aggregate cell is
+  near-unbiased in every era, and the extras cell recurs in both 2026
+  halves (+18.3/+26.4pt, n=156/56) — no self-correction claim either way at
+  these n [time_stability].
+- **¶8 The scale-up (transition to the boundary).** A state a market rarely
+  samples is a small version of a market type with no repetition to learn
+  from at all.
+- **¶9 Pathologies vanish where repetition exists.** BDW's platform-wide
+  pathologies are absent in game markets — moneylines at mid, -0.45%
   [why_sports].
-- **¶11 They return in one-shot outrights, at EVERY institution (Fig 7).**
+- **¶10 They return in one-shot outrights, at EVERY institution (Fig 6).**
   Kalshi $0.33 (fresh prints: 0 winners in 114), Polymarket $0.53, and the
-  BOOKS $0.34 at 0–3 months (se 0.08, n=1,614, 20 sport-seasons 2020–26,
-  playoff-densified, Shin-robust) — statistically identical to the exchange
+  BOOKS $0.34 at 0-3 months (se 0.08, n=1,614, 20 sport-seasons 2020-26,
+  playoff-densified) — statistically identical to the exchange
   [futures_calibration, book_outrights]. Both-tail overconfidence: 75c+
-  favorites won 62.5% against 86.3% priced. Book overrounds 1.20–1.27 vs
+  favorites won 62.5% against 86.3% priced. Book overrounds 1.20-1.27 vs
   exchange 1.03: the exchange charges less and is wrong in the same places.
-- **¶12 The benchmark is not the active ingredient (Fig 8).** Un-benchmarked
+  State the de-vig caveat in prose, not just the figure footnote: the books'
+  sub-10c return rises to $0.52 under Shin, and murphy.py's own rule says
+  tail-sensitive claims must use Shin — so "statistically identical" holds
+  under multiplicative de-vig, and the honest sentence is "the books fail
+  the same way, within de-vig uncertainty," not "identically."
+- **¶11 The benchmark is not the active ingredient.** Un-benchmarked
   repeated niche games are clean: excess ECE 0.00 against the noise floor,
-  slope 0.98 (CI 0.84–1.15), field sums 1.02 [niche_gradient].
-- **¶13 Nor is liquidity.** Deep outright books misprice; tiny niche books do
-  not. The footprint result closes the confounder [liquidity_footprint].
-- **¶14 Table 4, read both ways.** Across rows the institution explanation
+  slope 0.98 (CI 0.84-1.15), field sums 1.02 [niche_gradient].
+- **¶12 Nor is liquidity.** Deep outright books misprice; tiny niche books
+  do not. The footprint result closes the confounder [liquidity_footprint].
+- **¶13 Table 4, read both ways.** Across rows the institution explanation
   dies; down columns the benchmark explanation dies. Repetition and fast
   resolution are what is left. Precision vs bias decomposition: repetition
   produces unbiasedness; the MM complex produces existence and precision

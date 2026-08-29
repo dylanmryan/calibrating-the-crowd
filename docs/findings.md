@@ -215,7 +215,7 @@ this table is not luck. (`results/plain_calibration.png`)
 | Favorite–longshot bias | longshots overpriced | none — all slope CIs include 1; ladder longshots if anything *under*priced |
 | Information content | none | resolution equal to professional books |
 | Internal coherence | incoherent ladders | 97.3% perfectly monotone; executable arbitrage in 0.10% (0.05% live-book) |
-| Distributional accuracy | wrong shapes | PIT uniform in NBA (p=.33), NHL (p=.23), WNBA (p=.42); **MLB rejects (p<.001)** |
+| Distributional accuracy | wrong shapes | margin PIT passes every league post convention fix (pooled p=.72); totals pass 3 of 4; one shared extras blind spot |
 | Exploitability | beatable | no strategy clears costs; divergence-chasing loses 38% |
 | House edge | high take | Kalshi ~1.0% vs sportsbook ~4.2% overround |
 
@@ -258,106 +258,58 @@ analyses on our sports data:
 
 ## Notable nuances
 
-1. **MLB margin distributions are miscalibrated** (PIT KS=0.072, p<0.001, unbiased in
-   location) — and the mechanism is now partly identified. Baseball's ending rules
-   concentrate finals at a margin of exactly 1: extra-inning games (8.6% of games,
-   ghost-runner era) end within one run **70%** of the time (home wins in extras:
-   88% by exactly 1) vs 25% in regulation. In the run-line "win by 1–2" cell the
-   market implies 14.6% in extras games that empirically hit 44.5% (+29.9pts,
-   z=8.9); extras account for ~24% of the cell's total +8.4pt under-pricing, with
-   a broad +6.4pt under-pricing of small margins remaining even in regulation.
-   Notably the market prices the home/away walk-off *asymmetry* in the right
-   direction (implied 17.3% home vs 11.6% away) — the level is wrong, not the
-   shape's direction. (`src/analysis/mlb_extras.py`)
-   **Cross-source verdict: the blind spot is Kalshi-specific.** On the same games
-   and rungs, the books' alternate run lines price the cell almost perfectly
-   (implied 22.6% vs empirical 23.0%, gap +0.4pts, z=0.5; robust to requiring
-   ≥3 books), while Kalshi misses by +8.4pts (z=10). This is the first clean
-   Kalshi-vs-books divergence found anywhere in the project — and it lives in
-   the thin derivative ladders, not the liquid moneylines. Same pattern in tail
-   calibration on 20,363 identical contracts: book ECE 0.0069 vs Kalshi 0.0195
-   (Brier 0.1764 vs 0.1785). NBA ladders show no such gap (±1–2pts).
-   (`src/analysis/ladder_vs_books.py`, sportsbook alternate spreads for 2,480
-   MLB/NBA ladder games)
-   **THE MECHANISM IS NOW ISOLATED (2026-08-11, `src/analysis/totals.py`,
-   `src/collect/kalshi_totals.py`, `results/totals.png`).** Totals are a third
-   market layer over the *same* run-scoring process, but extras push totals UP
-   rather than truncating margins toward zero, and no stop-the-game rule
-   applies. So the walk-off story makes a falsifiable prediction: the implied
-   *total-runs* distribution should be fine on exactly the games where the
-   implied *margin* distribution is not. It is. On 1,244 identical MLB games,
-   with the margin PIT recomputed live inside the same module so the contrast
-   cannot go stale:
-
-   | layer | games | KS | p | mean u | median rungs |
-   |---|---|---|---|---|---|
-   | **totals** | 1,245 | 0.0173 | **0.843 — passes** | 0.501 | 11 |
-   | **margins** | 1,244 | 0.0734 | **2.9e-6 — rejects** | 0.501 | 3–5 |
-
-   The totals test is the *better-powered* of the two (11 rungs resolve the CDF
-   far more finely than the margin ladders' 3–5), so passing is not a
-   resolution artifact — a finer grid makes rejection easier, not harder.
-   Contract-level calibration on 15,124 MLB totals contracts is excellent
-   (Brier 0.1780, **ECE 0.0046**), and the right tail — the region extras feed
-   — shows no systematic bias at any threshold (largest gap +2.8pt at the 14.5
-   rung, every |z| ≤ 1.01).
-
-   **Full four-league sample (2026-08-11, collection complete: 36,552 contracts
-   over 4,260 games — MLB 15,124 / NBA 12,929 / NHL 6,850 / WNBA 1,649).** The
-   controls came in as the mechanism predicts, and on real samples rather than
-   the preliminary n=165:
-
-   | league | ladders | PIT KS | p | mean u | verdict |
-   |---|---|---|---|---|---|
-   | MLB | 1,466 | 0.0149 | 0.896 | 0.500 | passes |
-   | NBA | 1,284 | 0.0167 | 0.861 | 0.500 | passes |
-   | NHL | 1,211 | 0.0290 | 0.254 | 0.504 | passes |
-   | WNBA | 234 | 0.1083 | 0.0076 | 0.536 | **rejects** |
-
-   Contract-level ECE is 0.0046 (MLB), 0.0040 (NBA), 0.0125 (NHL), 0.0408
-   (WNBA). **Three of four leagues' implied total-scoring distributions are
-   correct**, including the two whose margin distributions also pass — so the
-   MLB margin failure remains the isolated defect.
-   *WNBA is the one rejection* and deserves care rather than a story: it is the
-   smallest sample (n=234), it clears a Bonferroni threshold across the four
-   leagues (0.0076 < 0.0125) so it is not simply multiplicity, and its direction
-   is a mild upward tilt (mean u 0.536, z=+1.9; decile counts pile up at u=0.7–0.9
-   with a deficit mid-CDF) — realized totals came in a little above what was
-   priced. Contract reliability agrees, under-predicting in the low-probability
-   (high-threshold) buckets: 0.194→0.248 and 0.376→0.460. That is consistent
-   with a market slow to re-price a rising scoring environment, but n=234 and
-   one season cannot establish it. **Reported as an open observation, not a
-   claim.**
-
-   **Coherence is a reconstruction artifact, not a market defect.** Raw
-   monotone shares (MLB 95.2%, NBA 86.9%, NHL 94.6%, WNBA 99.1%) split cleanly
-   by price source: ladders priced from a **live book are 99.3–100% monotone in
-   every league**, while trade-reconstructed ladders run 86.9–95.6%. NBA's low
-   raw figure is entirely this (only 10 of its 1,290 ladders are book-mid).
-   A reconstructed ladder inherits the timing noise of last-trade prints; a
-   live-book ladder is a simultaneous snapshot. This is the same caveat the
-   spread-ladder coherence work carries, and it points the same way: **when the
-   book is observed simultaneously, these ladders are essentially perfectly
-   coherent.** Executable arbitrage is 0.00% everywhere except NBA at 0.16%.
-   **Reading: Kalshi does not mismodel baseball. It mismodels the rule that
-   stops the game.** The defect is specific to the margin — precisely what the
-   walk-off/extras truncation account predicts, and the strongest available
-   evidence against the alternative "the exchange is simply bad at baseball's
-   scoring tail." Kalshi-only by design: the Odds API budget is spent, so this
-   layer has no book benchmark; the comparisons that matter here
-   (Kalshi-vs-reality, totals-vs-margins on the same games) are both internal.
-
-   Two completions of this story: **(a) the books' full margin distributions
-   pass the same PIT that rejects Kalshi's** (tie-consistent PIT, corrected
-   2026-07-30: book MLB KS p=0.084, NBA p=0.165 vs Kalshi MLB p<0.001 — the
-   earlier p=0.46 for MLB was inflated by strict-inequality tie handling on
-   integer lines; the pass is now marginal but the contrast with Kalshi's
-   decisive rejection stands) (`src/analysis/book_pit.py`); **(b) the mispricing is
-   unexploitable**: selling the over-priced "win by 3+" contracts at the bid,
-   fees included, loses 2.9–4.5% (date-clustered z −2.3 to −4.6; robust to
-   live-book-only quotes) — the bias is harbored inside Kalshi's transaction-
-   cost band exactly as books harbor biases inside their vig, which is *why* it
-   persists (`src/analysis/ladder_cost.py`).
+1. **The MLB margin anomaly: retracted and replaced (2026-08-23; this entry
+   supersedes every earlier version of this nuance).** Kalshi settles spread
+   rungs differently by league: MLB/WNBA quote integer run/goal lines
+   (threshold t = "wins by t-0.5 or more"), NBA/NHL half-point spreads
+   (t = "wins by more than t"). The analysis layer had applied the NBA rule
+   everywhere, shifting MLB's implied margin CDF by one full run — the
+   artifact's size (9.5pt) is exactly the spacing between adjacent MLB
+   rungs. Verified against Kalshi's own settlement field on 25,146
+   contracts (league-specific rule reproduces settlement 99.87% vs 97.80%
+   for a single global rule, the error concentrated in MLB at rungs
+   2.5/3.5/4.5); now enforced by `src/analysis/ladder_convention.py` and a
+   per-league data_audit settlement gate so it cannot regress.
+   **Retracted:** the +8.4pt (z=+10) "Kalshi under-prices 1-2-run margins"
+   cell (now -1.1pt, z=-1.3, n.s.); the MLB margin PIT rejection (now
+   KS=0.034, p=0.104 — passes, as does every league; pooled p=0.718); the
+   "books beat Kalshi on distributions" headline (pooled RPS now +0.49e-3,
+   z=+2.44, carried by NBA +1.14e-3 z=+2.27 — whose convention was always
+   correct — with MLB n.s. and NHL an exact tie); and the
+   totals-pass/margins-reject walk-off contrast (both layers now pass on
+   the same games). Ladder price agreement with the books rose to
+   corr=0.9887; tail ECE on identical contracts is 0.0078 (K) vs 0.0073
+   (B). The books' own far-denser ladders (push lines excluded) fail the
+   PIT in MLB (p<.001) and NHL (p=.024) where Kalshi's sparser ones pass —
+   read as test density/power, not book inferiority (`book_pit`).
+   **What survives, better founded: extra-inning games under-price the
+   1-2-run cell by +20.2pt on Kalshi (z=+5.94) and +22.0pt at the books**
+   on the same games and rungs (`mlb_extras`, `ladder_vs_books`). Extras
+   are 8.6% of finals and end within one run 70% of the time (ghost-runner
+   era; home wins in extras finish by exactly one 88% of the time);
+   regulation runs the opposite way (-3.1pt K / -1.6pt B), so each venue's
+   aggregate cell is a cancellation, not an absence. The blind spot is
+   baseball-wide, not Kalshi-specific — a rare, slow-feedback game state
+   mispriced identically at every institution, which is the within-game
+   miniature of the futures/outright boundary result and fits the
+   repetition thesis better than the claim it replaces.
+   **The totals layer, retargeted** (`totals`; settlement-verified uniform,
+   no convention adjustment needed): PIT passes MLB (p=.90), NBA (p=.86),
+   NHL (p=.25); contract ECE 0.0046 (MLB) with no right-tail bias — the
+   run-scoring process is priced correctly in every densely-sampled
+   dimension; only the rare conditional state is missed. WNBA totals
+   reject (p=.0076, n=234, mild upward tilt, mean u .536) — an open
+   observation, not a claim. Coherence violations remain reconstruction
+   noise: live-book ladders are 99.3-100% monotone in every league.
+   **Self-correction, re-read** (`time_stability` §2, migrated to the
+   corrected convention 2026-08-28): the previously reported "+7.5 to
+   +11.2pt persistent bias" was the artifact persisting — an artifact
+   cannot self-correct. The corrected aggregate cell is near-unbiased in
+   every era; the extras cell recurs in both 2026 halves (+18.3pt /
+   +26.4pt, n=156/56 sides), too rare per era for a self-correction claim
+   in either direction. **Unexploitable as ever**: selling any rung loses
+   2.9-4.5% net of costs (`ladder_cost`) — the shared miss sits inside both
+   venues' cost bands exactly as books harbor biases inside vig.
 2. **Forecast encompassing — a whisper that faded as the sample grew
    (downgraded 2026-07-30).** On the Jul-10 master, Kalshi's price appeared to
    carry information beyond the book (LR p=0.004) and beyond Polymarket
@@ -975,14 +927,18 @@ learning instrument (`src/analysis/time_stability.py`):
   quarter (ΔBrier −0.68e-3, z=−3.09, one of 12 quarter-pair tests) —
   favors the *exchange* and vanished the next quarter. No sub-period shows
   the exchanges behind.
-- **The MLB blind spot is NOT self-correcting — as the cost-band thesis
-  predicts.** The win-by-1-2 underpricing persisted through 2026 at
-  +7.5pts (H1, z=+7.6) and +11.2pts (H2, z=+7.3), with implied
-  probabilities static near 14% while reality sat at 22–25%. Where fees
-  and the 1¢ tick shelter a bias from arbitrage, no correction pressure
-  exists and none is observed — the sheltering mechanism demonstrated in
-  real time, not just cross-sectionally. (2025 ladders were too sparse to
-  measure, n=65 sides.)
+- **The self-correction series, corrected (2026-08-28).** The +7.5/+11.2pt
+  "persistent blind spot" this section previously tracked was the
+  ladder-convention artifact persisting across eras — an artifact cannot
+  self-correct, so the series demonstrated the bug's stability, not the
+  market's. Migrated onto the settlement-verified convention
+  (`time_stability` §2): the aggregate 1-2-run cell is near-unbiased in
+  every era (2026 H1 -1.9pt, H2 +1.7pt, both n.s.), while the surviving
+  extras cell recurs in both halves (+18.3pt n=156, +26.4pt n=56) — real
+  both times, but too rare per era to support a self-correction claim in
+  either direction. The cost-band shelter argument now rests where it
+  belongs: on `ladder_cost` (selling any rung loses money net of costs),
+  not on a trend. (2025 ladders remain too sparse to read, n=62 sides.)
 
 ## Beyond binary: 3-way outcomes and full margin distributions (2026-08-02)
 
@@ -994,27 +950,25 @@ Extending the comparison past win/lose markets (`src/analysis/multi_outcome.py`)
   venues* (RPS 0.2157 vs 0.2149), and across all 888 snapshot rows the two
   venues priced the **draw** — the outcome with no fans — within 0.3pt of
   each other, tighter than the teams. Small-sample surprise, shared priors.
-- **Margin distributions scored head-to-head (the "by how much" question).**
-  Each game's spread ladder implies a full probability distribution over
-  victory margins; scoring Kalshi's and the books' distributions with the
-  ranked probability score on each game's *shared* rungs (n=3,690 games
-  after the NHL extension, 2026-08-04): **the books' distributional edge
-  is real but LOCALIZED** — MLB ΔRPS +3.9e-3 (z=+5.4, the known
-  small-margin blind spot), NBA +1.1e-3 (z=+2.3), and NHL an exact tie
-  (+0.01e-3, z=+0.05); pooled z=+5.36. The edge concentrates precisely in
-  the sport whose margin process is strangest (baseball's walk-off/extras
-  spike), not as a general books-are-better-at-shapes rule. A curiosity
-  for the report's caveats: on NHL the BOOKS' ladder-implied margins fail
-  the PIT (KS p<0.001) while Kalshi's pass (p=0.23) — but NHL ladders
-  carry only 2-3 rungs, where shape inference is weakest, so this is
-  noted, not claimed. Refined thesis sentence: *dead heat on who wins; on
-  by-how-much, the professionals keep an edge only where the margin
-  distribution itself is pathological.*
-- **The picture** (`results/margin_distribution.png`): aggregated implied
-  margin distributions vs realized outcomes. MLB books track reality
-  within 2.3pts total variation; Kalshi misallocates ~18pts (blowouts
-  over-priced, 1–2-run games under-priced). NBA: the two sources'
-  implied curves are visually identical.
+- **Margin distributions scored head-to-head (the "by how much" question;
+  numbers corrected 2026-08-23, ladder-convention fix).** Each game's
+  spread ladder implies a full probability distribution over victory
+  margins; scoring Kalshi's and the books' distributions with the ranked
+  probability score on each game's *shared* rungs (n=3,673 games): the
+  books are better by a small pooled +0.49e-3 (z=+2.44), and the edge is
+  **carried by NBA** (+1.14e-3, z=+2.27 — the league whose convention was
+  always correct); MLB is n.s. (+0.33e-3, z=+1.29, the pre-fix +3.9e-3
+  z=+5.4 was the convention artifact) and NHL an exact tie (z=+0.05). On
+  the PIT side the books' far-denser ladders reject in MLB (p<.001) and
+  NHL (p=.024) where Kalshi's sparser ones pass — density/power, noted
+  not claimed. Refined thesis sentence: *dead heat on who wins; on
+  by-how-much, a small NBA-carried professional edge survives, and the
+  one large shape error — the extras cell — is shared by everyone.*
+- **The picture** (`results/margin_distribution.png`, regenerated post-fix):
+  aggregated implied margin distributions vs realized outcomes. MLB: both
+  sources now track reality tightly (total variation Kalshi 1.9pts, books
+  2.2pts — the pre-fix "Kalshi misallocates ~18pts" was the artifact).
+  NBA: the two sources' implied curves are visually identical.
 - **Next (inventoried): outrights/futures.** Kalshi lists 3,068 sports
   series including settled multi-outcome championship markets — the classic
   home of favorite–longshot bias and the sharpest place to extend the BDW
@@ -1217,8 +1171,8 @@ recommendation is made or implied.
 
 ## Caveats & scope
 
-- Cross-source margin curves cover MLB + NBA (Kalshi ladders vs book alternate
-  lines); other leagues remain within-Kalshi only. Deep history limited by Kalshi's ~60-day price retention (trade
+- Cross-source margin curves cover MLB + NBA + NHL (Kalshi ladders vs book
+  alternate lines); WNBA remains within-Kalshi only. Deep history limited by Kalshi's ~60-day price retention (trade
   reconstruction used beyond it) and Polymarket's structured-sports era (mid-2025→).
 - Book lines sampled up to 60 min before start (credit-batching); prediction-market
   prices at start. Any late-news asymmetry slightly *favors* the markets.

@@ -1,5 +1,8 @@
 config.yaml
 .venv/
+.venv
+.venv 2/
+planning/
 __pycache__/
 *.pyc
 .env
@@ -17,6 +20,7 @@ results/*
 !results/*.png
 !results/MANIFEST.md
 !results/.gitkeep
+!results/report/
 .ipynb_checkpoints/
 .venv-icloud-broken/
 data/backups/

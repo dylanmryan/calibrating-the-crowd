@@ -1,4 +1,8 @@
 # Roadmap — Remaining Work & Improvements
+
+> **Historical document.** Statements about the MLB margin anomaly predate
+> the 2026-08-23 ladder-convention retraction (see findings.md nuance 1 and
+> multiple_testing.py); the current record replaces them.
 *Written 2026-07-10 (end of week 2 of 8; project ends ~Aug 24)*
 
 ## Where the project stands vs. the proposal
