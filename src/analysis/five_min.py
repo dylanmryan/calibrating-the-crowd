@@ -30,7 +30,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 from src.analysis.lead_lag import panel, SRCS
-from src.analysis.book_moves import windows, decompose
+from src.analysis.book_moves import windows, decompose, threshold_sweep
 
 ERA = "2026-07-31"          # cron switched */15 -> */5
 GRIDS = ["5min", "10min", "15min", "30min"]
@@ -232,9 +232,18 @@ def event_study(d, w=W5):
           flush=True)
     global W5_ACTIVE
     mats, sizes = windows(d, "sportsbook", THRESH, w)
+    # THRESH defines the event population, so sweep it here rather than let a
+    # single cut stand. On this clock the sweep also answers the obvious
+    # follow-up to the underpowered verdict below — would a LOWER cut have
+    # rescued it? It would: a 1pt cut yields a readable event count on the
+    # 5-min grid and reproduces the 15-min study's below-chance anticipation
+    # independently. The 2pt default is kept for comparability with the 15-min
+    # study rather than tuned per clock, and the rolling design in 3b remains
+    # the primary sub-15-min evidence.
+    threshold_sweep(d)
     if len(sizes) < 10:
-        print(f"  only {len(sizes)} clean non-overlapping events — underpowered "
-              "at this window width", flush=True)
+        print(f"\n  only {len(sizes)} clean non-overlapping events at THRESH="
+              f"{THRESH*100:.0f}pts — underpowered at this window width", flush=True)
         return mats, sizes, None
     print(f"  n={len(sizes)} events, mean size {sizes.mean()*100:.1f}pts", flush=True)
     print(f"  {'responder':12} {'pre':>9} {'at(5min)':>9} {'post':>10} "

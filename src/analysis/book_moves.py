@@ -11,6 +11,12 @@ pre-window move already pointed the way the book was about to move; 50% =
 coin flip), a size split, and the mirror study (book response to exchange
 moves — is the book's stickiness following-with-a-lag or independence?).
 Events are non-overlapping (a window's steps can't seed another event).
+
+THRESH is the one number that defines the event population, so it is swept
+rather than asserted (see threshold_sweep). The sweep RE-DETECTS events at each
+threshold rather than sub-setting the 2pt events: because detection enforces
+non-overlap, a lower threshold does not merely add events, it changes which
+ones survive the pruning — so a post-hoc subset would not answer the question.
 """
 from __future__ import annotations
 
@@ -73,6 +79,59 @@ def report(label, mats, sizes, w=W):
     return res
 
 
+def threshold_sweep(d, event_src="sportsbook", ths=(0.01, 0.015, 0.02, 0.03)):
+    """Is the conclusion a property of the market or of THRESH?
+
+    Reports, per threshold, each exchange's anticipation share (the share of
+    events where its net pre-window move already pointed the way the book was
+    about to go; 50% = coin flip) with a sign-test, plus the event count. The
+    summary is derived from the rows, not asserted, because this runs on two
+    different clocks with very different event counts.
+    """
+    print(f"\n=== threshold sensitivity: events re-detected at each cut "
+          f"({event_src} moves) ===", flush=True)
+    print(f"  {'thresh':>7}{'events':>8}{'mean size':>11}   " +
+          "".join(f"{s + ' antic% (p)':>22}" for s in ("kalshi", "polymarket")), flush=True)
+    rows = []
+    for t in ths:
+        mats, sizes = windows(d, event_src, thresh=t)
+        n = len(sizes)
+        if n < 15:
+            print(f"  {t*100:>6.1f}p{n:>8}   (too few events to read)", flush=True)
+            continue
+        cells, shares, ps = "", [], []
+        for s in ("kalshi", "polymarket"):
+            *_, antic, nok = decompose(mats[s])
+            pv = stats.binomtest(int(round(antic * nok)), nok).pvalue if nok else 1.0
+            shares.append(antic); ps.append(pv)
+            cells += f"{antic:>13.0%} (p={pv:.3f})".rjust(22)
+        mark = "  <- module default" if abs(t - THRESH) < 1e-9 else ""
+        print(f"  {t*100:>6.1f}p{n:>8}{sizes.mean()*100:>10.1f}p   {cells}{mark}",
+              flush=True)
+        rows.append((t, n, shares, ps))
+
+    if not rows:
+        print("  no threshold on this clock yields a readable event count.", flush=True)
+        return rows
+    below = all(sh < 0.5 for _, _, shares, _ in rows for sh in shares)
+    sig = [t for t, _, _, ps in rows if all(pv < 0.05 for pv in ps)]
+    lo = min(min(shares) for _, _, shares, _ in rows)
+    hi = max(max(shares) for _, _, shares, _ in rows)
+    print(f"  Read: across {len(rows)} readable cut(s) the anticipation share spans "
+          f"{lo:.0%}-{hi:.0%}", flush=True)
+    if below:
+        print("  — BELOW 50% throughout, i.e. the exchanges had if anything drifted the", flush=True)
+        print("  wrong way before a book jump. There is no anticipation to find at any", flush=True)
+        print("  cut, so the null is a property of the data rather than of where the", flush=True)
+        print("  event boundary was drawn.", flush=True)
+    else:
+        print("  — the sign is NOT stable across cuts; read the rows, not a summary.", flush=True)
+    if sig:
+        print(f"  Significantly below chance for both exchanges at: "
+              f"{', '.join(f'{t*100:.1f}pt' for t in sig)}.", flush=True)
+    return rows
+
+
 def main():
     d = panel()
     print(f"panel: {d.game_id.nunique()} games", flush=True)
@@ -90,6 +149,8 @@ def main():
     big = sizes >= 0.03
     if big.sum() >= 15:
         report("BOOK moves >=3pts", {s: m[big] for s, m in mats.items()}, sizes[big])
+
+    threshold_sweep(d)
 
     kmats, ksizes = windows(d, "kalshi")
     kres = report("KALSHI moves >=2pts — does the book follow?", kmats, ksizes)

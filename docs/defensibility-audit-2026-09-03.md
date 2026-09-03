@@ -427,14 +427,39 @@ which claims survive BH** (item 10).
     so the corrected estimator is printed alongside in `rigor.cluster_levels` and
     a reader may use either.
 
-**Tier 3 — optional, only if you want maximum armour (one day)**
+**Tier 3 — DONE 2026-09-03.** All four. Two of them turned up something the
+default cut was hiding (items 13 and 16).
 
-13. **`book_moves`/`five_min` threshold sweep** at 1pt / 2pt / 3pt (A7). The event
-    study's population definition is currently a single unexamined number.
-14. **Week-level block bootstrap** of the headline Brier differentials as a
-    distribution-free companion to TOST (B1).
-15. **`REGRESS` and `BURN` sensitivity** on the Elo floor (A7) — K is already swept.
-16. **`niche_gradient` `MAX_STALE_MIN` sensitivity** at 60 / 360 min (A7).
+*(original scoping: optional, maximum armour, one day)*
+
+13. ✅ **Threshold sweep** — `book_moves.threshold_sweep`, called from both clocks.
+    It RE-DETECTS events at each cut rather than sub-setting the 2pt events, which
+    matters because detection enforces non-overlap. On the 15-min clock the
+    anticipation share runs 23–42% across a 3× range of cuts — below chance
+    throughout, significantly so at 1.0/1.5/2.0pt — so "no anticipation" is a
+    property of the data, not of the cut. **The 5-min clock is the find:** its
+    event study reports n=7 and gives up at the 2pt default, but a 1pt cut yields
+    55 events and reproduces the below-chance result independently (27%/17%,
+    p<0.001). The 2pt default is kept for comparability with the 15-min study
+    rather than tuned per clock, and the log now says so.
+14. ✅ **Week-block bootstrap** — `rigor.block_bootstrap`, 59 weekly blocks ×
+    4,000 resamples. Analytic vs bootstrap 90% intervals: K–P (−0.51,+0.05) vs
+    (−0.52,+0.05); K–B (−0.22,+0.20) vs (−0.25,+0.25); P–B (−0.08,+0.52) vs
+    (−0.03,+0.49), all e-3. Same EQUIV verdict on all three, so the headline
+    survives dropping both the normality assumption and the cluster-SE formula.
+15. ✅ **Elo hyperparameter grid** — `model_benchmark`. Ten settings across K,
+    `REGRESS` and `BURN`. `BURN` changes the evaluation set, so each row's gap is
+    computed against the best market Brier *on that row's own games*; comparing
+    raw Briers across rows would not be a comparison. Narrowest gap anywhere is
+    7.5e-3 (burn=20), and that row narrows only by dropping early-season games —
+    where a cold Elo is worst and the market's edge is largest — so it is a
+    smaller question, not a better model. The floor never comes within reach.
+16. ✅ **Niche staleness sweep** at 1h / 3h / 6h / 24h. Excess ECE is 0.00pt at
+    every cut and the slope stays near 1 — and the **1h cut is the cleanest**
+    (slope 0.997), so the un-benchmarked-markets-are-calibrated result is not
+    bought by the loose 6h window; if anything the loose window costs a little.
+    The default stays at 6h because the tighter cuts are thinner samples with
+    higher noise floors, and the log now states that trade-off.
 
 **Explicitly decline and record in the readiness audit's "considered and not added"
 list** (so the exhaustiveness is visible): two-way date×league clustering (D4, now

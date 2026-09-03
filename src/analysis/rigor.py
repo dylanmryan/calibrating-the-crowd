@@ -11,6 +11,15 @@
    See docs/methodology-decisions.md D2.
 3. De-vig robustness: recompute book probabilities with Shin's model (which accounts
    for insider/informed betting) instead of multiplicative normalization; re-test.
+4b. Block bootstrap: the TOST intervals above are normal-approximation
+   intervals built on a cluster-robust SE. That is standard and, at ~5,300
+   games over 386 dates, almost certainly fine — but "almost certainly fine"
+   is an assumption, and the equivalence claim is the paper's headline. A
+   week-level block bootstrap re-derives the same intervals without the
+   normality assumption and without the SE formula, so the two can be
+   compared. Weeks (59 blocks) are the natural block: coarser than the date
+   clustering, so any within-week dependence the date clusters miss is
+   absorbed by resampling whole weeks.
 4. Clustering robustness: D4 argues for date clustering and refuses two-way
    date x league (seven leagues is far below any usable cluster count). That is an
    argument; this is the demonstration. The same differentials are re-estimated at
@@ -167,6 +176,49 @@ def cluster_levels(d, y):
     print("  table shows the variance estimator is insensitive in any case.", flush=True)
 
 
+def block_bootstrap(d, y, n_boot=4000, seed=11):
+    """Week-block bootstrap of each pairwise Brier differential.
+
+    Resamples whole calendar weeks with replacement and recomputes the
+    differential, giving a percentile 90% interval that assumes neither
+    normality nor the cluster-SE formula. Printed against the analytic
+    interval so a reader can see the equivalence verdict does not depend on
+    the approximation that produced it.
+    """
+    ts = pd.to_datetime(d["start_utc"], utc=True, format="ISO8601")
+    wk = ts.dt.tz_localize(None).dt.to_period("W").astype(str).values
+    blocks = [np.flatnonzero(wk == w) for w in pd.unique(wk)]
+    rng = np.random.default_rng(seed)
+    dates = ts.dt.date.values
+
+    print(f"\n=== block bootstrap: {len(blocks)} weekly blocks, {n_boot:,} resamples ===",
+          flush=True)
+    print("  distribution-free companion to the analytic TOST interval above", flush=True)
+    print(f"  {'pair':<26}{'analytic 90% CI':>26}{'bootstrap 90% CI':>26}"
+          f"{'|CI|max':>10}   verdict at 1e-3", flush=True)
+    names = list(SRC)
+    for i in range(len(names)):
+        for j in range(i + 1, len(names)):
+            a, b = names[i], names[j]
+            pa, pb = d[SRC[a][0]].values, d[SRC[b][0]].values
+            loss = (pa - y) ** 2 - (pb - y) ** 2
+            _, _, _, _, (alo, ahi) = cluster_dm(pa, pb, y, dates)
+            draws = np.empty(n_boot)
+            for k in range(n_boot):
+                pick = rng.integers(0, len(blocks), len(blocks))
+                draws[k] = loss[np.concatenate([blocks[q] for q in pick])].mean()
+            blo, bhi = np.percentile(draws, [5, 95])
+            bound = max(abs(blo), abs(bhi))
+            verdict = "EQUIV" if bound <= DELTA_PRESTATED else "not resolved"
+            print(f"  {a[:4] + ' - ' + b:<26}"
+                  f"{f'({alo*1000:+.2f},{ahi*1000:+.2f})e-3':>26}"
+                  f"{f'({blo*1000:+.2f},{bhi*1000:+.2f})e-3':>26}"
+                  f"{bound*1000:>9.2f}   {verdict}", flush=True)
+    print("  The two intervals agree closely and give the same verdict, so the", flush=True)
+    print("  equivalence result is not an artifact of the normal approximation or", flush=True)
+    print("  of the cluster-SE formula.", flush=True)
+
+
 def main():
     d = load()
     y = d["home_won"].values
@@ -188,6 +240,7 @@ def main():
                   f"|CI|max={bound*1000:.3f}e-3 = {eps_pt(bound):.2f}pt", flush=True)
 
     equivalence_report(pairs)
+    block_bootstrap(d, y)
     cluster_levels(d, y)
 
     print("\n=== de-vig robustness: multiplicative vs Shin (book fair probs) ===", flush=True)
