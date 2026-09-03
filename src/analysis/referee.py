@@ -10,6 +10,13 @@
 4. CORP decomposition (Dimitriadis-Gneiting-Jordan 2021): isotonic (PAV)
    reliability instead of arbitrary bins — Brier = MCB (miscalibration)
    - DSC (discrimination) + UNC, with no binning choices to dispute.
+5. ECE's bin dependence, made explicit. ECE is the calibration number readers
+   recognise, and it is an artifact of its bin count: the LEVEL roughly triples
+   from 5 to 20 bins and the cross-venue RANKING is not stable either. Nothing
+   in this project ranks venues on ECE — that is what MCB (§4) and the Brier
+   differentials are for — but ECE appears in summary tables, so the sweep and
+   the binomial noise floor are printed here and the reading rule is stated:
+   quote ECE as a level against its floor, never as a comparison.
 """
 from __future__ import annotations
 
@@ -49,6 +56,52 @@ def corp(p, y):
     s_c = brier(c, y)
     s_r = brier(np.full_like(y, y.mean()), y)
     return {"brier": s, "MCB": s - s_c, "DSC": s_r - s_c, "UNC": s_r}
+
+
+def ece_noise_floor(d, c1, c2, sims=400, seed=17):
+    """Mean ECE a PERFECTLY calibrated forecaster of these prices would show from
+    binning noise alone. Games are simulated once and both sides stacked, so the
+    floor inherits the same mirrored-side dependence the observed ECE has.
+
+    Same construction as oos_verification.ece_noise_floor, which applies it to
+    the holdout; the frozen sample needs it for the identical reason.
+    """
+    rng = np.random.default_rng(seed)
+    p1 = d[c1].values
+    es = []
+    for _ in range(sims):
+        y = (rng.random(len(p1)) < p1).astype(float)
+        p = np.concatenate([p1, d[c2].values])
+        yy = np.concatenate([y, 1 - y])
+        es.append(ece(p, yy))
+    return float(np.mean(es))
+
+
+def ece_binning(d3):
+    print("\n=== 5. ECE is a bin artifact; MCB is not ===", flush=True)
+    print(f"  {'nbins':>7}" + "".join(f"{s:>12}" for s in SRC) +
+          "   best on ECE", flush=True)
+    for nb in (5, 8, 10, 12, 15, 20, 25):
+        vals = {}
+        for name, (c1, c2) in SRC.items():
+            p_, y_ = stacked(d3, c1, c2)
+            vals[name] = ece(p_, y_, nbins=nb)
+        best = min(vals, key=vals.get)
+        print(f"  {nb:>7}" + "".join(f"{vals[s]:>12.4f}" for s in SRC) +
+              f"   {best}", flush=True)
+    print("\n  The level roughly triples from 5 to 20 bins and the 'best' venue changes", flush=True)
+    print("  with the bin count. That is the bins moving, not the venues.", flush=True)
+
+    print("\n  ECE at the reported 10 bins, against its binomial noise floor:", flush=True)
+    print(f"  {'source':11}{'ECE':>9}{'noise floor':>14}{'ratio':>8}", flush=True)
+    for name, (c1, c2) in SRC.items():
+        p_, y_ = stacked(d3, c1, c2)
+        e = ece(p_, y_)
+        f = ece_noise_floor(d3, c1, c2)
+        print(f"  {name:11}{e:>9.4f}{f:>14.4f}{e/f:>8.2f}x", flush=True)
+    print("\n  READING RULE: report ECE as a LEVEL against this floor, never as a", flush=True)
+    print("  ranking. The miscalibration statistic that carries a comparison is MCB", flush=True)
+    print("  (section 4), which is isotonic and has no bin count to choose.", flush=True)
 
 
 def main():
@@ -135,6 +188,11 @@ def main():
         r = corp(p_, y_)
         print(f"  {name:11} {r['brier']:>8.4f} {r['MCB']*1000:>9.2f}e-3 "
               f"{r['DSC']*1000:>9.1f}e-3 {r['UNC']:>8.4f}", flush=True)
+    print("  MCB is the project's reported miscalibration statistic: isotonic, so it", flush=True)
+    print("  has no bin count to dispute. Section 5 shows why that matters.", flush=True)
+
+    # ---------- 5. ECE bin dependence ----------
+    ece_binning(d3)
 
 
 if __name__ == "__main__":

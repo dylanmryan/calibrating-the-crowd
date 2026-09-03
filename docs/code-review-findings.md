@@ -2,7 +2,51 @@
 
 Three parallel reviewers over collectors/core-stats/microstructure; every
 Tier-1/2 claim re-verified against code and current data before inclusion.
-Ordered by impact on published claims. Status: OPEN unless noted.
+Ordered by impact on published claims.
+
+**The findings below are the record as written on 2026-07-30 and are left
+unedited. Current status is the table immediately following, re-verified against
+the code on 2026-09-03 — do not read the body as a list of open defects.**
+
+## Status as of 2026-09-03
+
+Every Tier-1 finding is fixed. What remains open is Tier-2/3 hygiene, each
+either bounded in size, conservative in direction, or in a collector that has
+since been retired (so it is now a limitation to state, not a bug to fix).
+
+| # | finding | status | note |
+|---|---|---|---|
+| 1 | stale FDR inventory | **FIXED** 43bfb88 | regenerated from live logs; clustered-p policy adopted; NBA sub-claim retracted. *Residual risk: the inventory is hand-maintained again and can re-drift — see the 2026-09-03 defensibility audit, Tier-2 item 10* |
+| 2 | minute first-passage sign inverted | **FIXED** bed8579 | labels corrected; symmetric-null conclusion was always intact |
+| 3 | tick off-grid float-modulo bug | **FIXED** bed8579 | 14.6% → 0.7%; strengthens the on-grid narrative |
+| 4 | book_pit not tie-consistent | **FIXED** 70a5893 | tie-consistent PIT; book MLB pass weakens to p=0.084, contrast stands |
+| 5 | layer2 counts pushes as losses | **FIXED** 70a5893 | pushes excluded; the MLB 45.0% run-line claim was **retracted** as a scoring artifact |
+| 6 | book leg drops whole franchises | **FIXED** 490fa7f | accent/punctuation-insensitive alias map in `sportsbook_hist._norm_name`; franchises re-collected |
+| 7 | 117 duplicate Kalshi→ESPN matches | **FIXED** 490fa7f | 1:1 enforced, ambiguous pairs purged, audit-gated |
+| 8 | horizon collector 2-page fill cap | **FIXED** 490fa7f | cap raised 8×; constant sample 2,137 → 2,901 |
+| 9 | fee_volumes records failures as 0 | **OPEN (collector retired)** | the Polymarket side now distinguishes `None`; the Kalshi side still sums an empty fill list to 0 and the resume file marks it done. Collector is retired — state as a limitation on the DiD's precision, do not re-collect |
+| 10 | polyus endDate-anchored closes | **OPEN (guarded downstream)** | `game_start = gameStartTime or endDate` still in the collector; the look-ahead guard is in the analysis layer (443520e fixed 47 affected games). Retired collector — limitation |
+| 11 | trade-recon unbounded look-back | **OPEN, now bounded empirically** | no time floor on the reconstructed side, and `staleness_min` reports the newest fill. `validate_recon` (now in the suite) bounds the damage: 94.9%/96.9% exact bid/ask, median mid error 0.00pt, n=98 |
+| 12 | live_snapshot doubleheader ambiguity | **OPEN (collector retired)** | no nearest-start selection; known limitation with a named mechanism |
+| 13 | lead_lag shifts on row-dropped frames | **FIXED** bed8579 | masks to NaN on a full calendar grid; shifts negligible as predicted |
+| 14 | slope_ci on stacked mirrored sides | **FIXED** 490fa7f | `referee` §2 reports home-side-only slope and ECE alongside the stacked version |
+| 15 | nuance per-bin binomtests double-count sides | **OPEN, anti-conservative** | still `binomtest(k, n)` on stacked sides, so the per-bin stars near 50c are too easy. Affects a descriptive display only — no claim rests on those stars. Drop them or halve n |
+| 16 | CORP band resamples mirrored sides independently | **OPEN, conservative direction** | `corp_diagram.band` draws `y* ~ Bern(p)` over the stacked vector, so the null band is too WIDE near 50c — it overstates support for the centre rather than manufacturing a rejection |
+| 17 | cluster_dm uses CR0, z not t(G−1) | **OPEN, quantified** | `rigor.cluster_levels` (added 2026-09-03) prints the corrected version at six clustering levels: the G/(G−1) correction moves the SE <1% at G=386 and ~3% at G=15, and no verdict changes |
+| 18 | encompassing cites LR p over clustered p | **FIXED** 43bfb88 | clustered-p policy adopted across the inventory |
+| 19 | MLB cell z-stats ignore pairing | **OPEN, conservative direction** | ignoring the positive covariance between paired venue estimates inflates the variance, so the reported z is a lower bound on significance |
+| 20 | four_way dup ids / pre-guard print / dead clause | **FIXED** 490fa7f | uniqueness enforced, print reordered, dead clause deleted |
+| 21 | gates don't halt the suite | **FIXED** 490fa7f | `make_results` breaks on a gate failure |
+| 22 | deep_audit tautological / short-circuiting checks | **FIXED** 490fa7f | both reworked |
+| 23a | murphy global p can print 0.000 | **FIXED** 490fa7f | `(1+r)/(B+1)` floor |
+| 23b | coherence bracket check is an upper bound | **OPEN, cosmetic** | the arbitrage figure should be quoted as "≤ 0.10%", not "= 0.10%" |
+| 23c | profitability bootstrap resamples bets iid | **OPEN, anti-conservative** | should resample game- or date-clusters; the reported CI is likely too narrow. No equivalence claim depends on it |
+| 23d | wc_freeze would poison scores on a missing outcome | **OPEN, latent** | no game currently lacks an outcome; the case study is frozen and descriptive (D6) |
+| 23e | fee_liquidity label errors | **OPEN, labels only** | "Feb" window includes Mar 1; "biweekly" is weekly. Numbers are correct |
+
+---
+
+## The findings as written, 2026-07-30 (unedited)
 
 ## Tier 1 — changes published claims (fix before the report)
 

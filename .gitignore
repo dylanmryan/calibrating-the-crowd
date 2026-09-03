@@ -16,6 +16,10 @@ data/raw/*
 data/processed/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
+# committed on purpose (no paid book data): free-tier OddPool archived books
+# vs our own Kalshi trade reconstruction — the evidence underwriting ~80% of
+# the exchange leg. See src/analysis/validate_recon.py.
+!data/processed/recon_validation.csv
 results/*
 !results/*.png
 !results/MANIFEST.md

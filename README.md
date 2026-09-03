@@ -26,11 +26,19 @@ offshore crypto CLOB (Polymarket Global), a second US-regulated exchange
 (Polymarket US), and the professional sportsbook complex — including Pinnacle
 and eleven major US retail books — are a **statistical dead heat**.
 
-| source | Brier | calibration slope | ECE |
+| source | Brier | calibration slope | MCB (miscalibration) |
 |---|---|---|---|
-| Kalshi | 0.2196 | 0.96–1.01 | 0.009–0.014 |
-| Polymarket | 0.2199 | " | " |
-| Sportsbook consensus | 0.2196 | " | " |
+| Kalshi | 0.2196 | 0.964 | 1.31e-3 |
+| Polymarket | 0.2198 | 0.961 | 1.33e-3 |
+| Sportsbook consensus | 0.2196 | 1.008 | 1.45e-3 |
+
+*Miscalibration is reported as CORP's **MCB** (isotonic, `referee.py` §4), not as
+ECE. ECE is the number readers recognise, and it is an artifact of its bin count:
+on this sample the level roughly triples between 5 and 20 bins and the venue that
+looks best changes with it (`referee.py` §5). ECE at the conventional 10 bins is
+0.009–0.013 across the three, against a binomial noise floor of 0.0095–0.0098 for
+a sample this size — i.e. all three sit essentially at the floor. Quote ECE as a
+level against that floor; never rank venues on it.*
 
 Not merely "no significant difference" — formally equivalent under two
 one-sided tests, with every pairwise 90% CI inside the pre-stated margin. The
@@ -66,9 +74,10 @@ everywhere, exactly like one-shot outrights.
 ## Status
 
 Evidence collection and analysis are **complete and frozen** (2026-08-29
-freeze run: 59 analysis modules, 0 failures, audit-gated; every figure and
-table regenerates from the frozen logs). A **registered out-of-sample
-verification** — claims committed in `docs/registered-claims.md` before the
+freeze run; re-stamped 2026-09-03 at 61 modules with a robustness battery
+added, every prior number reproducing unchanged; 0 failures, audit-gated;
+every figure and table regenerates from the frozen logs). A **registered
+out-of-sample verification** — claims committed in `docs/registered-claims.md` before the
 holdout was pulled — confirmed the exchange dead heat at full registered
 power on fresh games (|ΔBrier| 0.04e-3 against an MDE of 0.81e-3),
 replicated the extra-innings blind spot (+19.6pt vs +20.2pt frozen) and the
@@ -118,7 +127,7 @@ Four games are included in full cross-venue detail under `data/exhibits/`
 src/collect/     API collectors (Kalshi, Polymarket Global + US, Odds API, ESPN)
 src/normalize/   venue-specific price construction
 src/match/       cross-venue game matching
-src/analysis/    59 analysis modules, one concern each
+src/analysis/    61 analysis modules, one concern each
 src/make_results.py   regenerates everything
 results/         figures + MANIFEST (per-module runtime and status)
 docs/            findings log, report outline, drafting plan, methodology decisions
@@ -149,6 +158,18 @@ defect," and one on 2026-08-29, when the WNBA totals rejection dissolved on
 the frozen sample and flipped sign on the registered holdout. The full record
 is kept at the top of `src/analysis/multiple_testing.py` rather than quietly
 dropped.
+
+The headline is also reported against the choices that produced it, because a
+result stated once is weaker than the same result stated five ways.
+`robustness_cuts.py` re-runs the three-way equivalence by favourite strength
+(a difference confined to heavy favourites would not show in a pooled Brier),
+by which of two instruments produced the Kalshi price (~80% of closes are
+reconstructed from the trade tape, and `validate_recon.py` checks that
+reconstruction against a third party's archived order books), under four
+book-consensus constructions including a line-shopped one, and with the 1.5%
+of games where settlements disagree put back in. `rigor.py` re-estimates every
+differential at six clustering levels. Nothing moves: the verdict is the same
+in every cut, and each null carries its MDE.
 
 ## License and use
 

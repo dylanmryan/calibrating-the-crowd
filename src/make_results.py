@@ -8,9 +8,11 @@ the suite), tees stdout to results/logs/<module>.log, and writes
 results/MANIFEST.md with per-module status, timing, and the figure inventory.
 The report must cite these logs/figures only — no hand-carried numbers.
 
-Excluded on purpose: collectors (network/API cost), validate_recon (spends
-OddPool requests), wc_freeze (case study frozen 2026-07-21; re-running
-re-fetches ESPN).
+Excluded on purpose: collectors (network/API cost), wc_freeze (case study
+frozen 2026-07-21; re-running re-fetches ESPN). validate_recon RUNS here — its
+network path is `validate_recon.collect()`, invoked by hand and never by the
+suite; the module's main() is the offline report over the already-fetched
+comparison file.
 """
 from __future__ import annotations
 
@@ -23,13 +25,14 @@ from pathlib import Path
 # dependency-safe order; all read local processed data only
 MODULES = [
     "data_audit", "deep_audit",   # the gates: a FAIL here fails the whole suite
+    "validate_recon",             # offline: trade-recon vs archived books (80% of the Kalshi leg)
     "plain_calibration", "three_way", "rigor", "league_tost", "four_way", "decomposition", "nuance", "corp_diagram", "murphy",
     "coherence", "margin_dist", "book_pit", "totals", "ladder_vs_books", "ladder_cost", "multi_outcome",
     "mlb_autopsy", "mlb_extras", "profitability", "behavioral", "why_sports", "time_stability", "futures_calibration", "retail_fingerprint", "niche_gradient", "book_outrights", "sharp_books", "us_books", "maker_structure", "liquidity_footprint", "mm_involvement", "market_functioning",
     "model_benchmark", "encompassing",
     "late_flow", "informed", "horizon", "horizon_equivalence", "horizon_cross",
     "close_efficiency", "layer2", "one_price", "multiple_testing",
-    "fee_experiment", "fee_liquidity", "tick_pricing", "referee", "power", "horizon_translation", "lead_lag", "book_moves", "minute_lead_lag", "five_min", "immediacy",
+    "fee_experiment", "fee_liquidity", "tick_pricing", "referee", "power", "robustness_cuts", "horizon_translation", "lead_lag", "book_moves", "minute_lead_lag", "five_min", "immediacy",
     "oos_verification",           # registered holdout scorecard (docs/registered-claims.md)
     "tables",                     # report Tables 1-5 rendered from the logs above
     "hierarchical_calibration",   # PyMC; ~90s, the suite's slowest module
