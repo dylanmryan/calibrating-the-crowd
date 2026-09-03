@@ -1,10 +1,11 @@
 # Figure program — mapping to the report's argument
 
-Nine figures, built by `src/analysis/report_visuals.py`, output to
-`results/report/` as PNG (220 dpi) and PDF (vector, for the document).
-Every statistic is quoted from the 2026-08-23 suite logs with provenance
-declared in the module; only F2's reliability curve is recomputed, and it
-is checked against `plain_calibration.log`.
+Fifteen figures (F0-F14), built by `src/analysis/report_visuals.py`, output
+to `results/report/` as PNG (220 dpi) and PDF (vector, for the document), with
+five alternates from `report_visuals_alt.py` listed below.
+Every statistic is quoted from the **2026-08-29 freeze** suite logs with
+provenance declared in the module; only F2's reliability curve is recomputed,
+and it is checked against `plain_calibration.log`.
 
 | Fig | Section it serves | The one thing it establishes |
 |---|---|---|

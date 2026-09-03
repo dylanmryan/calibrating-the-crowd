@@ -150,14 +150,17 @@ Each of those choices, including the ones declined and why, is written up in
 
 Underpowered subgroups are reported with their MDE, not as evidence of sameness
 (CFB, WNBA, and NFL cannot detect the effect size at issue). Suggestive results
-are labelled suggestive and do not become claims. Ten claims have been
+are labelled suggestive and do not become claims. Eleven claims have been
 **retracted, downgraded, or resolved as false alarms in place** as the sample
 grew or the pipeline was audited — four on 2026-08-23, when a league-specific
 settlement convention turned out to be generating the project's one "venue
-defect," and one on 2026-08-29, when the WNBA totals rejection dissolved on
-the frozen sample and flipped sign on the registered holdout. The full record
-is kept at the top of `src/analysis/multiple_testing.py` rather than quietly
-dropped.
+defect"; one on 2026-08-29, when the WNBA totals rejection dissolved on the
+frozen sample and flipped sign on the registered holdout; and one on
+2026-09-03, when the FDR inventory was rebuilt to re-derive its p-values from
+the logs instead of carrying them, and a Murphy sup-t claim it had been
+carrying at p=0.037 turned out to read 0.129 on the frozen data. The full
+record is kept at the top of `src/analysis/multiple_testing.py` rather than
+quietly dropped.
 
 The headline is also reported against the choices that produced it, because a
 result stated once is weaker than the same result stated five ways.

@@ -49,11 +49,32 @@ def roi(bets: pd.DataFrame):
 
 
 def boot_ci(bets, n=2000, seed=7):
-    rng = np.random.default_rng(seed)
+    """Cluster (game-level) bootstrap of the ROI.
+
+    Was an iid resample over contract-sides, which treats the two sides of one
+    game as independent draws. They are not — they share one outcome, and for a
+    two-sided market they are perfectly anti-correlated: exactly one pays.
+
+    Worth stating because the direction is counter-intuitive and the 2026-07-30
+    review guessed it the other way. Resampling whole games here NARROWS the
+    interval (on the full sample, [-4.4%,-4.1%] clustered vs [-6.0%,-2.6%] iid):
+    the pairing is a variance-REDUCING structure, and iid draws destroy it by
+    sampling lopsided mixes of winning and losing sides that the real book never
+    contains. The clustered version is the correct one either way; it just makes
+    the cost result sharper rather than softer.
+    """
     cost = (bets["ask"] + FEE(bets["ask"])).values
     pnl = (bets["won"] - cost).values
-    idx = rng.integers(0, len(bets), (n, len(bets)))
-    r = pnl[idx].sum(1) / cost[idx].sum(1)
+    if "game_id" not in bets:
+        raise KeyError("boot_ci needs game_id to cluster on")
+    codes, _ = pd.factorize(bets["game_id"].values)
+    groups = [np.flatnonzero(codes == g) for g in range(codes.max() + 1)]
+    rng = np.random.default_rng(seed)
+    r = np.empty(n)
+    for i in range(n):
+        pick = rng.integers(0, len(groups), len(groups))
+        idx = np.concatenate([groups[g] for g in pick])
+        r[i] = pnl[idx].sum() / cost[idx].sum()
     return np.percentile(r, [2.5, 97.5])
 
 

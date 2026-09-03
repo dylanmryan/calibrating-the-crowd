@@ -37,8 +37,16 @@ def reliability_table(df, nbins=20):
         n, k = len(g), int(g["won"].sum())
         lo, hi = wilson(k, n)
         pred = g["implied_prob"].mean()
-        # binomial two-sided p-value: is observed win rate != predicted?
-        pval = stats.binomtest(k, n, min(max(pred, 1e-9), 1 - 1e-9)).pvalue if n else np.nan
+        # Binomial two-sided p: is the observed win rate != predicted? The rows
+        # here are contract-SIDES, and a game contributes two deterministically
+        # mirrored ones, so n overstates the independent information and the
+        # naive p is anti-conservative (2026-07-30 review, item 15). Halve the
+        # effective sample before testing; the Wilson CI above is left on the
+        # full n and is therefore the tighter of the two displays.
+        n_eff = max(int(round(n / 2)), 1)
+        k_eff = int(round(k / 2))
+        pval = (stats.binomtest(min(k_eff, n_eff), n_eff,
+                                min(max(pred, 1e-9), 1 - 1e-9)).pvalue if n else np.nan)
         rows.append({"bin": str(b), "pred": pred, "obs": k / n, "n": n,
                      "ci_lo": lo, "ci_hi": hi, "resid": k / n - pred, "p_value": pval})
     return pd.DataFrame(rows)

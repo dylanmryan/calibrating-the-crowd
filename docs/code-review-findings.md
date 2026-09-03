@@ -10,13 +10,14 @@ the code on 2026-09-03 — do not read the body as a list of open defects.**
 
 ## Status as of 2026-09-03
 
-Every Tier-1 finding is fixed. What remains open is Tier-2/3 hygiene, each
-either bounded in size, conservative in direction, or in a collector that has
-since been retired (so it is now a limitation to state, not a bug to fix).
+Every Tier-1 finding is fixed. A second pass on 2026-09-03 closed four more
+(15, 23b, 23c, and the re-drift of 1) and formally declared a fifth (17). What
+remains open is bounded in size, conservative in direction, or in a collector
+that has since been retired — a limitation to state, not a bug to fix.
 
 | # | finding | status | note |
 |---|---|---|---|
-| 1 | stale FDR inventory | **FIXED** 43bfb88 | regenerated from live logs; clustered-p policy adopted; NBA sub-claim retracted. *Residual risk: the inventory is hand-maintained again and can re-drift — see the 2026-09-03 defensibility audit, Tier-2 item 10* |
+| 1 | stale FDR inventory | **FIXED** 43bfb88, hardened 2026-09-03 | regenerated from live logs; clustered-p policy adopted; NBA sub-claim retracted. It then re-drifted, as a hand-maintained list will: `multiple_testing` now re-derives every p from the frozen logs at run time and prints a drift report. That refresh retracted the Murphy sup-t claim (0.037 → 0.129) and strengthened both encompassing claims |
 | 2 | minute first-passage sign inverted | **FIXED** bed8579 | labels corrected; symmetric-null conclusion was always intact |
 | 3 | tick off-grid float-modulo bug | **FIXED** bed8579 | 14.6% → 0.7%; strengthens the on-grid narrative |
 | 4 | book_pit not tie-consistent | **FIXED** 70a5893 | tie-consistent PIT; book MLB pass weakens to p=0.084, contrast stands |
@@ -30,17 +31,17 @@ since been retired (so it is now a limitation to state, not a bug to fix).
 | 12 | live_snapshot doubleheader ambiguity | **OPEN (collector retired)** | no nearest-start selection; known limitation with a named mechanism |
 | 13 | lead_lag shifts on row-dropped frames | **FIXED** bed8579 | masks to NaN on a full calendar grid; shifts negligible as predicted |
 | 14 | slope_ci on stacked mirrored sides | **FIXED** 490fa7f | `referee` §2 reports home-side-only slope and ECE alongside the stacked version |
-| 15 | nuance per-bin binomtests double-count sides | **OPEN, anti-conservative** | still `binomtest(k, n)` on stacked sides, so the per-bin stars near 50c are too easy. Affects a descriptive display only — no claim rests on those stars. Drop them or halve n |
+| 15 | nuance per-bin binomtests double-count sides | **FIXED** 2026-09-03 | the binomial now runs on the halved effective sample, since a game contributes two deterministically mirrored sides. No star changes state on the frozen data (there were none), so this is a guard against a future false flag |
 | 16 | CORP band resamples mirrored sides independently | **OPEN, conservative direction** | `corp_diagram.band` draws `y* ~ Bern(p)` over the stacked vector, so the null band is too WIDE near 50c — it overstates support for the centre rather than manufacturing a rejection |
-| 17 | cluster_dm uses CR0, z not t(G−1) | **OPEN, quantified** | `rigor.cluster_levels` (added 2026-09-03) prints the corrected version at six clustering levels: the G/(G−1) correction moves the SE <1% at G=386 and ~3% at G=15, and no verdict changes |
+| 17 | cluster_dm uses CR0, z not t(G−1) | **DECLARED, quantified** | `rigor.cluster_levels` (2026-09-03) prints the corrected estimator at six clustering levels: the G/(G−1) correction moves the SE <1% at G=386 and ~3% at G=15, and changes no verdict. Left uncorrected in the headline `cluster_dm` deliberately — re-basing every number in a frozen, pre-registered suite for a sub-1% effect trades a real risk of transcription error for no inferential gain. The corrected version is printed alongside so a reader can use either |
 | 18 | encompassing cites LR p over clustered p | **FIXED** 43bfb88 | clustered-p policy adopted across the inventory |
 | 19 | MLB cell z-stats ignore pairing | **OPEN, conservative direction** | ignoring the positive covariance between paired venue estimates inflates the variance, so the reported z is a lower bound on significance |
 | 20 | four_way dup ids / pre-guard print / dead clause | **FIXED** 490fa7f | uniqueness enforced, print reordered, dead clause deleted |
 | 21 | gates don't halt the suite | **FIXED** 490fa7f | `make_results` breaks on a gate failure |
 | 22 | deep_audit tautological / short-circuiting checks | **FIXED** 490fa7f | both reworked |
 | 23a | murphy global p can print 0.000 | **FIXED** 490fa7f | `(1+r)/(B+1)` floor |
-| 23b | coherence bracket check is an upper bound | **OPEN, cosmetic** | the arbitrage figure should be quoted as "≤ 0.10%", not "= 0.10%" |
-| 23c | profitability bootstrap resamples bets iid | **OPEN, anti-conservative** | should resample game- or date-clusters; the reported CI is likely too narrow. No equivalence claim depends on it |
+| 23b | coherence bracket check is an upper bound | **FIXED** 2026-09-03 | the log now prints the consistency rate as "an UPPER bound" and states why (only the ±1.5 rung is tested against the moneyline) |
+| 23c | profitability bootstrap resamples bets iid | **FIXED** 2026-09-03 | now a game-level cluster bootstrap. The review's predicted direction was backwards: a game's two sides are perfectly anti-correlated (exactly one pays), so pairing *removes* variance — the clustered CI on the full sample is [−4.4%, −4.1%] against iid's [−6.0%, −2.6%]. Correct either way, and it sharpens the cost result rather than softening it |
 | 23d | wc_freeze would poison scores on a missing outcome | **OPEN, latent** | no game currently lacks an outcome; the case study is frozen and descriptive (D6) |
 | 23e | fee_liquidity label errors | **OPEN, labels only** | "Feb" window includes Mar 1; "biweekly" is weekly. Numbers are correct |
 

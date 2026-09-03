@@ -383,10 +383,15 @@ book data banked (subscription lapses Sept 2026); VPS backups.
 
 ## Appendices
 A. Side-assignment audit. B. Robustness battery (log score, home-side,
-CORP, selection, de-vig variants, staleness). C. FDR table: 17 discovery
-claims, 15 survive BH q=.05 (encompassing whispers + books-lead-24h drop;
-reported as suggestive); the retraction record stays in the module header. D. Equivalence/null register (17 entries).
-E. Data dictionary.
+CORP, selection, de-vig variants, quote quality) **plus the 2026-09-03 cuts:
+favourite strength, Kalshi price construction, four book-consensus
+constructions, exclusion sensitivity, six clustering levels, ECE bin
+sensitivity, logit-clip sensitivity**. C. FDR table: 15 discovery claims,
+13 survive BH q=.05 (books-lead-24h and the Murphy sup-t edge drop; the
+latter retracted), 14 at q=.10; p-values re-derived from the logs at run
+time and the retraction record stays in the module header. One claim
+(futures pooled longshot p) is held out of the family as unsourced.
+D. Equivalence/null register (17 entries). E. Data dictionary.
 
 ---
 

@@ -19,6 +19,10 @@ referee asks about. This module varies all four on the frozen sample.
      book first, taking a median instead of a mean, and line-shopping the best
      price on each side are all equally standard. Line-shopping is the books'
      best possible case and is included for that reason.
+  0. QUOTE QUALITY. The master carries staleness, spread, and consensus-depth
+     flags for every price, and `three_way.load()` filters on none of them. The
+     honest statement is not "we filtered" but "no filter was needed" — which
+     is only honest if the distributions are shown. Section 0 shows them.
   4. SAMPLE EXCLUSION. The clean set drops games where any source's settlement
      disagrees with ESPN. The drop is venue-asymmetric (far more Kalshi than
      Polymarket), so the honest check is whether keeping every disputed game and
@@ -90,6 +94,47 @@ def row(label, g):
     print(f"  {label:<26}{len(g):>6}"
           f"{brier(g.kalshi_p1, y):>8.4f}{brier(g.poly_p1, y):>8.4f}{brier(g.book_p1, y):>8.4f}"
           f"{wz:>8.2f} {wlab:<4}{wd*1000:>8.2f}{wm*1000:>8.2f}   {verdict(wd, wm)}", flush=True)
+
+
+# ------------------------------------------------------------------ cut 0 ---
+
+def quality_flags(d):
+    """What the unused quality columns actually contain.
+
+    Reported rather than filtered on: a staleness or spread cut would be a
+    researcher degree of freedom, and these distributions show there is nothing
+    for it to buy. `poly_stale` in particular bounds a construction detail —
+    `poly_price_at` looks back up to 8 HOURS for a last trade, and the table
+    shows that window never binds anywhere near its limit.
+    """
+    print("\n=== 0. quote quality on the headline sample (carried, never filtered on) ===",
+          flush=True)
+    cols = [
+        ("k_stale1", "Kalshi quote age (min)", "min"),
+        ("poly_stale1", "Poly quote age (min)", "min"),
+        ("k_spread1", "Kalshi quoted spread ($)", "$"),
+        ("book_n_books", "books in the consensus", "n"),
+    ]
+    print(f"  {'column':<26}{'n':>6}{'p50':>9}{'p90':>9}{'p99':>9}{'max':>9}   tail", flush=True)
+    for c, lab, unit in cols:
+        if c not in d:
+            continue
+        v = d[c].dropna()
+        if not len(v):
+            continue
+        if unit == "n":
+            tail = f"{(v < 5).mean():.1%} of games under 5 books"
+        elif unit == "min":
+            tail = f"{(v > 60).mean():.2%} older than 60 min"
+        else:
+            tail = f"{(v > 0.02).mean():.1%} wider than 2c"
+        print(f"  {lab:<26}{len(v):>6,}{v.median():>9.2f}{v.quantile(.90):>9.2f}"
+              f"{v.quantile(.99):>9.2f}{v.max():>9.2f}   {tail}", flush=True)
+    print("  Read: the quotes are essentially simultaneous with the bell and the", flush=True)
+    print("  consensus is essentially always the full book panel, so no quality", flush=True)
+    print("  filter is applied and none would change the sample materially. The", flush=True)
+    print("  book leg is the one with a real timing caveat (30-min snapshot", flush=True)
+    print("  bucketing, sportsbook_hist), and it is conceded in the limitations.", flush=True)
 
 
 # ------------------------------------------------------------------ cut 1 ---
@@ -189,6 +234,7 @@ def main():
     print("gap far too small to matter is still detectable. TOST answers 'is it small',", flush=True)
     print("DM answers 'is it zero'; the paper's claim is the first one.", flush=True)
 
+    quality_flags(d)
     cut_favourite(d)
     cut_construction(d)
     cut_consensus(d)

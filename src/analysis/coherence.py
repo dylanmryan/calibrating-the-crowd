@@ -91,7 +91,11 @@ def main(path="data/processed/kalshi_spread_prices.csv"):
                 ok += 1
         if checks:
             print(f"\n=== moneyline bracket consistency ===", flush=True)
-            print(f"games checked: {checks:,}  consistent: {ok/checks:.1%}", flush=True)
+            print(f"games checked: {checks:,}  consistent: {ok/checks:.1%} "
+                  f"(an UPPER bound)", flush=True)
+            print("  the check tests only the +-1.5 rung against the moneyline, so a", flush=True)
+            print("  violation elsewhere in the ladder is not counted: quote this as", flush=True)
+            print("  'at most this share is incoherent', never as an exact rate.", flush=True)
     except FileNotFoundError:
         pass
 

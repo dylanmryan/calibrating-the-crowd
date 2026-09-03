@@ -142,6 +142,18 @@ says this in one sentence rather than omitting the check silently.
 Heterogeneity across leagues is a real question and is addressed the right way:
 by estimating within each league and reporting the MDE, which is already done.
 
+**Demonstration added 2026-09-03.** The above is an argument for date and
+against two-way; it did not show that the answer is insensitive to the level,
+which is the question a referee actually asks. `rigor.cluster_levels` now
+re-estimates all three headline differentials at six levels — iid, league ×
+date, date, week, month, and home team — with the G/(G−1) finite-sample
+correction and a t(G−1) reference. No level crosses α=.05 on any pair, and the
+widest 90% bound anywhere is ~0.52e-3, roughly half δ. Team clustering gives
+*smaller* SEs than date, so there is no per-team shock the headline spec is
+missing. This also settles review item 17 (CR0, z rather than t): the
+correction moves the SE by under 1% at G=386 and about 3% at G=15, and changes
+no verdict.
+
 ---
 
 ## D5. Lead–lag formality — predictive regressions and event study, not Hasbrouck
@@ -225,6 +237,75 @@ surveys as the reason anyone should care, not as a premise anything rests on.
 
 ---
 
+## D9. Sportsbook consensus — equal-weight mean of vigged probabilities, de-vigged once
+*Added 2026-09-03. This was a decision made in code in July and never written
+down; it is recorded here because the consensus is the paper's benchmark and an
+undocumented benchmark is not a benchmark.*
+
+**Decision.** `sportsbook_hist._consensus` averages each book's raw implied
+probability across the US book panel, then normalizes the resulting pair to sum
+to 1. Equal weights, no book excluded, no trimming. Pinnacle and Betfair are
+NOT in this consensus — they enter separately as sharp benchmarks
+(`sportsbook_sharp`), so "the books" in the headline means the US retail
+complex, and the sharp comparison is a distinct test.
+
+**Reasoning.** Averaging before de-vigging keeps one de-vig operation on one
+well-conditioned pair, rather than compounding a per-book normalization across
+a panel whose books quote at different overrounds. Equal weighting is the
+neutral choice absent a defensible weighting variable: stake data is not
+public, and weighting by a book's own overround would build a sharpness
+judgement into the benchmark the paper is testing against.
+
+**Why this is now a reported robustness rather than an assertion.** Three
+alternatives — de-vig each book then average, de-vig then take the median, and
+line-shop the best price on each side — are run in `robustness_cuts.py` §3.
+All four give a book Brier of 0.2197-0.2198 and leave the equivalence verdict
+inside δ=1e-3, including the line-shopped construction, which is the benchmark's
+best possible case. Mean absolute divergence from the headline is 0.016pt for
+devig-then-mean, 0.15pt for the median, 0.37pt for line-shopping. The choice
+was defensible and, as it turns out, immaterial; the paper says both.
+
+---
+
+## D10. Kalshi closing price — book-mid where the book survives, trade reconstruction where it does not
+*Added 2026-09-03, same reason as D9: made in code, never written down, and it
+is the largest measurement assumption in the exchange leg.*
+
+**Decision.** `kalshi_hist_prices.price_side` returns the 1-minute candle
+book-mid at official start where Kalshi's API still holds the book (a ~60-day
+window), and otherwise reconstructs an effective bid and ask from the trade
+tape's taker sides. On the frozen three-way sample that is **4,263 games
+reconstructed to 1,070 book-mid — 80/20.** Both are anchored to the official
+ESPN start and neither uses anything after it.
+
+**Reasoning.** The alternative to reconstruction is not a better price, it is
+no price: Kalshi retains no order book past the window, so a book-mid-only
+sample would discard 80% of the games and would be selected on recency, which
+is the one dimension along which this market is plausibly changing. A
+reconstructed touch that is verifiably close to the real touch is a better
+instrument than a sample four-fifths smaller and selected on the wrong axis.
+
+**Why this is now evidence rather than an argument.** Two checks, both in the
+suite as of 2026-09-03:
+
+1. `validate_recon.py` compares the reconstruction against a third party's
+   archived order-book snapshots (OddPool) for a stratified sample of 98 games:
+   **94.9% exact bid match, 96.9% exact ask, median mid error 0.00pt, 99%
+   within 1pt.** NBA is the residual (mean 1.67pt, n=24), the league whose
+   books move fastest between the last fill and the bell. The validation covers
+   CBB-M, MLB, NBA and NHL only — no NFL, CFB or WNBA rows — and says so.
+2. `robustness_cuts.py` §2 splits the headline equivalence on the construction.
+   Neither subsample rejects; the trade-recon sample is formally equivalent at
+   δ=1e-3 and the smaller book-mid sample is power-limited with its MDE quoted.
+
+**Known residual, declared not fixed.** `closing_trade_price` puts no age floor
+on either reconstructed side, and `staleness_min` reports the age of the
+*newest* fill, so a quote whose bid side is older than its ask side reports as
+fresh (2026-07-30 review, item 11). The collector is retired, so this is a
+limitation rather than a bug to fix, and check 1 is what bounds it.
+
+---
+
 ## Changes required in code before drafting
 
 | File | Change | Blocking |
@@ -232,4 +313,4 @@ surveys as the reason anyone should care, not as a premise anything rests on.
 | `src/analysis/rigor.py:63` | Replace the "≈0.5pt/game" gloss; print ε=√δ scale and the three cost-anchored margins | Yes — §5A |
 | `docs/report-outline.md` | Same correction wherever δ is glossed | Yes — §5A |
 | `src/analysis/margin_dist.py` | Add nonrandomized (mean) PIT panel | No — appendix |
-| `src/analysis/multiple_testing.py` | No change; policy now documented here | — |
+| `src/analysis/multiple_testing.py` | **Done 2026-09-03**: the inventory now re-derives every p from the frozen logs at run time instead of carrying them. It had drifted again since the July regeneration — the Murphy sup-t claim is retracted (0.037 → 0.129) and both encompassing claims strengthened | — |

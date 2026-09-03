@@ -111,3 +111,25 @@ Scorecard as evaluated (oos_verification.log, 2026-08-29):
 | R6 | **CONSISTENT** | extras cell +19.6pt (90% CI ±14.3, n=34) vs frozen +20.2pt; aggregate +0.1pt |
 | R7 | **DEVIATES** | mean u 0.404 (z=−2.3, n=47) — the tilt **flipped sign** vs the frozen 0.536; the open observation does not replicate and is treated as sampling noise, which is precisely what this test existed to determine |
 | R8 | **CONSISTENT** | −4.6% per position (n=44,525 fresh quotes) vs frozen −4.5% |
+
+## Second annotation (2026-09-03) — a description error in the sample table
+
+Nothing above the post-pull line has been edited, including this correction's
+subject. The H-EX row describes the sample as "passing the exact
+`three_way.load()` clean-set quality filters (spread, staleness, source
+flags)." **Those filters do not exist.** `three_way.load()` filters on exactly
+two things — a resolved outcome and no cross-source settlement disagreement —
+and requires the prices to be present; it has never conditioned on spread,
+staleness, or source.
+
+The analysis is unaffected: `oos_verification.load_hex()` mirrors what
+`load()` actually does, so the holdout sample was built the way the frozen
+sample was, which is what the registration was for. Only the *description* was
+wrong, and it is corrected here rather than above because a pre-registration
+document that gets edited after the pull is not a pre-registration document.
+
+The substantive question underneath it — whether those unused flags hide
+anything — is now answered rather than assumed: `robustness_cuts.py` §0 prints
+their distributions on the headline sample (Kalshi quote age median 0.1 min,
+Polymarket 0.9 min, 11 books in the consensus for 99.6% of games), and §1-§4
+re-run the equivalence under the cuts a filter would have imposed.

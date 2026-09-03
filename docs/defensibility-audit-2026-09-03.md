@@ -371,20 +371,61 @@ string in the PyMC log; the only content changes are additive (`rigor`,
    in the log that MCB is the statistic that carries a comparison. *Also corrected
    while there: the README had Polymarket's Brier as 0.2199; the log says 0.2198.*
 
-**Tier 2 — cheap, do if the week allows (half a day)**
+**Tier 2 — DONE 2026-09-03.** All six. One of them turned out to be neither
+cheap nor cosmetic: rebuilding the FDR inventory to read its own logs **changed
+which claims survive BH** (item 10).
 
-7. **Quality-flag distribution table** in Methods (A4): `k_stale`, `poly_stale`,
-   `k_spread`, `book_n_books` — "no filter was needed, here is why."
-8. **Fix the three doc-vintage defects**: figure-map date + figure count (C2),
-   registered-claims annotation (C3), README ECE line (C5).
-9. **Logit-clip sensitivity** on the FLB slopes at 0.005 / 0.001 (A6). Two lines.
-10. **De-drift `multiple_testing`** (C4): read p-values from logs, or gate on them.
-11. **Document A1 and A2 as new decisions D9 and D10** in `methodology-decisions.md`.
-    The file's whole value is that it records reasoning rather than outcomes; these two
-    are the largest choices missing from it.
-12. **Close the open Tier-3 items or declare them**: the `cluster_dm` correction (17),
-    `nuance` stars (15), `profitability` cluster bootstrap (23), the "≤" on the
-    arbitrage figure (23).
+*(original scoping: cheap, half a day)*
+
+7. ✅ **Quality-flag distribution table** — `robustness_cuts.py` §0. Kalshi quote
+   age median 0.1 min, Polymarket 0.9 min (max 8.1, so `poly_price_at`'s 8-hour
+   look-back never binds anywhere near its limit), 11 books in the consensus for
+   99.6% of games. No filter was needed; now it is shown rather than asserted.
+8. ✅ **Doc-vintage defects.** figure-map now reads 2026-08-29 freeze and
+   "Fifteen figures (F0–F14)"; `registered-claims.md` carries a second annotation
+   *below* the post-pull line correcting the H-EX filter description (the analysis
+   was always right — `load_hex()` mirrors what `load()` actually does — only the
+   description was wrong); the README ECE line was done in Tier 1.
+9. ✅ **Logit-clip sensitivity** — `decomposition.py`. **My audit was wrong here:**
+   A6 asserted the 1c/99c guard "binds on real observations." It binds on exactly
+   one observation out of 5,333 (Polymarket's 99.2c home price); Kalshi and the
+   books clip nothing. The module now prints each venue's price extremes, the
+   clipped count, and slopes at three clips — identical to three decimals, every
+   CI covering 1.
+10. ✅ **`multiple_testing` now re-derives every p from the frozen logs** — each
+    claim names a log, a regex, and whether the capture is a p or a z; a pattern
+    that stops matching raises and fails the suite; a drift report prints against
+    the previously asserted values. **This changed the paper's claim set:**
+    - **Murphy sup-t vs the Shin book: 0.037 → 0.129. RETRACTED.** It survives at
+      no threshold, and it was always the claim most exposed to the de-vig choice.
+    - **Both encompassing terms strengthened and now survive BH at q=0.05**
+      (K-beyond-book 0.054→0.033, K-beyond-Poly 0.044→0.021). The FRAGILE flag
+      stays: this family has printed 0.004 / 0.048 / 0.044 / 0.054 / 0.021 across
+      five vintages, which is a result at the data's resolution limit, not a
+      stable effect.
+    - **The futures pooled longshot p (6e-3) has no generating line** in
+      `futures_calibration.log` and is now held OUT of the BH family, on the
+      precedent set for "sharpens 24h→start". The effect is still reported
+      descriptively; the p-value is what lacked a source.
+    - Net: **15 claims in the family, 13 survive q=0.05, 14 at q=0.10.**
+    Propagated to `findings.md` (two passages), `report-outline.md` appendix C,
+    and the README retraction count (ten → eleven).
+11. ✅ **D9 (book consensus construction) and D10 (Kalshi price construction)**
+    added to `methodology-decisions.md`, each with its reasoning, its robustness
+    evidence, and — for D10 — its declared residual (the unbounded trade-recon
+    look-back, review item 11). D4 also gains a cross-reference to the new
+    clustering demonstration.
+12. ✅ **Tier-3 items closed or declared.** 15 fixed (binomial now on the halved
+    effective sample; no star changes state on the frozen data, so it is a guard
+    against a future false flag). 23b fixed (the coherence rate prints as an upper
+    bound and says why). 23c fixed — and **the review's predicted direction was
+    backwards**: a game's two sides are perfectly anti-correlated, so the game-level
+    cluster bootstrap *narrows* the interval ([−4.4%,−4.1%] vs iid's
+    [−6.0%,−2.6%]); correct either way, and it sharpens the cost result. 17
+    **declared, not applied**: re-basing every number in a frozen pre-registered
+    suite for a sub-1% effect trades transcription risk for no inferential gain,
+    so the corrected estimator is printed alongside in `rigor.cluster_levels` and
+    a reader may use either.
 
 **Tier 3 — optional, only if you want maximum armour (one day)**
 
