@@ -7,12 +7,22 @@ the gap plan.*
 
 ---
 
-> **Status, 2026-09-03.** This document is the record as written on 2026-08-28
-> and is left unedited. **Every gap it identified has since been closed:** Gap 1
-> (retraction reconciliation) in 6bbd3dc, Gap 2 (registered out-of-sample
+> **Status, 2026-09-04.** This document is the record as written on 2026-08-28
+> and is left unedited. **Every ANALYTICAL gap it identified has been closed:**
+> Gap 1 (retraction reconciliation) in 6bbd3dc, Gap 2 (registered out-of-sample
 > verification) in f915794/aec245a, Gap 3 (tables, figure program, exhibits) in
-> 97b9c00, Gap 4 (playoff split, shared-deviation stat) in 97b9c00, Gap 5
-> (freeze) in dc40fe6. Two further audits followed — `defensibility-audit-2026-09-03.md`
+> 97b9c00, Gap 4 (playoff split, shared-deviation stat) in 97b9c00, Gap 5's
+> number freeze in dc40fe6.
+>
+> **Gap 5's release checklist is the one thing still open**, and it is
+> deliberately open because it is Dylan's call, not a task: the repo is
+> untagged, has no DOI, and is still private. What HAS been done is the part
+> that gates the decision — a secrets audit over the full git history
+> (2026-09-04): no `.env`, `pem/`, `.key` or `config.yaml` was ever committed,
+> and no literal API key or private-key block appears in the content of any
+> commit on any branch. **The repository can be made public without a history
+> rewrite.** Remaining, all one-liners once the call is made: `git tag`, a
+> Zenodo DOI if wanted, and flipping visibility. Two further audits followed — `defensibility-audit-2026-09-03.md`
 > (arbitrary choices, all 16 items closed) and `interpretation-audit-2026-09-03.md`
 > (claim strength and unexamined rival explanations). References below to
 > "out-of-sample verification planned ~Aug 22" describe the state on 2026-08-28;

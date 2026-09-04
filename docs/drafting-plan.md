@@ -563,14 +563,25 @@ be described accurately.
 
 1. **Venue/format** — advisor email pending. Decision B makes this
    non-blocking; the manuscript works either way.
-2. **Number freeze** — deferred by request. Every number in the draft carries
-   its bracketed log until freeze re-stamps it. Do not strip provenance
-   brackets before freeze.
-3. **Out-of-sample verification (~Aug 22)** — if it runs, it becomes ¶9 of
-   §5A and a sentence in the abstract. If it does not, nothing else changes.
-   Drafted so its absence leaves no hole.
-4. **Table 4 needs rendering** — the 2×2 does not exist as an artifact yet.
-   Numbers are all in `niche_gradient`, `futures_calibration`,
-   `book_outrights`, `liquidity_footprint`.
-5. **WNBA totals rejection** — one sentence in §5C ¶8, one clause in §7 ¶4.
-   No further analysis.
+2. ~~**Number freeze**~~ — RUN 2026-08-29 (dc40fe6) and re-stamped 2026-09-03
+   at 61 modules. Provenance brackets can now be resolved against
+   `results/logs/`; keep them in the draft until the final read-through.
+3. ~~**Out-of-sample verification**~~ — REGISTERED 2026-08-28 and EXECUTED
+   2026-08-29. It becomes ¶9 of §5A and an abstract sentence, as planned: R2
+   confirmed the exchange dead heat at full registered power (|ΔBrier|
+   0.04e-3 vs MDE 0.81e-3), R6 and R8 replicated, R7 deviated and retired the
+   WNBA observation as noise, R1/R5 not evaluable (the live feed's book leg
+   had stopped). Report the deviation with the same prominence as the
+   confirmations.
+4. ~~**Table 4 needs rendering**~~ — BUILT. `tables.py` emits Tables 1–5 to
+   `results/report/tables.md` from the logs, re-stamped by every freeze run,
+   so no number is hand-carried.
+5. ~~**WNBA totals rejection**~~ — RESOLVED as a false alarm twice over
+   (dissolved on the frozen sample, flipped sign on the registered holdout).
+   It is now an example of the machinery working, not an open observation:
+   one sentence in §5C, and it belongs in the §7 corrections paragraph.
+6. **NEW (2026-09-03 interpretation audit)** — three claims were restated at
+   the strength the design supports. §5B must not say "parallel processing"
+   or "not transmitted"; §5A ¶4's law-of-one-price is arbitrage-elimination
+   only; §7 leads with the product-scope paragraph. See
+   `docs/interpretation-audit-2026-09-03.md`.
