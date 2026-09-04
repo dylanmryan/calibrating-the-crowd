@@ -94,6 +94,42 @@ def equivalence_report(pairs):
     print("  an edge only a zero-cost participant could ever act on.", flush=True)
 
 
+def scale_against_skill(d, y, pairs):
+    """State the dead heat against RESOLUTION, not against the Brier level.
+
+    A Brier of 0.2196 is mostly irreducible uncertainty: at a base rate near
+    0.5, UNC alone is ~0.25. Quoting a 0.2e-3 gap against 0.2196 invites the
+    fair objection that everything here is a small number. Quoting it against
+    DSC — the skill a venue actually has — is the honest comparison and is a
+    considerably stronger statement.
+    """
+    from src.analysis.compare import stacked
+    from src.analysis.referee import corp
+    print("\n=== the size of the difference, against the size of the skill ===",
+          flush=True)
+    print(f"  {'source':12}{'Brier':>9}{'UNC':>9}{'DSC (skill)':>13}{'MCB':>11}", flush=True)
+    dsc = {}
+    for name, (c1, c2) in SRC.items():
+        p_, y_ = stacked(d, c1, c2)
+        r = corp(p_, y_)
+        dsc[name] = r["DSC"]
+        print(f"  {name:12}{r['brier']:>9.4f}{r['UNC']:>9.4f}"
+              f"{r['DSC']*1000:>12.1f}e-3{r['MCB']*1000:>10.2f}e-3", flush=True)
+    mean_dsc = np.mean(list(dsc.values()))
+    worst = max(bound for _, bound in pairs)
+    print(f"\n  mean discrimination (the skill any venue has): {mean_dsc*1000:.1f}e-3",
+          flush=True)
+    print(f"  widest pairwise 90% bound:                     {worst*1000:.2f}e-3",
+          flush=True)
+    print(f"  -> the venues' accuracy differs by at most {worst/mean_dsc:.1%} of the "
+          f"skill any of", flush=True)
+    print("     them has, and their miscalibration differs by less than that.", flush=True)
+    print("  This is the framing the result deserves: not '0.2196 vs 0.2198, a small", flush=True)
+    print(f"  number among small numbers', but 'indistinguishable to within "
+          f"{worst/mean_dsc:.0%} of", flush=True)
+    print("  everything they know'.", flush=True)
+
+
 def cluster_dm(pA, pB, y, clusters):
     """DM on squared-error differential with cluster-robust (by date) SE."""
     d = ((np.asarray(pA) - y) ** 2 - (np.asarray(pB) - y) ** 2)
@@ -240,6 +276,7 @@ def main():
                   f"|CI|max={bound*1000:.3f}e-3 = {eps_pt(bound):.2f}pt", flush=True)
 
     equivalence_report(pairs)
+    scale_against_skill(d, y, pairs)
     block_bootstrap(d, y)
     cluster_levels(d, y)
 

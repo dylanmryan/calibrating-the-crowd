@@ -120,9 +120,19 @@ ticker-order rule.
 - **Law of one price across legally segregated pools:** |US − Global| median
   0.50pt, mean 0.77pt, >5pt in only 0.4% of games — barely wider than the
   Kalshi-vs-Global benchmark (median 0.40pt), even though no participant may
-  legally trade both Polymarkets. Prices agree because both pools process the
-  same public information, not because anyone arbitrages the two books: the
-  strongest version yet of the shared-information mechanism.
+  legally trade both Polymarkets. This rules out *participant* arbitrage as
+  the mechanism. **It does not establish independent information processing,
+  and an earlier version of this note said it did — corrected 2026-09-03.**
+  Legal segregation binds traders, not operators: Polymarket US and Polymarket
+  Global are the same company, and one firm quoting both books off one model
+  produces identical prices across segregated pools with no arbitrage and no
+  independent processing at all. Shared quoting infrastructure is a third
+  mechanism and, for this pair specifically, the leading one. Maker identity
+  is not in any public tape, so no outside researcher can settle it. The
+  informative version of the comparison is **Kalshi vs Polymarket**, which are
+  unaffiliated firms on different technology in different regulatory regimes —
+  that pair agrees to a median 0.40pt, and it is the one that should carry the
+  shared-information claim.
 - Caveats: ~2% of extreme-close side checks disagree (isolated
   postponement/stale cases, visible as scatter outliers); 23% of tape symbols
   didn't match ESPN (code aliases + coverage); CBB (4,387 US markets) awaits

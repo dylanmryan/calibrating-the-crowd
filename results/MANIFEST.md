@@ -1,40 +1,40 @@
 # Results manifest — regenerated 2026-09-03
 
-Suite: 61 modules, 183s total, 0 failed.
+Suite: 61 modules, 204s total, 0 failed.
 
 | module | status | seconds | log |
 |---|---|---|---|
-| data_audit | ok | 3.1 | logs/data_audit.log |
+| data_audit | ok | 3.4 | logs/data_audit.log |
 | deep_audit | ok | 1.7 | logs/deep_audit.log |
 | validate_recon | ok | 0.3 | logs/validate_recon.log |
 | plain_calibration | ok | 1.2 | logs/plain_calibration.log |
-| three_way | ok | 1.2 | logs/three_way.log |
-| rigor | ok | 1.5 | logs/rigor.log |
+| three_way | ok | 1.1 | logs/three_way.log |
+| rigor | ok | 1.6 | logs/rigor.log |
 | league_tost | ok | 1.1 | logs/league_tost.log |
 | four_way | ok | 1.6 | logs/four_way.log |
 | decomposition | ok | 1.1 | logs/decomposition.log |
 | nuance | ok | 1.2 | logs/nuance.log |
-| corp_diagram | ok | 2.3 | logs/corp_diagram.log |
-| murphy | ok | 1.5 | logs/murphy.log |
+| corp_diagram | ok | 2.1 | logs/corp_diagram.log |
+| murphy | ok | 1.6 | logs/murphy.log |
 | coherence | ok | 4.5 | logs/coherence.log |
-| margin_dist | ok | 6.6 | logs/margin_dist.log |
-| book_pit | ok | 4.3 | logs/book_pit.log |
-| totals | ok | 7.4 | logs/totals.log |
-| ladder_vs_books | ok | 2.8 | logs/ladder_vs_books.log |
+| margin_dist | ok | 7.2 | logs/margin_dist.log |
+| book_pit | ok | 4.5 | logs/book_pit.log |
+| totals | ok | 10.1 | logs/totals.log |
+| ladder_vs_books | ok | 5.8 | logs/ladder_vs_books.log |
 | ladder_cost | ok | 0.3 | logs/ladder_cost.log |
-| multi_outcome | ok | 10.7 | logs/multi_outcome.log |
+| multi_outcome | ok | 11.7 | logs/multi_outcome.log |
 | mlb_autopsy | ok | 3.7 | logs/mlb_autopsy.log |
-| mlb_extras | ok | 2.4 | logs/mlb_extras.log |
+| mlb_extras | ok | 2.5 | logs/mlb_extras.log |
 | profitability | ok | 0.7 | logs/profitability.log |
-| behavioral | ok | 1.2 | logs/behavioral.log |
-| why_sports | ok | 1.3 | logs/why_sports.log |
-| time_stability | ok | 3.3 | logs/time_stability.log |
-| futures_calibration | ok | 0.6 | logs/futures_calibration.log |
-| retail_fingerprint | ok | 1.9 | logs/retail_fingerprint.log |
-| niche_gradient | ok | 1.8 | logs/niche_gradient.log |
-| book_outrights | ok | 1.0 | logs/book_outrights.log |
-| sharp_books | ok | 1.2 | logs/sharp_books.log |
-| us_books | ok | 1.2 | logs/us_books.log |
+| behavioral | ok | 1.1 | logs/behavioral.log |
+| why_sports | ok | 1.4 | logs/why_sports.log |
+| time_stability | ok | 3.4 | logs/time_stability.log |
+| futures_calibration | ok | 0.7 | logs/futures_calibration.log |
+| retail_fingerprint | ok | 2.0 | logs/retail_fingerprint.log |
+| niche_gradient | ok | 1.9 | logs/niche_gradient.log |
+| book_outrights | ok | 1.1 | logs/book_outrights.log |
+| sharp_books | ok | 1.3 | logs/sharp_books.log |
+| us_books | ok | 1.3 | logs/us_books.log |
 | maker_structure | ok | 0.5 | logs/maker_structure.log |
 | liquidity_footprint | ok | 1.6 | logs/liquidity_footprint.log |
 | mm_involvement | ok | 0.8 | logs/mm_involvement.log |
@@ -43,28 +43,28 @@ Suite: 61 modules, 183s total, 0 failed.
 | encompassing | ok | 1.1 | logs/encompassing.log |
 | late_flow | ok | 0.9 | logs/late_flow.log |
 | informed | ok | 1.8 | logs/informed.log |
-| horizon | ok | 1.2 | logs/horizon.log |
-| horizon_equivalence | ok | 1.1 | logs/horizon_equivalence.log |
-| horizon_cross | ok | 1.1 | logs/horizon_cross.log |
-| close_efficiency | ok | 1.1 | logs/close_efficiency.log |
-| layer2 | ok | 2.6 | logs/layer2.log |
-| one_price | ok | 0.2 | logs/one_price.log |
-| multiple_testing | ok | 0.5 | logs/multiple_testing.log |
-| fee_experiment | ok | 1.1 | logs/fee_experiment.log |
-| fee_liquidity | ok | 1.2 | logs/fee_liquidity.log |
-| tick_pricing | ok | 0.7 | logs/tick_pricing.log |
-| referee | ok | 1.9 | logs/referee.log |
-| power | ok | 1.1 | logs/power.log |
-| robustness_cuts | ok | 1.1 | logs/robustness_cuts.log |
-| horizon_translation | ok | 1.5 | logs/horizon_translation.log |
-| lead_lag | ok | 1.7 | logs/lead_lag.log |
-| book_moves | ok | 2.6 | logs/book_moves.log |
-| minute_lead_lag | ok | 3.0 | logs/minute_lead_lag.log |
+| horizon | ok | 1.1 | logs/horizon.log |
+| horizon_equivalence | ok | 1.6 | logs/horizon_equivalence.log |
+| horizon_cross | ok | 1.4 | logs/horizon_cross.log |
+| close_efficiency | ok | 1.4 | logs/close_efficiency.log |
+| layer2 | ok | 3.8 | logs/layer2.log |
+| one_price | ok | 0.3 | logs/one_price.log |
+| multiple_testing | ok | 0.6 | logs/multiple_testing.log |
+| fee_experiment | ok | 1.5 | logs/fee_experiment.log |
+| fee_liquidity | ok | 1.5 | logs/fee_liquidity.log |
+| tick_pricing | ok | 0.9 | logs/tick_pricing.log |
+| referee | ok | 2.5 | logs/referee.log |
+| power | ok | 1.4 | logs/power.log |
+| robustness_cuts | ok | 1.5 | logs/robustness_cuts.log |
+| horizon_translation | ok | 2.1 | logs/horizon_translation.log |
+| lead_lag | ok | 2.3 | logs/lead_lag.log |
+| book_moves | ok | 2.9 | logs/book_moves.log |
+| minute_lead_lag | ok | 3.1 | logs/minute_lead_lag.log |
 | five_min | ok | 5.3 | logs/five_min.log |
 | immediacy | ok | 1.3 | logs/immediacy.log |
 | oos_verification | ok | 2.9 | logs/oos_verification.log |
 | tables | ok | 0.4 | logs/tables.log |
-| hierarchical_calibration | ok | 65.7 | logs/hierarchical_calibration.log |
+| hierarchical_calibration | ok | 71.2 | logs/hierarchical_calibration.log |
 
 ## Figures
 

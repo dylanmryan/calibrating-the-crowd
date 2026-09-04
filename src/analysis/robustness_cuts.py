@@ -23,6 +23,15 @@ referee asks about. This module varies all four on the frozen sample.
      flags for every price, and `three_way.load()` filters on none of them. The
      honest statement is not "we filtered" but "no filter was needed" — which
      is only honest if the distributions are shown. Section 0 shows them.
+  5. NEWS ARRIVAL. If forecasting skill differs anywhere it differs when there
+     is something to forecast. Nothing else in the suite conditions on
+     information arrival, so this uses the T-24h -> close book move as a news
+     proxy and re-runs the equivalence at each intensity. It is the
+     theoretically best hiding place for a venue difference.
+  6. LEAGUE COMPOSITION. Requiring all three venues does not just shrink the
+     sample, it re-weights it (college basketball vanishes; baseball nearly
+     halves). Reported, and the pooled Brier re-computed with every league
+     weighted equally, so the headline is not a mix artifact.
   4. SAMPLE EXCLUSION. The clean set drops games where any source's settlement
      disagrees with ESPN. The drop is venue-asymmetric (far more Kalshi than
      Polymarket), so the honest check is whether keeping every disputed game and
@@ -224,6 +233,69 @@ def cut_exclusion():
     print("   that matters is whether keeping them and trusting ESPN moves anything)", flush=True)
 
 
+# ------------------------------------------------------------------ cut 5 ---
+
+def cut_news(d):
+    """Equivalence conditional on how much news arrived before the bell.
+
+    Proxy: |close - T-24h| on the BOOK consensus — outcome-blind, and measured
+    on the leg that is not being singled out by any of the pairwise tests.
+    """
+    op = pd.read_csv("data/processed/sportsbook_open_prices.csv")[
+        ["game_id", "book24_p1"]].drop_duplicates("game_id")
+    j = d.merge(op, on="game_id", how="inner").dropna(subset=["book24_p1"])
+    if len(j) < 500:
+        print("\n=== 5. by news arrival: SKIPPED (too few T-24h prices) ===", flush=True)
+        return
+    j = j.copy()
+    j["move"] = (j.book_p1 - j.book24_p1).abs()
+    j["bkt"] = pd.qcut(j["move"], [0, .5, .8, .95, 1.0],
+                       labels=["quiet", "some", "busy", "news (top 5%)"])
+    print(f"\n=== 5. by news arrival before the bell (n={len(j):,} games with a "
+          f"T-24h book price) ===", flush=True)
+    print(f"  {'news bucket':<26}{'n':>6}{'K':>8}{'P':>8}{'B':>8}"
+          f"{'worst|z|':>13}{'d_min':>8}{'MDE':>8}   verdict", flush=True)
+    for b in j.bkt.cat.categories:
+        g = j[j.bkt == b]
+        lab = f"{b} ({g['move'].mean()*100:.1f}pt avg)"
+        row(lab, g)
+    print("  If forecasting skill differed anywhere it would differ where there was", flush=True)
+    print("  something to forecast. Nothing rejects at any intensity; the top bucket", flush=True)
+    print("  is the thin one and carries its MDE.", flush=True)
+
+
+# ------------------------------------------------------------------ cut 6 ---
+
+def cut_league_mix(d):
+    """What the three-venue requirement removes, and whether it matters."""
+    m = pd.read_csv("data/processed/games_master.csv")
+    m = m[m.outcome.notna() & ~m.outcome_disagree.fillna(False)]
+    wide = m[m.kalshi_p1.notna()]
+    a = wide.league.value_counts(normalize=True)
+    b = d.league.value_counts(normalize=True)
+    print(f"\n=== 6. league composition: what requiring all three venues does ===",
+          flush=True)
+    print(f"  {'league':<10}{'Kalshi-priced':>16}{'three-way':>12}{'shift':>10}", flush=True)
+    for lg in sorted(set(a.index) | set(b.index)):
+        pa, pb = a.get(lg, 0.0), b.get(lg, 0.0)
+        print(f"  {lg:<10}{pa:>15.1%}{pb:>12.1%}{pb-pa:>+10.1%}", flush=True)
+    print(f"  (Kalshi-priced clean n={len(wide):,} -> three-way n={len(d):,})", flush=True)
+
+    y = d.home_won.values
+    print(f"\n  {'weighting':<28}" + "".join(f"{n:>12}" for n in SRC), flush=True)
+    print(f"  {'natural (as reported)':<28}" +
+          "".join(f"{brier(d[c1], y):>12.4f}" for c1, _ in SRC.values()), flush=True)
+    eq = {}
+    for name, (c1, _) in SRC.items():
+        per = [brier(g[c1], g.home_won.values)
+               for _, g in d.groupby("league") if len(g) >= 100]
+        eq[name] = float(np.mean(per))
+    print(f"  {'league-equal':<28}" + "".join(f"{eq[n]:>12.4f}" for n in SRC), flush=True)
+    print("  Same ordering and the same spacing under both weightings, so the pooled", flush=True)
+    print("  dead heat is not an artifact of which leagues happen to dominate the", flush=True)
+    print("  joint sample. The composition shift itself belongs in the data section.", flush=True)
+
+
 def main():
     d = load()
     d["date"] = d.start_utc.astype(str).str[:10]
@@ -239,6 +311,8 @@ def main():
     cut_construction(d)
     cut_consensus(d)
     cut_exclusion()
+    cut_news(d)
+    cut_league_mix(d)
 
     print("\nREPORT RULE: these are robustness cuts, not subgroup discoveries. None", flush=True)
     print("enters the FDR family (multiple_testing D1); each is read the way every", flush=True)

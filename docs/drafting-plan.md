@@ -290,9 +290,15 @@ means writing its beats in order and nothing else.
   book-by-book [us_books].
 - **¶4 The fourth leg and the law of one price.** Polymarket US equivalent to
   each, δ_min ≤ 0.74e-3; median gap 0.50pt across legally segregated pools
-  that no participant can arbitrate [four_way]. This is the cleanest mechanism
-  demonstration in the paper: agreement without arbitrage means shared
-  information.
+  that no participant can arbitrate [four_way]. **Scope this claim carefully —
+  the earlier draft over-read it.** Segregation binds traders, not operators:
+  US and Global are one company, so the pair cannot distinguish shared
+  information from shared quoting infrastructure, and maker identity is not in
+  any public tape. Agreement without arbitrage rules out the arbitrage
+  mechanism and nothing more. The version that carries weight is **Kalshi vs
+  Polymarket** — unaffiliated firms, different technology, different regulatory
+  regimes — agreeing to a median 0.40pt. Lead with that pair and use US-vs-
+  Global as the arbitrage-elimination step only.
 - **¶5 Stability.** Equivalence holds within every adequately powered quarter
   [time_stability]. Note the one wobble and its direction.
 - **¶6–7 The gambling scorecard (Table 3 companion).** Calibration, no FLB,
@@ -335,7 +341,12 @@ means writing its beats in order and nothing else.
   imbalance predicts nothing; discovery is maker-driven via quote revision
   [informed]. Book-move event study: anticipation-direction share 34% Kalshi
   (p=0.012) and 23% Polymarket (p<0.001), both significantly *below* chance
-  [book_moves]. Parallel processing of the same information, not transmission.
+  [book_moves], sign stable from a 1pt to a 3pt event cut. Write this as "no
+  transmission at any resolution the panel resolves", NOT as "parallel
+  processing" — the latter is a mechanism claim the event study cannot make,
+  since a same-step function of the book produces the same picture. The
+  independence evidence lives in niche_gradient (calibrated where no book
+  exists) and, weakly, in the encompassing residual.
 
 ### §5C Where the surface cracks (1,400 w, Fig 6, Table 4)
 

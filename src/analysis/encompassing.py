@@ -17,6 +17,17 @@ Caveat printed with results: the prices are correlated at r~0.99, so individual
 coefficients are unstable by construction; the reported tests are of INCREMENTAL
 information (each coefficient given the others), which is exactly the question.
 
+Also included: SEPARABILITY. Before asking whether an exchange adds information
+beyond the book, ask how much of it is not the book to begin with. Regressing
+each exchange's log-odds on the book's gives the share of its price that is
+idiosyncratic at all; the encompassing tests then ask whether that share is
+informative. The two together are what the mechanism claim rests on, and they
+are reported together because either alone is misleading: a high R2 is NOT
+evidence of copying (two independent accurate forecasters of the same games are
+also ~0.99 correlated, because the games differ enormously in difficulty), and
+a significant increment on a 0.5% residual is a thin foundation for a claim
+about how prices form.
+
 Also included: liquidity-controlled cluster-robust DM on tight-spread games only.
 The pre-side-fix data showed "Kalshi lags the book even on liquid games
 (p=0.004)"; that claim was never re-tested after the repair — done here.
@@ -62,6 +73,39 @@ def encompass(d, cols, dates, label):
     return r
 
 
+def separability(d, y, dates):
+    """How much of each exchange price is NOT the book, and is that part informative?
+
+    Two numbers per exchange, and both are needed:
+      R2 of its log-odds on the book's -> the idiosyncratic share exists at all
+      the residual's coefficient on the outcome -> that share carries information
+    Read them together. R2 alone cannot distinguish independent convergence from
+    mirroring; the residual test can, and it is the weaker of the two results.
+    """
+    print("\n=== separability: how much of each exchange price is not the book? ===",
+          flush=True)
+    print(f"  {'exchange':12}{'R2 on book':>12}{'idiosyncratic':>15}"
+          f"{'residual coef':>15}{'z':>8}{'p':>8}", flush=True)
+    xb = sm.add_constant(lo(d.book_p1))
+    for name, c in (("Kalshi", "kalshi_p1"), ("Polymarket", "poly_p1")):
+        yv = lo(d[c])
+        fit = sm.OLS(yv, xb).fit()
+        resid = yv - fit.predict()
+        m = sm.Logit(y, sm.add_constant(np.column_stack([lo(d.book_p1), resid]))).fit(
+            disp=0, cov_type="cluster", cov_kwds={"groups": dates})
+        print(f"  {name:12}{fit.rsquared:>12.4f}{(1-fit.rsquared)*100:>14.2f}%"
+              f"{m.params[2]:>15.3f}{m.tvalues[2]:>+8.2f}{m.pvalues[2]:>8.3f}", flush=True)
+    print("  Read carefully, in both directions. A high R2 is NOT evidence that an", flush=True)
+    print("  exchange copies the book: two independent, equally accurate forecasters", flush=True)
+    print("  of the SAME games are also ~0.99 correlated, because the games differ", flush=True)
+    print("  enormously in difficulty and both track the truth. Equally, the small", flush=True)
+    print("  idiosyncratic share means the lead-lag nulls elsewhere in this project", flush=True)
+    print("  cannot separate parallel discovery from same-step mirroring — a maker", flush=True)
+    print("  quoting continuously off the book produces no lead at any resolution.", flush=True)
+    print("  What the design CAN say is below (does the residual inform?) and in", flush=True)
+    print("  niche_gradient (are exchanges calibrated where no book exists at all?).", flush=True)
+
+
 def main():
     d = load()
     y = d["home_won"].values
@@ -69,6 +113,8 @@ def main():
     print(f"clean all-three games: {len(d):,} ({len(set(dates))} date clusters)", flush=True)
     print(f"price correlations: K-book={d.kalshi_p1.corr(d.book_p1):.4f}  "
           f"P-book={d.poly_p1.corr(d.book_p1):.4f}  K-P={d.kalshi_p1.corr(d.poly_p1):.4f}", flush=True)
+
+    separability(d, y, dates)
 
     print("\n=== pairwise encompassing (does the 2nd source add info beyond the 1st?) ===", flush=True)
     encompass(d, ["book_p1", "kalshi_p1"], dates, "book + Kalshi")

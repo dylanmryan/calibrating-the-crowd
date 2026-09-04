@@ -1,8 +1,9 @@
 # Report outline — Calibrating the Crowd
-*Drafting outline (2026-08-06), for review before prose. Every number below
-was re-verified against the 2026-08-06 clean-run logs (53 modules, 0
-failures); provenance in brackets. Figures referenced by filename exist in
-`results/`.*
+*Drafting outline (2026-08-06; numbers re-verified against the 2026-08-29
+freeze and the 2026-09-03 re-stamp, 61 modules, 0 failures). Provenance in
+brackets. Figures referenced by filename exist in `results/`. Sections 7 and 8
+were revised 2026-09-03 following the interpretation audit — see
+`docs/interpretation-audit-2026-09-03.md`.*
 
 **Working title:** Calibrating the Crowd: Prediction Markets and Sportsbooks
 as Rival Forecasters of the Same Games
@@ -134,6 +135,10 @@ with 90% CIs inside ±1e-3). **Table 1**: plain calibration deciles.
   CIs within ±0.53e-3 [rigor.log].
 - Four-way: Polymarket US equivalent to each (δ_min ≤ 0.74e-3); law of one
   price across legally segregated pools, median gap 0.50pt [four_way.log].
+  Reads as arbitrage-elimination only — US and Global are one operator, so the
+  pair cannot separate shared information from shared quoting. The
+  unaffiliated-firm version (Kalshi vs Polymarket, median 0.40pt) carries the
+  mechanism claim.
 - Vs Pinnacle: all CIs within ±0.34e-3 [sharp_books.log]. Vs each of 11 US
   books: dead heat book-by-book, all n.s. [us_books.log].
 - Time stability: equivalence holds within every adequate quarter
@@ -175,10 +180,14 @@ Fig: `horizon_calibration.png`.
   away from game time, not news transmission. Reported with its cuts.
 - Markouts flat across size; taker imbalance predicts nothing → discovery
   is maker-driven, information enters via quote revision [informed].
-- Book-move event study: exchanges neither anticipate nor follow with a lag
-  — parallel processing of the same information. On the refreshed 528-game
-  panel the anticipation-direction share is 34% Kalshi (p=0.012) and 23%
-  Polymarket (p<0.001), both significantly BELOW chance [book_moves.log].
+- Book-move event study: exchanges neither anticipate nor follow with a lag.
+  On the refreshed 528-game panel the anticipation-direction share is 34%
+  Kalshi (p=0.012) and 23% Polymarket (p<0.001), both significantly BELOW
+  chance, and the sign is stable from a 1pt to a 3pt event cut
+  [book_moves.log]. State the conclusion at the strength it supports: no
+  transmission on any clock the panel resolves. It does NOT establish
+  independent processing — a same-step function of the book would look
+  identical here (see §7, mechanism).
 Figs: `minute_lead_lag.png`, `five_min.png`.
 
 ### 5.5 Where the surfaces crack: distributions
@@ -367,17 +376,70 @@ whoever is using it, and what the usage pattern looks like (median $14 stake,
 53% of fills in the final 3h, evening-leisure concentration) — consumption-
 shaped, whoever is doing it. Any generational claim would need account-level
 data no outside researcher has.
+**Product scope: the pre-game moneyline only.** This is the largest scope
+decision in the paper and it deserves its own paragraph rather than a clause.
+Every comparison here is a straight pre-game win/loss price. No parlays, no
+same-game parlays, no player props, no in-play or live pricing. The
+justification is real — a like-for-like comparison needs a contract both
+institutions list, and the moneyline is that contract — but the consequence
+cuts two ways and the paper should own both. The moneyline is the
+sportsbook's most efficient, lowest-hold, most heavily arbitraged product,
+close to a loss-leader; the industry's economics, and the products most
+implicated in the harm literature, are parlays and props, where hold runs
+several times higher and no exchange analogue exists. So this design compares
+the venues where the book looks *most* like a forecaster, and it says nothing
+about the products where most of the money and most of the concern actually
+sit. A reader is entitled to note that "the exchange forecasts as well as the
+sportsbook" is established on one product line and not on the institution's
+whole book of business. In-play pricing — arguably where the gambling/
+forecasting distinction is sharpest — is excluded by design, since every price
+here is anchored at the official start and nothing after it is used.
+
+**Mechanism is underdetermined, and no outside researcher can fix it.** The
+lead–lag nulls rule out slow transmission between venues, not transmission:
+a maker quoting one venue continuously off another's line produces no lead at
+any resolution. 99.5% of Kalshi's log-odds variation and 98.7% of
+Polymarket's is explained by the book consensus, and only Kalshi's residual
+carries detectable information (p=0.035, fragile). That does not show copying
+— two independent accurate forecasters of the same games would also be ~0.99
+correlated — but it does mean this design cannot separate the two readings in
+benchmarked markets. What it can show is that exchanges price *un*-benchmarked
+niche markets just as well, so they do not require a professional line. The
+missing datum is maker identity: whether the same firms quote both exchanges
+is not in any public tape, and settling it would need venue cooperation.
+
+**No demographic data** — see above.
+
 Sports scope (but see §2.1: ~95% of prediction-market volume is sports, so this
 is the main case rather than a narrow one); consensus timing (60-min buckets vs exchange T-0 — documented
-direction); Kalshi 60-day decay (harvest protocol); trade-recon staleness
-(caps + robustness); small-league power (MDE table); niche name-matching
+direction); **the three-venue requirement re-weights the sample** (CBB-M falls
+from 10.2% of the Kalshi-priced clean set to 0% of the headline set, MLB from
+41% to 23%; the pooled dead heat is unchanged under league-equal weighting —
+robustness_cuts §6); Kalshi 60-day decay (harvest protocol); trade-recon
+staleness (caps, plus external validation against archived order books —
+validate_recon); small-league power (MDE table); niche name-matching
 lower bounds; Poly resolved-market candle coarseness; US per-book covers 86% of the joint set
 (floor-stopped); outright inference = 20 season-clusters; 15-min panel
-era-limited; informal pre-registration (freeze + out-of-sample verification
-planned ~Aug 22).
+era-limited; informal pre-registration, discharged — claims were registered in
+`docs/registered-claims.md` before the holdout was pulled and the scorecard is
+reported whichever way it read (R2 confirmed at full registered power; R7
+deviated and the open observation was retired as noise).
+
+**On the direction of our own corrections.** Eleven claims have been retracted,
+downgraded, or resolved as false alarms. A reader is right to ask whether they
+all conveniently moved toward the paper's thesis. They did not: four removed a
+*"Kalshi has a defect"* claim (the ladder-convention set, the WNBA totals false
+alarm) and four removed a *"Kalshi is better"* claim (the NBA encompassing
+sub-claim, wide-set K>P, log-score K>book, and the Murphy sup-t edge). The
+corrections ran both ways and roughly evenly. What is true of nearly all of
+them is that they moved *toward the null* — which is what one would see if the
+null were true, and also what one would see from a pipeline whose cleaning
+shrinks extreme estimates. The registered out-of-sample verification is the
+answer to that second reading: the dead heat replicated on games collected
+after the claims were fixed, at full registered power.
 
 ## 8. Reproducibility and data
-One-command regeneration (53 modules, audit-gated); committed core table +
+One-command regeneration (61 modules, audit-gated); committed core table +
 dictionary + tour notebook; free-API re-derivability for exchange data;
 book data banked (subscription lapses Sept 2026); VPS backups.
 

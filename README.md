@@ -43,13 +43,22 @@ level against that floor; never rank venues on it.*
 Not merely "no significant difference" — formally equivalent under two
 one-sided tests, with every pairwise 90% CI inside the pre-stated margin. The
 equivalence holds against Pinnacle specifically, book-by-book across US retail,
-within every adequately powered quarter, and across legally segregated pools
-that no participant can arbitrage.
+within every adequately powered quarter, across every favourite-strength band,
+at every news intensity, and across legally segregated pools that no
+participant can arbitrage.
 
 Three things follow, and they are the actual contribution:
 
-1. **Nobody leads.** No venue predicts another at 30, 15, 10, or 5-minute
-   resolution. Price discovery is maker-driven and parallel, not transmitted.
+1. **Nobody leads, and nobody needs a benchmark.** No venue predicts another
+   at 30, 15, 10, 5, or 1-minute resolution — so if one venue's price is a
+   function of another's, it is a same-step function, not a lag. The design
+   cannot distinguish parallel discovery from continuous same-step mirroring,
+   and the paper says so rather than picking the flattering reading: 99.5% of
+   Kalshi's log-odds variation and 98.7% of Polymarket's is explained by the
+   book consensus, and only Kalshi's residual carries detectable information
+   (p=0.035, fragile). What *does* separate the venues from the book is that
+   they price un-benchmarked niche markets — where no professional line exists
+   to follow — just as well (excess ECE 0.00, slope 0.98).
 2. **The discipline has a boundary, and it is not the institution.** One-shot,
    long-horizon outrights are badly priced *everywhere* — Kalshi returns $0.33
    per $1 on sub-10c longshots, the books $0.34. Meanwhile un-benchmarked niche
@@ -161,6 +170,15 @@ the logs instead of carrying them, and a Murphy sup-t claim it had been
 carrying at p=0.037 turned out to read 0.129 on the frozen data. The full
 record is kept at the top of `src/analysis/multiple_testing.py` rather than
 quietly dropped.
+
+Those corrections did not all run one way, which is the question a reader
+should ask. Four removed a claim that Kalshi had a *defect*; four removed a
+claim that Kalshi was *better*. What is true of nearly all of them is that they
+moved toward the null — which is what you would see if the null were true, and
+also what you would see from a pipeline whose cleaning shrinks extreme
+estimates. The registered out-of-sample verification exists to separate those
+two readings, and it replicated the dead heat on games collected after the
+claims were fixed.
 
 The headline is also reported against the choices that produced it, because a
 result stated once is weaker than the same result stated five ways.

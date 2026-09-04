@@ -26,7 +26,7 @@ A dead heat. Brier scores of 0.2196, 0.2199 and 0.2196. When these venues say 62
 
 This is not "we failed to find a difference." I set the margin for what counts as the same before running anything and tested for equivalence directly, and every pairwise interval landed inside it. The tie holds against Pinnacle specifically, book by book across US retail, and across legally segregated pools that no participant can arbitrage between. That last one surprised me: the arbitrage explanation I walked in with cannot be the reason, because the tie survives where arbitrage is impossible.
 
-Nobody leads, either. No venue predicts another at thirty, fifteen, ten or five minute resolution. Price discovery is happening in parallel at all four, not flowing from one to the rest.
+Nobody leads, either. No venue predicts another at thirty, fifteen, ten or five minute resolution, so nothing is flowing from one venue to the rest on any clock I can measure. I want to be careful about what that does and does not prove. A market maker quoting the exchange continuously off the sportsbook's line would also produce no lead, because there would be no lag to find — and in fact almost all of an exchange price is explained by the book, which is what you would expect either from copying or from two accurate forecasters watching the same games. The measurement cannot separate those. What can: the exchanges price obscure markets with no professional line to copy just as well as the ones that have one. They do not need the book. Whether they lean on it where it exists is a question this data cannot answer, and I would rather say that than pretend otherwise.
 
 None of this is because the bar is low. I built a deliberately naive fourth forecaster, a walk-forward Elo model off nothing but past wins and losses, and every venue beat it decisively. The three institutions sit about 28 times closer to each other than any of them sits to the model. They are equally good, and equally better than public statistics.
 
@@ -36,7 +36,7 @@ I checked hard that I was not manufacturing the tie. The audit gate caught 39 du
 > *Caption: Priced probability tracks realized frequency, identically, at three institutions.*
 
 > **[F4: no leader]**
-> *Caption: No venue predicts another at thirty, fifteen, ten or five minutes. Discovery is parallel, not transmitted.*
+> *Caption: No venue predicts another at thirty, fifteen, ten or five minutes. If one follows another, it does so within the same step.*
 
 ## 4. Why accuracy is not profit
 

@@ -7,6 +7,17 @@ the gap plan.*
 
 ---
 
+> **Status, 2026-09-03.** This document is the record as written on 2026-08-28
+> and is left unedited. **Every gap it identified has since been closed:** Gap 1
+> (retraction reconciliation) in 6bbd3dc, Gap 2 (registered out-of-sample
+> verification) in f915794/aec245a, Gap 3 (tables, figure program, exhibits) in
+> 97b9c00, Gap 4 (playoff split, shared-deviation stat) in 97b9c00, Gap 5
+> (freeze) in dc40fe6. Two further audits followed — `defensibility-audit-2026-09-03.md`
+> (arbitrary choices, all 16 items closed) and `interpretation-audit-2026-09-03.md`
+> (claim strength and unexamined rival explanations). References below to
+> "out-of-sample verification planned ~Aug 22" describe the state on 2026-08-28;
+> it was registered, run, and reported.
+
 ## Verdict
 
 **Analytical coverage is essentially complete.** Of the ~45 distinct
