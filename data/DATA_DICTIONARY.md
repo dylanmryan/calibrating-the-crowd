@@ -52,6 +52,16 @@ files are the permanent record)
 - `sportsbook_sharp_prices.csv` — **per-book** EU closing quotes, one row
   per game-book (24 books incl. `pinnacle`, `betfair_ex_eu`, `matchbook`);
   `raw_p1/raw_p2` are vigged implied probs — de-vig with p1/(p1+p2).
+- `sportsbook_us_books.csv` — the same shape for 11 US retail brands
+  (DraftKings, FanDuel, BetMGM, …), 4,729 games.
+- **`book_ts` in both per-book files is that bookmaker's own `last_update`,
+  not the collection time**, so the age of each quote at kickoff is
+  recoverable. It went unread until 2026-09-16 and is now load-bearing:
+  `src/analysis/book_freshness.py` uses it to re-run the headline inside a
+  bimodal quote-age split, which converts the project's timing caveat from a
+  concession into a measurement. It is a CLOSING cross-section — ~8-12
+  distinct stamps per game, near-synchronous within a game — so it bounds how
+  stale the benchmark was, and cannot support lead-lag between books.
 - `sportsbook_alt_spreads.csv` — de-vigged alternate-spread ladders
   (MLB/NBA/NHL), one row per game-line-side, `n_books` per point.
 - `sportsbook_outrights.csv` — monthly championship-winner odds snapshots,
@@ -99,7 +109,20 @@ files are the permanent record)
 
 - `snapshots.csv` — Kalshi/Polymarket/book aligned quotes per upcoming game,
   with Kalshi touch sizes and depth-within-5c (`bidq1..d5ask2`) since
-  2026-07-25; book odds at 5-min cadence since 2026-07-31.
+  2026-07-25; book odds at 5-min cadence since 2026-07-31. The `sportsbook`
+  rows carry a **cross-book MEAN** (`p1`/`p2`, with `n_books` = how many books
+  it averaged), not any individual book's quote. Every lead–lag result in the
+  project reads this series; `src/analysis/book_panel.py` audits what the
+  averaging costs and which questions it forecloses.
+- `book_quotes.csv` — **per-book** live quotes, one row per (snapshot, game,
+  book): `book`, `book_update` (that bookmaker's own last-update stamp, so
+  quote age is recoverable), `raw1`/`raw2` (vigged implied probabilities).
+  Added 2026-09-16 from the same Odds API response `snapshots.csv` already
+  paid for, at zero marginal credit cost, after the panel audit found that
+  per-book *timing* was unrecoverable from anything banked. Written to its own
+  file so `snapshots.csv` keeps the exact schema the frozen analysis reads.
+  **Empty until collection resumes** — it does not cover the frozen panel, and
+  no result in the current report uses it.
 - `wc_snapshots.csv` — World Cup 3-way (home/draw/away) paths.
 - `outcomes.csv` — ESPN finals backfill.
 

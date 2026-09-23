@@ -159,10 +159,30 @@ def odds_h2h(sport: str) -> list:
 
 
 def book_price(odds_events: list, home: str, away: str):
-    """Match by team names; average books, de-vig to implied probs (home, away)."""
+    """Match by team names; average books, de-vig to implied probs (home, away).
+
+    Returns the consensus AND the per-book quotes it was built from. The
+    consensus keys (p1/p2/n_books) are unchanged and are what the snapshot row
+    carries; `quotes` is written to a separate file and touches nothing
+    downstream.
+
+    Why the per-book leg exists (added 2026-09-16). Until now this function
+    averaged the field and discarded the members, so every timing result in the
+    project describes a cross-book MEAN rather than any book. That is fine for
+    accuracy — `sharp_books`/`us_books` unpack it per book from the closing
+    tape — but it makes two questions permanently unanswerable from banked
+    data: whether the sharp book leads the retail field, and whether an
+    exchange sits on Pinnacle's line or the field's. Averaging also low-pass
+    filters the series (books update asynchronously, so one book's move enters
+    the mean as a multi-step ramp) and lets membership churn masquerade as
+    repricing — both attenuate measured leadership toward the paper's own null.
+    `src/analysis/book_panel.py` bounds that damage on the banked panel; only
+    per-book series can remove it. The quotes come from the SAME API response
+    already paid for, so retaining them costs no additional credits.
+    """
     for e in odds_events:
         if e.get("home_team") == home and e.get("away_team") == away:
-            hs, as_, n = 0.0, 0.0, 0
+            hs, as_, n, quotes = 0.0, 0.0, 0, []
             for bk in e.get("bookmakers", []):
                 mk = next((m for m in bk.get("markets", []) if m["key"] == "h2h"), None)
                 if not mk:
@@ -170,9 +190,13 @@ def book_price(odds_events: list, home: str, away: str):
                 px = {o["name"]: o["price"] for o in mk["outcomes"]}
                 if home in px and away in px:
                     hs += 1 / px[home]; as_ += 1 / px[away]; n += 1
+                    quotes.append({"book": bk.get("key"),
+                                   "book_update": bk.get("last_update"),
+                                   "raw1": round(1 / px[home], 6),
+                                   "raw2": round(1 / px[away], 6)})
             if n:
                 p1, p2 = _implied_pair(hs / n, as_ / n)
-                return {"p1": p1, "p2": p2, "n_books": n}
+                return {"p1": p1, "p2": p2, "n_books": n, "quotes": quotes}
     return None
 
 
@@ -183,7 +207,7 @@ def snapshot(out="data/live/snapshots.csv") -> pd.DataFrame:
     today = now.strftime("%Y%m%d")
     tomorrow = (now + dt.timedelta(days=1)).strftime("%Y%m%d")
 
-    rows = []
+    rows, qrows = [], []
     for lg, (series, sport, poly_sport) in LEAGUES.items():
         games = fetch_day(lg, today) + fetch_day(lg, tomorrow)
         kmk = kalshi_open(series)
@@ -202,7 +226,14 @@ def snapshot(out="data/live/snapshots.csv") -> pd.DataFrame:
                 rows.append({**base, "source": "kalshi", **kp})
             bp = book_price(odds, g["home_team"], g["away_team"])
             if bp:
+                quotes = bp.pop("quotes", [])
                 rows.append({**base, "source": "sportsbook", **bp})
+                # per-book detail to its own file: the consensus row above keeps
+                # the exact schema every frozen analysis module reads.
+                qrows += [{"snapshot_utc": base["snapshot_utc"], "league": lg,
+                           "game_id": base["game_id"], "start_utc": base["start_utc"],
+                           "minutes_to_start": base["minutes_to_start"], **q}
+                          for q in quotes]
             pp = polymarket.price_for(poly, g["home_team"], g["away_team"])
             if pp:
                 rows.append({**base, "source": "polymarket", **pp})
@@ -213,6 +244,14 @@ def snapshot(out="data/live/snapshots.csv") -> pd.DataFrame:
         if os.path.exists(path):
             df = pd.concat([pd.read_csv(path), df], ignore_index=True)
         df.to_csv(path, index=False)
+
+    # per-book quotes, appended to their own file. Separate on purpose: the
+    # snapshots schema is frozen-analysis input and must not gain columns, and
+    # this leg is one row per (snapshot, game, BOOK) rather than per game.
+    if qrows:
+        qpath = os.path.join(os.path.dirname(out) or ".", "book_quotes.csv")
+        q = pd.DataFrame(qrows)
+        q.to_csv(qpath, mode="a", header=not os.path.exists(qpath), index=False)
     return df
 
 

@@ -33,13 +33,26 @@ W = 4               # +-4 steps of 15 min = +-1h
 THRESH = 0.02
 
 
-def windows(d, event_src, thresh=THRESH, w=W):
-    """Signed change matrices around non-overlapping big moves of event_src."""
+def windows(d, event_src, thresh=THRESH, w=W, eligible=None):
+    """Signed change matrices around non-overlapping big moves of event_src.
+
+    eligible — optional boolean column in `d`. When given, only steps where it
+    is True can SEED an event. The filter is applied at detection, before the
+    non-overlap pruning, not as a post-hoc subset of the unfiltered events:
+    pruning enforces non-overlap over whatever population is detected, so
+    dropping events afterwards would leave a population no detector produces
+    (the same reason `threshold_sweep` re-detects at each cut). Used by
+    `book_panel.py` to re-run the study on steps where the book consensus kept
+    a constant membership.
+    """
     out = {s: [] for s in SRCS}
     sizes, mts = [], []
     for gid, g in d.groupby("game_id"):
         g = g.sort_values("t").reset_index(drop=True)
-        ev = g.index[g[event_src].abs() >= thresh].tolist()
+        hit = g[event_src].abs() >= thresh
+        if eligible is not None:
+            hit &= g[eligible].fillna(False).astype(bool)
+        ev = g.index[hit].tolist()
         last = -10 * max(w, 1)
         for i in ev:
             if i - last <= w or i - w < 0 or i + w >= len(g):
