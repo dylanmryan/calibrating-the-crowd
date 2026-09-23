@@ -104,8 +104,10 @@ def main():
         cov = wm((da - wm(da)) * (db - wm(db)))
         r = cov / np.sqrt(wm((da - wm(da)) ** 2) * wm((db - wm(db)) ** 2))
         print(f"  {a:11} vs {b:11}: r={r:+.2f} over {len(common)} bands (n-weighted)", flush=True)
-    print("  (r near +1 = shared blind spots, the same result the extras cell and", flush=True)
-    print("   the WC draws give game-level; r near 0 would say venue-specific error)", flush=True)
+    print("  (r near +1 = shared deviations; r near 0 would say venue-specific error.", flush=True)
+    print("   The WC draws give the same result game-level. The extras cell USED to be", flush=True)
+    print("   cited here too; it was retracted 2026-09-23 as a conditioning artifact", flush=True)
+    print("   -- see extras_conditioning.py -- and is no longer part of this motif.)", flush=True)
 
     # figure at FULL resolution: one point per integer percent (1..99),
     # shown where >=10 teams were priced there, plus a 5-point centered

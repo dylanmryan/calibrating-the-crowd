@@ -15,6 +15,29 @@ If the ladder's under-pricing of the 1-2 cell concentrates in these game states,
 the miscalibration has a *cause*: the market prices a smooth margin distribution
 and misses the spike created by baseball's ending rules.
 
+  ####################################################################
+  #  WARNING (2026-09-23): THAT INFERENCE IS INVALID, AND THE CLAIM   #
+  #  BUILT ON THIS MODULE'S `extras` SPLIT IS RETRACTED.              #
+  ####################################################################
+
+`extras` and `walkoff` are realized DURING the game. They are NOT in the
+forecaster's information set at quote time. Conditioning a calibration test on
+an outcome-correlated state outside that set breaks the calibration identity
+mechanically, in both directions, whether or not anything is mispriced -- so a
+nonzero gap on these slices is not evidence of a pricing error.
+
+src/analysis/extras_conditioning.py demonstrates it with a placebo: a CONSTANT
+at the unconditional base rate scores +21.19pt on this module's extras split,
+and a pre-game-information-only forecast +21.23pt, against the market's
++20.22pt. A constant cannot misprice the ghost-runner rule. Also
+P(win by 1-2 | extras) - P(win by 1-2) = +21.19pt, i.e. the whole gap.
+
+The numbers this module prints are CORRECT and are retained as descriptive
+decomposition -- they describe how baseball's ending rules shape the margin
+distribution, which is a real and interesting fact. They must NOT be quoted as
+mispricing, a "blind spot", or a venue comparison. For the valid test, see
+extras_conditioning.py §3-§4 (it reverses the sign).
+
 Needs data/processed/mlb_innings.csv (src/collect/mlb_innings.py).
 """
 from __future__ import annotations

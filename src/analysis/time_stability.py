@@ -12,10 +12,14 @@ Two tests on existing data:
      ladder-convention artifact retracted on 2026-08-23, not the market —
      an artifact naturally persists across eras. Under the settlement-
      verified convention (ladder_convention.cover_line) the aggregate cell
-     is near-unbiased in every era; the surviving blind spot is the
-     EXTRA-INNINGS cell (~+20pt, shared with the books — see mlb_extras,
-     ladder_vs_books), which is too rare for era-level inference, so no
-     self-correction claim is made about it in either direction.
+     is near-unbiased in every era. A second blind-spot claim stood here --
+     the EXTRA-INNINGS cell (~+20pt, shared with the books) -- and it was
+     RETRACTED 2026-09-23: splitting on `extras`, a state realized during the
+     game, breaks the calibration identity mechanically, and a constant
+     forecaster scores +21.19pt on the same split (extras_conditioning.py).
+     No blind spot survives here, and the era-level extras figures are
+     withdrawn with the parent claim rather than being reported as too rare
+     to read.
 """
 from __future__ import annotations
 
@@ -123,8 +127,9 @@ def bias_half_life():
               f"{gap*100:>+6.1f}p {gap/se:>+6.1f}{xtra}", flush=True)
     print("  (the +7.4/+11.2pt series previously printed here was the ladder-", flush=True)
     print("   convention artifact, retracted 2026-08-23. Corrected, the aggregate", flush=True)
-    print("   cell is near-unbiased in every era; the surviving extras blind spot", flush=True)
-    print("   is too rare per era for a self-correction claim either way.)", flush=True)
+    print("   cell is near-unbiased in every era. The extras blind spot once", flush=True)
+    print("   reported here was RETRACTED 2026-09-23 as a conditioning artifact", flush=True)
+    print("   (extras_conditioning.py); its era-level figures are withdrawn too.)", flush=True)
 
 
 def main():

@@ -262,6 +262,13 @@ def r2_r3_r4(h):
 
 def r6_extras():
     print(f"\n=== R6. shared extras blind spot, direction (fresh MLB ladders) ===", flush=True)
+    print("  !! R6 WITHDRAWN 2026-09-23: this test could not fail. It splits on", flush=True)
+    print("     `extras`, a state realized DURING the game, which breaks the", flush=True)
+    print("     calibration identity mechanically -- a CONSTANT forecaster scores", flush=True)
+    print("     +21.19pt on the same split (extras_conditioning.py S1). A verdict of", flush=True)
+    print("     CONSISTENT below therefore carries NO information and must not be", flush=True)
+    print("     cited as a replication. Computed and printed for the record only;", flush=True)
+    print("     see the third annotation in docs/registered-claims.md.", flush=True)
     sp = pd.read_csv("data/processed/kalshi_spread_prices.csv")
     sp = sp[sp.league == "MLB"].copy()
     sp["start"] = pd.to_datetime(sp.start_utc, utc=True, format="mixed")

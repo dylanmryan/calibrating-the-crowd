@@ -28,13 +28,24 @@ MODULES = [
     "validate_recon",             # offline: trade-recon vs archived books (80% of the Kalshi leg)
     "plain_calibration", "three_way", "rigor", "league_tost", "four_way", "decomposition", "nuance", "corp_diagram", "murphy",
     "coherence", "margin_dist", "book_pit", "totals", "ladder_vs_books", "ladder_cost", "multi_outcome",
-    "mlb_autopsy", "mlb_extras", "profitability", "behavioral", "why_sports", "time_stability", "futures_calibration", "retail_fingerprint", "niche_gradient", "book_outrights", "sharp_books", "us_books", "maker_structure", "liquidity_footprint", "mm_involvement", "market_functioning",
+    "mlb_autopsy", "mlb_extras", "extras_conditioning", "profitability", "behavioral", "why_sports", "time_stability", "futures_calibration", "retail_fingerprint", "niche_gradient", "book_outrights", "sharp_books", "us_books", "maker_structure", "liquidity_footprint", "mm_involvement", "market_functioning",
     "model_benchmark", "encompassing",
     "late_flow", "informed", "horizon", "horizon_equivalence", "horizon_cross",
-    "close_efficiency", "layer2", "one_price", "multiple_testing",
-    "fee_experiment", "fee_liquidity", "tick_pricing", "referee", "power", "robustness_cuts", "horizon_translation", "lead_lag", "book_moves", "minute_lead_lag", "five_min", "immediacy",
+    "close_efficiency", "layer2", "one_price",
+    "fee_experiment", "fee_liquidity", "tick_pricing", "referee", "power", "robustness_cuts", "horizon_translation", "lead_lag", "book_moves", "book_panel", "book_freshness", "minute_lead_lag", "five_min", "immediacy",
     "oos_verification",           # registered holdout scorecard (docs/registered-claims.md)
+    # Log-CONSUMERS last. multiple_testing re-derives every claim's p-value from
+    # the logs above, so running it mid-suite (where it sat until 2026-09-16)
+    # silently read the PREVIOUS run's logs for the ~20 modules scheduled after
+    # it — lead_lag, five_min, book_moves, book_panel, ladder_cost and the rest.
+    # It converged across repeated runs and so never failed, but "the inventory
+    # reads its own logs" is only true if those logs are this run's.
+    "multiple_testing",
     "tables",                     # report Tables 1-5 rendered from the logs above
+    # candidate figures for the two instrument legs. In the suite so they cannot
+    # drift from the logs while the report decides whether to adopt them; they
+    # write C1-C4 and touch nothing the frozen F-set owns.
+    "report_visuals_instrument",
     "hierarchical_calibration",   # PyMC; ~90s, the suite's slowest module
 ]
 
@@ -77,5 +88,4 @@ def main():
     sys.exit(1 if fails else 0)
 
 
-if __name__ == "__main__":
-    main()
+if __name__ == 

@@ -133,3 +133,42 @@ anything — is now answered rather than assumed: `robustness_cuts.py` §0 print
 their distributions on the headline sample (Kalshi quote age median 0.1 min,
 Polymarket 0.9 min, 11 books in the consensus for 99.6% of games), and §1-§4
 re-run the equivalence under the cuts a filter would have imposed.
+
+## Third annotation (2026-09-23) — R6 was a vacuous test, and is withdrawn
+
+Nothing above the post-pull line has been edited, R6 included. R6 registered
+the extras blind spot's *direction* ("extras gap positive, frozen estimate
+≈ +20pt") and the holdout scored it **CONSISTENT** (+19.6pt, 90% CI ±14.3,
+n=34). That verdict should be read as **no evidence at all**, and the reason is
+a flaw in the registration rather than in the holdout.
+
+`extras` is realized DURING the game. Conditioning a calibration test on an
+outcome-correlated state outside the forecaster's information set breaks the
+calibration identity mechanically, so the split returns the extras/margin
+dependence whichever forecaster you feed it. `src/analysis/extras_conditioning.py`
+demonstrates this directly: a **constant at the unconditional base rate**
+scores +21.19pt on the same split, and a pre-game-information-only forecast
++21.23pt, against the market's +20.22pt. A constant cannot misprice the
+ghost-runner rule.
+
+So R6 predicted a positive gap that a constant would also have produced. It was
+guaranteed to confirm before any data was pulled, which makes it the one thing a
+pre-registration is supposed to exclude: a test that cannot fail. Its
+confirmation adds nothing, and is withdrawn as evidence for the blind-spot
+claim. The claim itself is retracted in `multiple_testing.py`'s retired-claims
+record.
+
+This is a lesson about the registration, not the holdout. R1–R5 and R7–R8 were
+all falsifiable — R7 in fact **deviated** and was reported as a deviation. The
+gap in the procedure was that R6's *statistic* was never checked against a
+placebo before being registered, only its direction and magnitude. Any future
+registration of a conditional-calibration claim should state the information set
+the conditioning variable belongs to, and should be run against a constant
+forecaster first.
+
+The replacement test — E[realized − implied | Z] = 0 for Z inside the market's
+information set, Z = a cross-fitted ex-ante extras propensity — is **not**
+registered and is not scored here. It is a post-hoc finding from auditing R6,
+flagged as such in the FDR inventory, and it runs the *opposite* way (coef
+−1.1495, z=−3.00 date-clustered: a small over-pricing of the cell in
+extras-prone games). It is reported at that strength and no higher.

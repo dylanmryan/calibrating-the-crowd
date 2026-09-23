@@ -120,7 +120,12 @@ def main():
         reg, ext = g[~g.extras], g[g.extras]
         print(f"  {src}: regulation gap {100*(reg.emp.mean()-reg.imp.mean()):+.2f}pts (n={len(reg)}), "
               f"extras gap {100*(ext.emp.mean()-ext.imp.mean()):+.2f}pts (n={len(ext)})", flush=True)
-    print("  (matching gaps => baseball-wide blind spot; book~0 => Kalshi-specific)", flush=True)
+    print("  (matching gaps were read as a baseball-wide blind spot, book~0 as", flush=True)
+    print("   Kalshi-specific. RETRACTED 2026-09-23: `extras` is realized DURING the", flush=True)
+    print("   game, so this split breaks the calibration identity mechanically and a", flush=True)
+    print("   CONSTANT forecaster scores +21.19pt on it. The gaps above are the", flush=True)
+    print("   extras/margin dependence, not either venue's error. See", flush=True)
+    print("   extras_conditioning.py for the placebo and the correct pre-game test.)", flush=True)
 
 
 if __name__ == "__main__":

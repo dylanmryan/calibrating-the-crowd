@@ -3,8 +3,13 @@
 NOTE (2026-08-20): the premise of this module has changed. It was written to
 probe a Kalshi-specific +8.4pt under-pricing of 1-2-run margins; that result
 was a ladder-convention artifact (see src/analysis/ladder_convention.py) and
-is gone. What survives is an extra-innings effect that the BOOKS share, so
-this is no longer a test of a Kalshi-specific edge.
+is gone. It was then re-aimed at an extra-innings effect the BOOKS share --
+and that claim was ALSO retracted, on 2026-09-23, as a test conditioned on a
+state realized during the game (extras_conditioning.py: a constant forecaster
+scores +21.19pt on the same split). So this module no longer has a specific
+mispricing to price. It is retained as the general efficiency test described
+below: whatever deviation is under examination, does it clear executable
+costs?
 
 The ROI arithmetic below is unaffected -- it uses each contract's own
 settlement -- and remains a valid efficiency test: a bias that clears

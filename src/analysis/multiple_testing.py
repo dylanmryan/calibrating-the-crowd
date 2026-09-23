@@ -16,6 +16,16 @@ must not be silently carried.
 
 Each entry also records the value the inventory asserted BEFORE this refresh,
 so main() prints a drift report rather than quietly overwriting the record.
+Claims registered after that refresh carry `was=None` and print as "new": there
+is no prior asserted value to drift from, and inventing one would be exactly the
+hand-carried number this report exists to catch.
+
+Ordering note (2026-09-16): this module now runs at the END of the suite, with
+`tables`, because it is a log CONSUMER. It had been scheduled mid-list, which
+meant it re-derived p-values from the PREVIOUS run's logs for the ~20 modules
+scheduled after it. That converged across repeated runs and so never failed
+loudly, but "the inventory reads its own logs" is only true if those logs are
+the ones this run just wrote.
 Claims whose p-value has no single generating line are held OUT of the BH
 family, following the precedent set when "Kalshi sharpens 24h->start" was
 removed on the same grounds.
@@ -44,6 +54,28 @@ RETIRED CLAIMS (kept here as the honest record):
       * "Totals pass where margins reject" (the walk-off mechanism story) ->
         both layers now pass on the same 1,244 games (totals p=0.84, margins
         p=0.10). The CONTRAST is retracted; the totals result itself stands.
+  - CONDITIONING-ON-THE-FUTURE CORRECTION (2026-09-23). "MLB extra-inning
+    1-2-run cell under-priced by ~20pt at BOTH institutions" was the last
+    surviving Kalshi-era anomaly and it does not survive an identification
+    check. `extras` is realized DURING the game; conditioning a calibration
+    test on an outcome-correlated state outside the forecaster's information
+    set breaks the calibration identity mechanically, in both directions,
+    whether or not anything is mispriced. src/analysis/extras_conditioning.py
+    runs the published split on forecasters that CANNOT be missing the rule:
+      * a constant at the unconditional base rate -> +21.19pt
+      * best pre-game-information-only forecast   -> +21.23pt
+      * the market (published)                    -> +20.22pt
+    P(win by 1-2 | extras) - P(win by 1-2) = +21.19pt, which is the entire
+    published gap. RETRACTED: the statistic measures the extras/margin
+    dependence, not mispricing.
+    The correct test — E[realized - implied | Z] = 0 for Z inside the market's
+    information set, Z = cross-fitted ex-ante extras propensity — is REGISTERED
+    ABOVE as a new claim and runs the OTHER WAY: coef=-1.1495, z=-3.00
+    date-clustered, a small OVER-pricing of the cell in extras-prone games.
+    Extras are also barely foreseeable (cross-fitted AUC 0.540), so there was
+    little for any forecaster to price. The "shared blind spot" reading is
+    withdrawn; the boundary thesis now rests on outrights and niche games,
+    which were never conditioned on a realized state.
   - "Book consensus momentum z=17.5" (2026-07-21): 3-day small-sample
     artifact; matured panel own-lag z=-0.3.
   - "NBA carries the encompassing increment" (2026-07-30): p=0.006 on Jul-10
@@ -82,15 +114,40 @@ LOGS = Path("results/logs")
 # `was` is what the inventory asserted before the 2026-09-03 refresh, kept so
 # drift is reported rather than silently absorbed.
 SPECS = [
-    dict(name="MLB extra-inning 1-2-run cell under-priced, BOTH venues",
+    dict(name="RETRACTED — MLB extra-inning 1-2-run cell under-priced, BOTH venues",
          log="mlb_extras", kind="z", was=1e-8,
          pat=r"^\s*extras\s+[\d,]+\s+[\d.]+\s+[\d.]+\s+\+[\d.]+\s+\+([\d.]+)\s*$",
-         note="ladder_vs_books: K +20.2pt / books +22.0pt on the same games — "
-              "baseball-wide, not Kalshi-specific; regulation runs the other way"),
+         note="RETRACTED 2026-09-23 — the p-value is real and the statistic is NOT. "
+              "`extras` is realized DURING the game, outside the forecaster's "
+              "information set, so splitting on it breaks the calibration identity "
+              "mechanically. extras_conditioning.log S1: a CONSTANT at the "
+              "unconditional base rate scores +21.19pt on the same split and a "
+              "pre-game-information-only forecast +21.23pt, against the market's "
+              "+20.22pt — neither can misprice the ghost-runner rule, so the "
+              "statistic has no power to detect mispricing. The whole published gap "
+              "IS the extras/margin dependence. Kept in the family so the BH "
+              "computation is over the claims actually made, not a curated subset; "
+              "BH still marks it KEEP because its p-value was never the problem"),
     dict(name="Extras end within 1 run vs regulation (two-proportion)",
          log="mlb_extras", kind="two_prop", was=1e-10,
          pat=r"regulation \(9 inn\)\s+([\d,]+)\s+([\d.]+).*?extra innings\s+([\d,]+)\s+([\d.]+)",
-         note="the ghost-runner base rate the cell is mispriced against"),
+         note="the ghost-runner base rate itself — a fact about baseball, unaffected "
+              "by the 2026-09-23 retraction above. It is no longer described as the "
+              "rate 'the cell is mispriced against': on pre-game information the "
+              "cell is not under-priced at all"),
+    dict(name="MLB 1-2-run cell OVER-priced in extras-prone games (pre-game Z)",
+         log="extras_conditioning", kind="z", was=None,
+         pat=r"date-clustered \(house convention\)\s+[-+][\d.]+\s+-([\d.]+)\s",
+         note="NEW 2026-09-23, and it is the RETRACTED claim's replacement with the "
+              "sign reversed. Regressing (realized - implied) on a cross-fitted "
+              "ex-ante extras propensity — a Z the market could see — gives "
+              "coef=-1.1495, z=-3.00 date-clustered (-2.89 game-clustered, -2.41 "
+              "iid), i.e. the market slightly OVER-prices the narrow-margin cell in "
+              "the games most likely to reach extras. ~4pt swing across the whole "
+              "propensity range: small, robust to the error structure, and opposite "
+              "in sign to what the retracted statistic appeared to show. Flagged as "
+              "specification-search-adjacent: it was found while auditing the "
+              "retracted claim, not registered in advance"),
     dict(name="Markets beat walk-forward Elo floor",
          log="model_benchmark", kind="z", was=1e-10,
          pat=r"model vs Kalshi\s+dBrier=\S+\s+z=\+([\d.]+)",
@@ -139,6 +196,38 @@ SPECS = [
          log="horizon_equivalence", kind="p", was=6.3e-2,
          pat=r"Kalshi 24h - Book 24h:.*?z=\+[\d.]+ p=([\d.]+)",
          note="softened on the completed 84%-coverage T-24h sample"),
+    dict(name="Exchanges drift AGAINST an imminent book move (Kalshi, clean panel)",
+         log="book_panel", kind="p", was=None,
+         pat=r"whole \+-1h window constant\s+\d+\s+[\d.]+p\s+\d+% \(p=([\d.e-]+)\)",
+         note="NEW 2026-09-16. The anticipation-share claim was never in this "
+              "family; registering it was overdue and it enters on the "
+              "membership-constant population, not the published one. Cleaning "
+              "the instrument moved the share AWAY from 50% (34%->26%), so the "
+              "effect is not the averaging artifact it was suspected of being."),
+    dict(name="Exchanges drift AGAINST an imminent book move (Poly, clean panel)",
+         log="book_panel", kind="p", was=None,
+         pat=r"whole \+-1h window constant\s+\d+\s+[\d.]+p\s+\d+% \(p=[\d.e-]+\)\s+\d+% \(p=([\d.e-]+)\)",
+         note="as above; Polymarket's share is the more stable of the two "
+              "(23%->21% across cleaning)"),
+    dict(name="Book consensus predicts Poly's next 15-min move, final 2h, constant panel",
+         log="book_panel", kind="p", was=None,
+         pat=r"MEMBERSHIP HELD CONSTANT \(15-min\)[\s\S]*?membership CONSTANT, final 2h"
+             r"\s+\S+\s+\+[\d.]+\(z=\+[\d.]+,p=([\d.]+)\)",
+         note="NEW 2026-09-16, and it exists only AFTER the composition noise is "
+              "removed — the pooled panel shows -0.004 (z=-0.1). Registered as a "
+              "positive claim because it is one, but the identification cuts in "
+              "the same log read it as catch-up bookkeeping, not transmission: it "
+              "lives in RESTING quotes (z=+5.5) not awake ones (z=+1.2), lives in "
+              "sub-0.5pt drift not news-sized moves, and does NOT sharpen at the "
+              "5-min clock (final-2h -0.008, z=-0.1), which is the opposite of a "
+              "fixed wall-clock lag's signature."),
+    dict(name="Exchanges price closer to the books that just updated (Poly)",
+         log="book_freshness", kind="z", was=None,
+         pat=r"Polymarket\s+-[\d.]+p\s+-([\d.]+)",
+         note="NEW 2026-09-16. Closing cross-section, so it is PROXIMITY not "
+              "precedence: an exchange that leads and books that catch up produce "
+              "the same picture. Economically small — 9% of the fresh-stale price "
+              "gap. Kalshi's term is the same sign and size (-0.021pt, t=-3.7)."),
     dict(name="Murphy sup-t: Kalshi edge vs Shin-de-vigged book",
          log="murphy", kind="p", was=3.7e-2,
          pat=r"Kalshi\s+vs mult book: sup-t=[\d.]+ p=[\d.]+\s+\|\s+vs Shin book: sup-t=[\d.]+ p=([\d.]+)",
@@ -209,7 +298,7 @@ NULLS = [
     ("FLB: all slope CIs include 1 (home-side)", "-"),
     ("Layer-2 main-line calibration (push-corrected)", "MLB 50.4% vs 49.9%; NBA n.s. — 45.0% claim retracted"),
     ("Kalshi margin PIT, all leagues (convention-corrected)", "pooled p=0.718; MLB p=0.104 — the pre-fix MLB rejection was the ladder-convention artifact. The BOOKS' far denser ladders show small deviations of their own (MLB p<.001, NHL p=.024, KS 0.04-0.07) — density/power, not superiority; see book_pit.log"),
-    ("Kalshi TOTALS PIT, MLB", "KS=0.015 p=0.90 PASSES (n=1,466 ladders). The margin layer now ALSO passes post convention fix — the totals-pass/margins-reject contrast is retracted; both layers of the run process are priced correctly outside the extras cell"),
+    ("Kalshi TOTALS PIT, MLB", "KS=0.015 p=0.90 PASSES (n=1,466 ladders). The margin layer now ALSO passes post convention fix — the totals-pass/margins-reject contrast is retracted; both layers of the run process are priced correctly, the extras cell included once that cell is tested on pre-game information (see the 2026-09-23 conditioning correction)"),
     ("Kalshi TOTALS PIT, NBA/NHL controls", "p=0.86 / 0.25 — pass on full samples (n=1,284 / 1,211)"),
     ("Kalshi totals right-tail bias (MLB)", "no threshold off by more than 2.8pt, all |z|<=1.01"),
     ("Totals ladder coherence, live-book only", "99.3-100% monotone every league; raw 86.9-95.6% is trade-reconstruction noise"),
@@ -217,8 +306,12 @@ NULLS = [
     ("Minute-scale first-passage leads", "median 0.0, sign-test p=1.0"),
     ("Resolution ladder 30->5 min: any venue leads", "no cross-lag corr sharpens as the clock sharpens; nothing predicts the book at any grid"),
     ("Book->exchange lead in the final 2h (5-min clock)", "K +0.006 (z=+0.1), P -0.008 (z=-0.1)"),
+    ("Book->Kalshi lead in the final 2h (15-min, constant-membership panel)", "+0.063 (z=+1.7, p=0.087) — n.s.; the Poly term in the same cell is a registered claim above"),
+    ("Book-panel composition drives the no-leader nulls", "refuted: clean-panel anticipation shares move AWAY from 50%, and the constant-membership regressions reproduce the pooled ones (book_panel.log S3-S4)"),
     ("Niche-sport games (no benchmark): excess ECE", "0.00pt vs noise floor; slope CI 0.84-1.15"),
     ("Exchanges vs PINNACLE at close (n=5,294)", "all n.s.; 90% CIs within ±0.34e-3 (TOST-equiv)"),
+    ("Exchanges vs PINNACLE quoted <10 min from start (n=2,992)", "K -0.004e-3 (z=-0.02), P +0.079e-3 (z=+0.50); TOST-equivalent, MDE 0.49/0.44e-3 — the dead heat at MATCHED freshness, so the book is not handicapped by a stale quote"),
+    ("Book staleness shifts the differential (fresh-dummy interaction)", "+0.06..+0.41e-3, all n.s. (z=0.14-1.30) — directionally what the timing caveat predicts, too small to detect and inside the equivalence margin either way [book_freshness.log]"),
     ("Levitt shading vs sharp line (24 EU books)", "sub-1pt deviations, both signs"),
     ("Levitt shading, US retail (DK/FD/MGM +8, n=2.6K)", "-0.22..-0.01pt on home favs: none"),
     ("Book-by-book Brier vs Kalshi (11 US books)", "all n.s.; dead heat holds per book"),
@@ -253,15 +346,22 @@ def drift_report(rows):
     print("   its own logs. 'was' is the pre-2026-09-03 asserted value.)\n", flush=True)
     print(f"  {'claim':<58}{'was':>10}{'now':>10}  {'evidence':<26} moved", flush=True)
     for r in sorted(rows, key=lambda r: r["p"]):
-        ratio = r["p"] / r["was"] if r["was"] else float("inf")
-        if r["p"] < 1e-4 and r["was"] < 1e-4:
-            moved = "-"                       # both astronomically small
-        elif 0.5 <= ratio <= 2.0:
-            moved = "~same"
+        # was=None marks a claim registered after the 2026-09-03 refresh: there
+        # is no prior asserted value to drift from, and inventing one would be
+        # the hand-carried number this report exists to catch.
+        if r["was"] is None:
+            was, moved = "new", "-"
         else:
-            moved = "WEAKER" if ratio > 1 else "stronger"
+            was = f"{r['was']:.2g}"
+            ratio = r["p"] / r["was"] if r["was"] else float("inf")
+            if r["p"] < 1e-4 and r["was"] < 1e-4:
+                moved = "-"                   # both astronomically small
+            elif 0.5 <= ratio <= 2.0:
+                moved = "~same"
+            else:
+                moved = "WEAKER" if ratio > 1 else "stronger"
         now = f"<{P_FLOOR:.0g}" if r["p"] <= P_FLOOR else f"{r['p']:.2g}"
-        print(f"  {r['name'][:57]:<58}{r['was']:>10.2g}{now:>10}  "
+        print(f"  {r['name'][:57]:<58}{was:>10}{now:>10}  "
               f"{r['evidence']:<30} {moved}", flush=True)
     print(flush=True)
 
