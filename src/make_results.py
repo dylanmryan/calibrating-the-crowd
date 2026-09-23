@@ -88,4 +88,5 @@ def main():
     sys.exit(1 if fails else 0)
 
 
-if __name__ == 
+if __name__ == "__main__":
+    main()

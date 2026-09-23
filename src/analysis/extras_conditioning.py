@@ -245,4 +245,24 @@ def main():
           f"coef={rimp.params[1]:+.4f} (z={rimp.tvalues[1]:+.2f}, p={rimp.pvalues[1]:.3f})",
           flush=True)
 
-    # ---- S
+    # ---- S4 quintile picture ---------------------------------------------
+    print("\n=== 4. THE SAME CUT, BY EX-ANTE EXTRAS PROPENSITY ===", flush=True)
+    s["bucket"] = pd.qcut(s.zhat, 5, labels=["Q1 least", "Q2", "Q3", "Q4", "Q5 most"])
+    print(f"  {'ex-ante extras propensity':>26}{'sides':>8}{'implied':>10}"
+          f"{'realized':>10}{'gap':>10}", flush=True)
+    for k, sub in s.groupby("bucket", observed=True):
+        print(f"  {str(k):>26}{len(sub):>8,}{sub.imp.mean():>10.4f}"
+              f"{sub.emp.mean():>10.4f}{gap(sub,'imp'):>+9.2f}pt", flush=True)
+    print("\n  READ: if the market had missed the ghost-runner rule, the gap would "
+          "grow with\n  ex-ante extras propensity — the games a forecaster could have "
+          "seen coming. It does\n  the OPPOSITE: the column falls monotonically and "
+          "S3's coefficient is negative at\n  z=-3.0 date-clustered (p=0.003; -2.9 "
+          "game-clustered, -2.4 iid). So the published\n  SIGN does not survive the "
+          "correction either. On pre-game information the market\n  slightly "
+          "OVER-prices the narrow-margin cell in extras-prone games — a ~4pt swing\n  "
+          "across the whole propensity range. Small, robust, and opposite to the "
+          "retracted\n  claim. Report it as a sign reversal, not as a null.", flush=True)
+
+
+if __name__ == "__main__":
+    main()
