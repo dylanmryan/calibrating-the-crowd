@@ -27,6 +27,27 @@ the gap plan.*
 > (claim strength and unexamined rival explanations). References below to
 > "out-of-sample verification planned ~Aug 22" describe the state on 2026-08-28;
 > it was registered, run, and reported.
+>
+> **Status, 2026-09-23 — one of this document's own load-bearing claims is
+> retracted.** Gap 1's spec (below) told the drafting rewrite that what survived
+> the 2026-08-23 retraction was "extra-inning MLB games under-price the 1–2-run
+> cell by +20.15pt on Kalshi (z=+5.94) and +21.99pt at the books — the same miss
+> at both institutions". That is **withdrawn**. `extras` is realized DURING the
+> game; conditioning a calibration test on it breaks the calibration identity
+> mechanically, and a constant forecaster at the unconditional base rate scores
+> +21.19pt on the identical split (`src/analysis/extras_conditioning.py` §1,
+> added to the suite 2026-09-23). The correct pre-game test reverses the sign
+> (coef −1.1495, z=−3.00 date-clustered: a small OVER-pricing in extras-prone
+> games). Gap 2's registered claim **R6 is withdrawn as vacuous** — it could not
+> fail — see the third annotation in `docs/registered-claims.md`.
+>
+> Consequences for this document as a plan: the Gap 1 spec's items 3 and 5 are
+> wrong where they call the extras cell a surviving shared blind spot and a
+> "within-game microcosm of the paper's boundary thesis". The boundary thesis
+> stands on outrights and niche games, neither of which conditions on a realized
+> state, but it is now a ONE-scale argument. The body below is left unedited per
+> this document's convention; read it as the record of 2026-08-28, not as
+> current instruction.
 
 ## Verdict
 

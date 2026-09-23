@@ -4,10 +4,19 @@
 
 *SUPERSEDED 2026-08-28: the third bullet states the walk-off/totals contrast
 that was retracted on 2026-08-23 (ladder-convention artifact — see
-findings.md nuance 1). Do not send without rewriting that bullet; the honest
-replacement is: the anomaly shrank under a settlement-convention audit and
-what survives is a ~20pt extra-innings blind spot shared by Kalshi AND the
-books, which fits the paper's thesis better than the claim it replaces.*
+findings.md nuance 1). Do not send without rewriting that bullet.*
+
+*SUPERSEDED AGAIN 2026-09-23, and the 2026-08-28 replacement text is itself
+withdrawn. That note proposed replacing the bullet with "a ~20pt extra-innings
+blind spot shared by Kalshi AND the books"; that claim is now RETRACTED too.
+The split conditioned on whether the game reached extra innings — a state
+realized during play — and a constant forecaster scores +21.19pt on it against
+the market's +20.22pt. The correct pre-game test reverses the sign (z=−3.00,
+a small over-pricing). The honest bullet, if this draft is ever revived, is
+that NO anomaly survived: two successive candidate anomalies on the same cell
+were withdrawn by the project's own audits, the second on identification
+grounds, and the boundary thesis rests on outrights and niche games instead.
+Do not send any version of this email citing an extras blind spot.*
 
 **Subject:** Calibrating the Crowd: two-week update, and a meeting next week?
 

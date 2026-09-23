@@ -26,18 +26,34 @@ Nothing is dropped. §5.10 (World Cup 3-way, n=9, descriptive) moves to
 Appendix F — at n=9 it cannot carry a numbered results section, and it
 interrupts C→D at exactly the wrong moment.
 
-Movement C is the pivotal regrouping — rebuilt 2026-08-28 after the
-ladder-convention retraction (b7a2428). The shared extra-innings blind spot
-(5.5: the 1-2-run cell missed by ~+20pt at BOTH venues) and the one-shot
-outright failure (5.9) are the same finding at two scales: **discipline is a
-property of the market's repetition structure, not of the institution.**
-Extras are a rare state inside a repeated market (8.6% of games — thin
-feedback); one-shot outrights are a market type with no repetition at all;
-both are mispriced everywhere, by the same amount at every institution. Put
-them adjacent and the paper has a thesis instead of two anomalies — and the
-retraction strengthened it: the one finding that looked Kalshi-specific
-turned out to be institution-independent once the settlement convention was
-read correctly.
+Movement C is the pivotal regrouping. It was rebuilt 2026-08-28 after the
+ladder-convention retraction (b7a2428) and must be **rebuilt a second time
+after the 2026-09-23 conditioning retraction**, because that retraction removes
+one of its two legs.
+
+The version written on 2026-08-28 ran the shared extra-innings blind spot (5.5)
+and the one-shot outright failure (5.9) as *the same finding at two scales*:
+extras a rare state inside a repeated market, outrights a market type with no
+repetition at all, both mispriced everywhere. **The extras leg is gone.** The
++20pt cell was a statistic conditioned on a state realized during the game; a
+constant forecaster scores +21.19pt on the same split [extras_conditioning §1],
+and the correct pre-game test reverses the sign (z=−3.00, a small
+*over*-pricing).
+
+The thesis itself survives and should NOT be softened: **discipline is a
+property of the market's repetition structure, not of the institution.** What
+it loses is the within-game scale. It now rests on the cross-market evidence
+that was always the stronger half — one-shot outrights fail at every
+institution (5.9), un-benchmarked niche games are clean (5.9), and neither
+conditions on a realized state. Movement C is therefore a **one-scale argument
+carried to a boundary**, not a two-scale parallel, and the drafting must not
+reach for a within-game miniature it no longer has.
+
+There is a genuine replacement beat, and it is a methods beat: this is the
+project's fourth self-caught error, the second on this same cell, and the first
+caught by asking *what information set does my conditioning variable belong
+to?* rather than by finding a pipeline bug. Framed that way it strengthens
+Movement C's credibility even as it costs Movement C a finding.
 
 **Decision B — Target ~11,000 words main text, ~9 main figures, 5 main tables.**
 Format-agnostic: this is a paper that reads as a grant report with a cover
@@ -312,7 +328,9 @@ means writing its beats in order and nothing else.
   docs/registered-claims.md before any post-2026-08-11 game was pulled; on
   264 fresh games the exchange dead heat verified at full registered power
   (|ΔBrier| 0.04e-3, p=.879, MDE 0.81e-3 against δ=1e-3), slopes cover 1,
-  the extras cell replicated (+19.6pt vs +20.2pt), the structural cost
+  the extras cell appeared to replicate (+19.6pt vs +20.2pt) — **R6 withdrawn
+  2026-09-23 as a test a constant would also have passed; do not cite it as a
+  replication** — the structural cost
   matched (−4.6%), and one open observation (WNBA totals tilt) flipped sign
   and is retired as noise. The three-way legs could not be evaluated — the
   live book feed had stopped 2026-08-07 when its credit reserve ran out —
@@ -372,35 +390,58 @@ two scales — and the last "venue defect" died on inspection.*
   their own PITs (MLB p<.001, NHL p=.024) where Kalshi's sparse ones pass —
   density and power, not superiority [book_pit]. One clause on tail ECE
   0.0078 vs 0.0073 on identical contracts [ladder_vs_books].
-- **¶4 The crack that survives is shared.** Extras (8.6% of finals; 70% end
-  within one run under the ghost-runner rule): the 1-2-run cell is
-  under-priced +20.2pt on Kalshi (z=+5.94) and +22.0pt at the books, same
-  games, same rungs [mlb_extras, ladder_vs_books]. Regulation runs the other
-  way, so each venue's aggregate cell is a cancellation (K -1.1pt, B +0.4pt,
-  both n.s.) — the bias was never visible in the aggregate, and never absent
-  from the state.
-- **¶5 Why that matters.** A rare, slow-feedback state inside a repeated
-  market is the within-game miniature of the boundary this movement ends on:
-  repetition disciplines what it samples often; what it samples rarely stays
-  wrong — at every institution. The shared-blind-spot column now holds the
-  extras cell, the WC draws, and the 40/60 compression. And it is sheltered:
-  selling any rung loses money net of costs [ladder_cost] — biases harbored
-  inside cost bands, exactly as books harbor theirs inside vig. The framing
-  rule earns its keep here.
+- **¶4 REWRITTEN 2026-09-23 — the crack does not survive, and why it looked
+  like one.** The old ¶4 reported extras under-pricing the 1-2-run cell +20.2pt
+  on Kalshi and +22.0pt at the books, with regulation cancelling in aggregate.
+  Write instead: the cell was tested by splitting on `extras`, a state realized
+  DURING the game and outside the forecaster's information set, which breaks the
+  calibration identity mechanically. Lead with the placebo, because it is the
+  whole argument and it is one line long — **a constant at the unconditional
+  base rate scores +21.19pt on the same split** (pre-game-only forecast
+  +21.23pt; market +20.22pt) [extras_conditioning §1]. A constant cannot
+  misprice the ghost-runner rule. Then: extras were barely foreseeable anyway
+  (cross-fitted AUC 0.540, §2), and the correct test — error regressed on an
+  ex-ante extras propensity the market *could* see — comes back **negative**
+  (coef −1.1495, z=−3.00 date-clustered, ~4pt across the propensity range):
+  a small OVER-pricing, post-hoc, reported at that strength and no higher.
+  The placebo table is the natural exhibit if this paragraph gets one.
+- **¶5 REWRITTEN 2026-09-23 — why the absence matters.** The old ¶5 made extras
+  the within-game miniature of the movement's boundary. That parallel is gone
+  and must not be reconstructed. Write instead: the distributional surface is
+  clean *all the way down* — every league's margin PIT passes, the totals layer
+  passes, and the last candidate anomaly dissolved under an identification
+  check. A forecasting instrument that survives this many attempts to break it,
+  including two of the author's own that succeeded and were retracted, is the
+  finding. The shared-blind-spot column now holds only the WC draws and the
+  40/60 compression, and should be presented at that reduced size. Keep the
+  shelter point, which is untouched and still earns its keep: where deviations
+  do exist, selling the rung loses money net of costs [ladder_cost] — biases
+  harbored inside cost bands, exactly as books harbor theirs inside vig.
 - **¶6 The totals layer, retargeted.** Totals settle uniformly (verified);
   PIT passes MLB/NBA/NHL, contract ECE 0.0046, no right-tail bias [totals].
   Collected to test the walk-off contrast; the contrast is retracted, and
   what the layer shows instead is stronger: the entire run-scoring process
-  is priced correctly in every densely-sampled dimension. WNBA rejection:
+  is priced correctly in every densely-sampled dimension — and after
+  2026-09-23, in the sparse conditional state too, once that state is tested on
+  pre-game information rather than on a realized one. WNBA rejection:
   one sentence — resolved as a false alarm twice over: dissolved in the
   frozen sample (p=0.21 at n=290) and sign-flipped on the registered holdout
   (u 0.404, z=−2.3, n=47) [totals, oos_verification].
 - **¶7 Self-correction, corrected.** The "+7.5 to +11.2pt non-correcting
   bias" was the artifact persisting; the corrected aggregate cell is
-  near-unbiased in every era, and the extras cell recurs in both 2026
-  halves (+18.3/+26.4pt, n=156/56) — no self-correction claim either way at
-  these n [time_stability].
-- **¶8 The scale-up (transition to the boundary).** A state a market rarely
+  near-unbiased in every era. Drop the era-split extras figures
+  (+18.3/+26.4pt, n=156/56): they are the retracted conditioned-on-the-future
+  statistic cut finer, so they measure the extras/margin dependence within each
+  half and cannot speak to self-correction [time_stability; retraction per
+  extras_conditioning].
+- **¶8 REWRITE THE TRANSITION 2026-09-23.** This beat moved from "a state a
+  market rarely samples" to "a market type with no repetition" — a bridge that
+  needed the extras finding to stand on the near side. Rebuild the transition
+  out of Movement C's own clean result instead: the binary surface, the
+  distributional surface and the sparse conditional state are all priced
+  correctly, so the question becomes where pricing DOES fail, and the answer is
+  a change of market type, not a change of institution. Original text kept below
+  for reference. A state a market rarely
   samples is a small version of a market type with no repetition to learn
   from at all.
 - **¶9 Pathologies vanish where repetition exists.** BDW's platform-wide

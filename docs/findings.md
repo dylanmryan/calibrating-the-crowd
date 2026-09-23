@@ -4,6 +4,80 @@
 **Research question:** are sports prediction markets genuine forecasting instruments,
 or another form of gambling?
 
+> ## ⚠ Correction header — 2026-09-15: this notebook is STALE. Read the logs.
+>
+> ### ⛔ RETRACTION — 2026-09-23: the extra-innings blind spot is withdrawn
+>
+> Everything below about the extra-inning "win by 1-2" cell — including the
+> paragraph headed **"What survives, better founded"** — is **retracted**. The
+> numbers reproduce; the *test* does not identify anything. `extras` is realized
+> DURING the game, so splitting a calibration test on it breaks the calibration
+> identity mechanically and returns the extras/margin dependence for any
+> forecaster. `extras_conditioning.log` §1: a **constant at the unconditional
+> base rate scores +21.19pt** on the same split, a pre-game-information-only
+> forecast +21.23pt, the market +20.22pt. A constant cannot misprice the
+> ghost-runner rule, and P(win by 1-2 | extras) − P(win by 1-2) = +21.19pt is the
+> whole published gap. Extras are also near-unforeseeable ex ante (cross-fitted
+> AUC 0.540).
+>
+> Tested correctly — E[realized − implied | Z] = 0 for Z the market could see,
+> Z = cross-fitted ex-ante extras propensity — the sign **reverses**: coef
+> −1.1495, z=−3.00 date-clustered (−2.89 game-clustered, −2.41 iid), a small
+> OVER-pricing of the cell in extras-prone games, ~4pt across the propensity
+> range. Post-hoc, flagged as such, reported at that strength and no higher.
+>
+> Consequences: the FDR family's extras claim is marked RETRACTED and a
+> replacement claim registered (`multiple_testing.py`); registered claim **R6 is
+> withdrawn** as vacuous (third annotation in `docs/registered-claims.md`); the
+> "shared blind spot" motif loses this member, and the boundary thesis now rests
+> on outrights and niche games, which never conditioned on a realized state.
+>
+> This file is a running notebook that has accumulated since July, and its
+> dated entries are kept as the historical record (same convention as the
+> RETIRED CLAIMS block in `src/analysis/multiple_testing.py`). Entries below
+> have **not** been rewritten in place. Where a number in this file disagrees
+> with `results/logs/`, **the log is correct and this file is wrong.**
+>
+> Reconciled against the frozen logs on 2026-09-15. Superseded values:
+>
+> | Claim | This file says | Frozen log says | Log |
+> |---|---|---|---|
+> | T−24h sportsbook lead | ΔBrier +0.69e-3, z=+2.32, p=0.020, n=2,901 | ΔBrier **+0.517e-3, z=+1.80, p=0.072**, n=3,906 | `horizon_equivalence.log` |
+> | └ closing Briers, same sample | 0.2125 / 0.2123 / 0.2124 | **0.2195 / 0.2196 / 0.2194** | `horizon_equivalence.log` |
+> | └ book T−24h coverage | 63% | **84%** | `multiple_testing.log` |
+> | └ FDR status | "statistically real accuracy lead" | **drops at q=0.05**; survives only at q=0.10 | `multiple_testing.log` |
+> | Extras 1-2-run cell, Kalshi | +20.2pt, z=+5.94 | +20.22pt, z=+7.46, n=339 — but **RETRACTED 2026-09-23**: the statistic is invalid, see the retraction block above | `extras_conditioning.log` |
+> | Margin PIT, pooled | KS=0.011, p=0.718 | **KS=0.0093, p=0.812** | `margin_dist.log` |
+> | Margin PIT, MLB | KS=0.034, p=0.104 | **KS=0.0282, p=0.087**, n=1,962 | `margin_dist.log` |
+> | Pooled RPS | +0.49e-3, z=+2.44 | **+0.48e-3, z=+2.41**, n=3,670 | `multi_outcome.log` |
+> | Ladder monotone share | 97.3% | **98.0%** | `coherence.log` |
+> | Executable arbitrage | 0.10% (0.05% live-book) | **0.07% (0.03% book-mid)** | `coherence.log` |
+> | Live-book totals ladders | 99.3-100% monotone per league | **99.5-100%** (MLB 99.5, NBA/NHL/WNBA 100.0) | `totals.log` |
+> | Books' ladder PIT, NHL | p=.024 | **p=.032** (KS=0.0402) | `book_pit.log` |
+> | Tail ECE, books | 0.0073 | **0.0072** | `ladder_vs_books.log` |
+> | Totals PIT, per league | MLB p=.90, NBA p=.86, NHL p=.25 | **MLB p=0.396 (n=1,969), NBA p=0.793, NHL p=0.218 (n=1,222), WNBA p=0.207** | `totals.log` §3 |
+> | Data-quality gate | "48-check automated audit" | **79 checks** (55 data_audit + 24 deep_audit) | `data_audit.log`, `deep_audit.log` |
+>
+> **Verified unchanged** (no correction needed): extras at the books +22.0pt
+> (log: +21.99pt, n=208) — *the figure reproduces, but it is retracted as
+> evidence along with the Kalshi leg: a constant scores the same split at
+> +21.19pt, so neither venue's number measures mispricing*; NBA-carried RPS +1.14e-3, z=+2.27; ladder price
+> correlation 0.9887; tail ECE Kalshi 0.0078; books' MLB ladder PIT p<.001;
+> FDR family **15 claims, 13 surviving at q=0.05** — this file is right and the
+> report outline's "16 claims" was wrong. *(That count was correct on 2026-09-15
+> and is superseded: the family is 19 claims, 17 surviving at q=0.05, after
+> book_panel registered three and book_freshness one on 2026-09-16. Kept as the
+> dated record per this file's convention; the log is always the live source.)*
+>
+> **Why these drifted.** Every corrected figure above traces to a *hand-written*
+> string in `multiple_testing.py` — its docstring's RETIRED CLAIMS block or its
+> `NULLS` list — rather than to the log that section cites. The 2026-09-03
+> refactor made the module re-derive the **BH family** p-values from the logs at
+> run time, but `NULLS` is still a literal list of prose, and that prose is what
+> this notebook (and the report outline's §5 prose) copied. The module's own
+> guarantee — *a claim that cannot find its own evidence must not be silently
+> carried* — does not currently extend to the nulls registry it also prints.
+
 **Answer so far: forecasting instruments, on every facet tested.** A US-regulated
 exchange (Kalshi), an offshore crypto market (Polymarket), and professional
 sportsbooks converge on statistically *equivalent*, well-calibrated, internally
@@ -685,7 +759,7 @@ measurement.
 ## The books Americans use: per-book US record (2026-08-05)
 
 The credit endgame banked the per-book US closing record before the
-subscription lapses (`src/collect/sportsbook_us_books.py`, 4,664 games
+subscription lapses (`src/collect/sportsbook_us_books.py`, 4,664 games [superseded: us_books.log prints 4,655]
 = 86% of the joint set, 11 books, ~23.9K credits; seeded-shuffle bucket
 order, floor-stopped at the live-feed reserve). Three closures (`src/analysis/us_books.py`):
 
@@ -796,7 +870,7 @@ detail) — depth requires the signed orderbook endpoint.
 The paper's benchmark had been a US retail consensus with per-book quotes
 discarded. An EU-region re-collection of the full joint set's closing
 buckets (`src/collect/sportsbook_sharp.py`, 24 books per game kept,
-n=5,294 with Pinnacle) upgrades the comparison three ways
+n=5,294 with Pinnacle [superseded: sharp_books.log prints 5,284]) upgrades the comparison three ways
 (`src/analysis/sharp_books.py`, `logs/sharp_books.log`):
 
 **1. Equivalence survives Pinnacle.** Against the academic-standard sharp
@@ -1188,6 +1262,157 @@ identification — no generational claim is made. The equity yardstick used for
 scale is a fixed textbook constant, not an estimate from this project, and no
 recommendation is made or implied.
 
+## Is the benchmark a clean instrument for TIMING? (2026-09-16)
+
+Prompted by the right question: pooling books into a consensus could hide both
+how the venues interact in lead–lag and how they compare to the biggest books
+individually. The two halves land differently, and the second one was a genuine
+hole (`src/analysis/book_panel.py`, `results/logs/book_panel.log`).
+
+**The accuracy half was already closed** and needs no new work: `sharp_books`
+(Pinnacle, n=5,284), `us_books` (11 US books individually, 4,655 games, every
+one tying Kalshi on clustered DM), and `robustness_cuts` §3 (four consensus
+constructions incl. line-shopped). Worth saying once in the paper, because it
+is the intuitive objection's answer: averaging books makes the benchmark
+*stronger*, not weaker — a Bates–Granger combination beats its components — so
+"exchanges tie the consensus" is the harder test, and the per-book test was run
+anyway.
+
+**The timing half was defended in prose, not measured.** Every dynamic module
+reads one series for "the sportsbook": the cross-book mean that
+`collect/live_snapshot.py:book_price` built at ingest, discarding the members.
+Three ways that can manufacture the no-leader null, all pushing toward it:
+
+1. *Census* (§1). On the 15-min grid, membership changes on 2.2% of steps — but
+   those steps carry **54.3%** of the whole consensus-change series' squared variation,
+   and the mean |move| on them is 1.35pt against 0.12pt when membership holds
+   (11.3×). Churn is concentrated far from start (3.30% beyond 8h, **0.52% in
+   the final hour, 0.88% at 1–2h**), is mostly books joining as the game nears
+   (391 joins vs 142 exits), and 61% of exits reverse on the next step — feed
+   flicker, not a book pulling a line. The headline horizon window is nearly
+   clean; the wide panel is not.
+2. *Contamination* (§2). A membership change is jump-shaped, so it lands in the
+   event population by construction. Of the 122 ≥2pt consensus jumps the event
+   detector sees (`book_moves` keeps the 70 that survive non-overlap pruning),
+   **15.6%** coincide with a membership change against a 2.1% base rate —
+   **7.4× enrichment**, rising to 11.2× at ≥5pt.
+3. *Smearing* — asynchronous book updates turn one book's move into a
+   multi-step ramp in the mean. Not separately measurable here; it attenuates.
+
+**The result: the nulls survive, and they survive in the honest direction.**
+Re-detecting the events on a constant-membership panel (eligibility applied at
+detection, before non-overlap pruning, so the population is one a detector
+actually produces) moves the anticipation shares **away** from chance, not
+toward it:
+
+| population | events | Kalshi antic% | Poly antic% |
+|---|---|---|---|
+| all events (published) | 70 | 34% (p=0.0115) | 23% (p=9.1e-06) |
+| event step membership-constant | 63 | 32% (p=0.00515) | 22% (p=1.11e-05) |
+| whole ±1h window constant | 43 | 26% (p=0.00191) | 21% (p=0.00017) |
+
+The contamination was *diluting* the finding toward 50%, so the published
+numbers understate it. Both shares are now registered in the FDR family
+(`multiple_testing.py`) — they were a positive claim that had never been
+registered, which was an inventory gap independent of this audit. Both survive
+BH at q=0.05.
+
+**One new positive finding, and it goes in the record as one.** §4's regression
+on the constant-membership panel shows a book→Polymarket coefficient in the
+final two hours of **+0.070 (z=+2.6, p=0.008; date-clustered p=0.012)** that
+the pooled panel hides entirely (−0.004, z=−0.1). Kalshi's term in the same
+cell is +0.063 (z=+1.7, n.s.). So pooling *was* hiding an interaction — the
+concern was correct in substance, just not in direction. Three cuts identify it,
+and all three say bookkeeping rather than news:
+
+- it lives in **RESTING** quotes (+0.079, z=+5.5, n=2,476), not awake ones
+  (+0.055, z=+1.2, n=597) — a stale quote stepping toward a consensus that
+  drifted while it slept;
+- it lives in **sub-0.5pt** book moves (+0.165, z=+3.0), not news-sized ones
+  (n=138, too thin to read);
+- it does **not sharpen at the finer clock** — the 5-min final-2h cell is
+  −0.008 (z=−0.1). A fixed wall-clock lag must sharpen as the grid approaches
+  it; this does the opposite, which is the project's own stated signature for a
+  spurious lead (`five_min.py` §1).
+
+Same diagnosis `five_min` reached for the >2h window, now reached independently
+at 15 min inside 2h. Registered in the BH family with that reading attached.
+
+**What no amount of re-analysis can fix** (§5). `book_price` kept 0 per-book
+quotes across 40,152 live book rows. The per-book tapes that do exist
+(`sportsbook_sharp_prices.csv`, 28 books; `sportsbook_us_books.csv`, 11 books)
+are closing **cross-sections** — ~8–12 distinct timestamps per game, not series.
+So *"does Pinnacle lead the retail field, and do the exchanges sit on the sharp
+line or the field's?"* is **not identified by any data this project banked, at
+any resolution.** That is now stated as a limitation rather than left implied,
+and the collector has been fixed forward: `live_snapshot.py` now writes one row
+per (snapshot, game, book) to `data/live/book_quotes.csv` — with each book's own
+`last_update`, so per-book quote age is recoverable — from the **same API
+response already paid for**, at zero marginal credit cost. The consensus row
+keeps its exact frozen schema, so nothing downstream changes. It only helps if
+collection resumes before the plan lapses.
+
+*Caveat carried in the log: `n_books` equality is a lower bound on churn — one
+book leaving as another joins is invisible to it. Every contamination figure
+above understates, and every "clean" subsample still holds some turnover.*
+
+*Regression-checked: `book_moves`, `lead_lag`, `five_min` and `minute_lead_lag`
+reproduce their frozen logs byte for byte after the `eligible=` hook was added.*
+
+## The timing caveat, measured: quote age was in the data all along (2026-09-16)
+
+Follow-on from the panel audit above, and the higher-value half of it. The
+per-book tapes carry each bookmaker's own `last_update`, which nothing had ever
+read. It answers a sharper question than the one that prompted the audit: not
+"does pooling hide lead-lag" but **"were the books handicapped by a stale price
+when the paper declared a dead heat?"** (`src/analysis/book_freshness.py`,
+`results/logs/book_freshness.log`).
+
+**The split is the collector's, not the games'.** Per-game median quote age is
+bimodal — p25 4.9 min, p50 5.2 min, p75 34.8 min — with 56% of games under 10
+minutes, 31% over 30, and only 618 in between. That shape is credit-batching,
+not anything about the matches, which is what makes it usable as a natural
+experiment. Provenance checked rather than assumed: `book_p1` is built in
+`sportsbook_hist` and the timestamps live in `sportsbook_us_books`, so the
+module rebuilds the consensus from the timestamped file and reproduces `book_p1`
+to a median 0.003pt (corr 0.99997) — the same quotes.
+
+**The dead heat inside each arm.** All twelve rows TOST-equivalent at δ=1e-3;
+one cell (Poly vs US consensus, >30 min) is flagged UNDERPOWERED at MDE 1.106e-3
+and is not read as evidence of sameness.
+
+| comparison | n | ΔBrier | MDE |
+|---|---|---|---|
+| Kalshi vs **Pinnacle**, quote <10 min | 2,992 | **−0.004e-3** (z=−0.02) | 0.492e-3 |
+| Kalshi vs Pinnacle, quote >30 min | 1,608 | −0.412e-3 (z=−1.60) | 0.720e-3 |
+| Kalshi vs US consensus, quote <10 min | 2,617 | +0.100e-3 (z=+0.51) | 0.544e-3 |
+| Kalshi vs US consensus, quote >30 min | 1,420 | −0.229e-3 (z=−0.95) | 0.673e-3 |
+| Poly vs Pinnacle, quote <10 min | 2,992 | +0.079e-3 (z=+0.50) | 0.443e-3 |
+
+**The caveat was directionally right and quantitatively negligible.** The direct
+test is a fresh-dummy interaction on the squared-error differential. Sign
+convention matters and is stated in the log: ΔBrier(exchange − book) is negative
+when the exchange forecasts better, so an exchange edge that *shrinks* when the
+book is quoted fresh shows up as a POSITIVE shift — which is precisely what the
+caveat predicts. All four rows are positive: Kalshi−Pinnacle +0.408e-3 (z=1.30),
+Kalshi−consensus +0.328e-3 (z=1.05), Poly−Pinnacle +0.265e-3 (z=0.79),
+Poly−consensus +0.058e-3 (z=0.14). None significant. So the honest statement is
+not "the caveat is dead" but "the handicap points where we feared, is worth
+about 0.3–0.4e-3, cannot be detected at this n, and the equivalence survives on
+both sides of the split." That is strictly stronger than the concession it
+replaces, because the strongest arm — Pinnacle at <10 minutes — is an exact tie.
+
+**One genuine per-book TIMING result, from a cross-section.** Splitting each
+game's books at their own median timestamp, the fresher and staler halves
+disagree by 0.336pt on average (1.1 min apart, n=4,642). Both exchanges sit
+closer to the fresher half: Kalshi −0.021pt (t=−3.7), Polymarket −0.030pt
+(t=−5.0, registered in the FDR family at p=5.7e-07). Reading: the exchanges are
+priced off current information, not off a stale field. What it is NOT: evidence
+of precedence. An exchange that LEADS, with books catching up to it, produces an
+identical cross-section — and the effect is 6–9% of the fresh-stale price gap.
+This is the closest the banked data gets to the per-book timing question, and it
+is a statement about proximity only.
+
 ## In progress
 
 - **Lead–lag price discovery** — *complete as of 2026-08-10*. The panel now
@@ -1197,6 +1422,12 @@ recommendation is made or implied.
   The World Cup 3-way leg ended with the final and is frozen (see case study).
   The panel keeps growing ~18 games/day; one final refresh before the number
   freeze will roughly double the n=19 fine-clock event study.
+  *Superseded 2026-09-16:* the panel was frozen at the 2026-08-29 refresh, and
+  the leg is no longer only "complete" — it has been audited as an instrument.
+  `book_panel.py` measures what the cross-book averaging costs and re-runs the
+  event study on a constant-membership panel; the nulls survive and strengthen.
+  What that audit could not do — per-book lead-lag — is now a stated limitation
+  rather than an unexamined assumption. See the 2026-09-16 entries above.
 - Advisor input pending on: HAC/cluster choices, multiple-testing policy,
   equivalence-margin convention, 3-way calibration methodology.
 
@@ -1206,6 +1437,16 @@ recommendation is made or implied.
   alternate lines); WNBA remains within-Kalshi only. Deep history limited by Kalshi's ~60-day price retention (trade
   reconstruction used beyond it) and Polymarket's structured-sports era (mid-2025→).
 - Book lines sampled up to 60 min before start (credit-batching); prediction-market
-  prices at start. Any late-news asymmetry slightly *favors* the markets.
+  prices at start. **Measured 2026-09-16, no longer a concession**
+  (`book_freshness.py`): the collection cadence made quote age bimodal — 56% of
+  games priced within ~5 min of start, 31% more than 30 min out — so the headline
+  can simply be re-run inside each arm. Against Pinnacle quoted **<10 min from
+  start**, ΔBrier is −0.004e-3 (z=−0.02, n=2,992, MDE 0.49e-3): an exact tie at
+  full power. The staleness penalty is directionally real — the exchange's
+  apparent edge shrinks by +0.33 to +0.41e-3 once the book is quoted fresh, which
+  is the sign the caveat predicted — but it is not significant (z=0.14–1.30) and
+  every arm stays TOST-equivalent at δ=1e-3. Report it that way: the caveat was
+  right about the direction and wrong about the size, and the headline holds at
+  matched freshness.
 - CBB largely excluded (ESPN coverage gap; no Polymarket CBB markets).
 - Kalshi trading fees are not included in the overround comparison (spread only).

@@ -68,6 +68,27 @@ first-time reader who must be able to trust the honesty of the display.)
   (dissolved at n=290; sign-flipped on the registered holdout). Nothing to
   illustrate — a fortiori.
 
+## C-series: generated, in the suite, NOT YET ADOPTED (decision open)
+
+`src/analysis/report_visuals_instrument.py` runs inside the suite (so these
+cannot drift from the logs) and writes four candidate panels for the two
+instrument legs added 2026-09-16. **No report section references them yet.**
+Adopt or cut explicitly — leaving them generated-but-unplaced is the state this
+document exists to prevent.
+
+| figure | what it shows | log | if adopted, belongs in |
+|---|---|---|---|
+| `C1_matched_freshness_forest` | the headline re-run inside the bimodal quote-age split; the <10-min arm is the exact tie at full power | book_freshness | §5A, beside the equivalence forest — it retires the timing caveat |
+| `C2_freshness_natural_experiment` | the fresh-dummy shift per leg (+0.06 to +0.41e-3): the staleness penalty is directionally real and too small to detect | book_freshness | §5A or Methods, wherever the caveat is stated |
+| `C3_clean_panel_anticipation` | exchange drift against imminent book moves on the membership-constant panel (34%→26%) | book_panel | §5D price formation |
+| `C4_panel_integrity` | what cross-book averaging costs and which questions it forecloses | book_panel | Appendix / data-quality |
+
+Recommendation: C1 and C2 earn main-text placement because they answer the most
+obvious referee objection to the headline (stale book quotes) with a measurement
+rather than a concession. C3 and C4 are appendix material — C3's own log reads
+the effect as catch-up bookkeeping rather than transmission, and a main-text
+panel would overstate it.
+
 ## Caveats carried in the figures themselves
 
 - F6 states in its own footnote that the books' sub-10c return rises from
