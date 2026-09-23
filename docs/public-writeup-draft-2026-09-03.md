@@ -57,7 +57,7 @@ There is one real structural difference, and it is not the one the marketing sel
 
 **The discipline boundary is not the institution.** One-shot, long-horizon outrights are badly priced everywhere: about 33 cents back per dollar on deep longshots at the exchange, 34 at the books. Meanwhile obscure game markets with no professional benchmark at all are clean. What produces calibration is repetition and fast resolution, not regulation, liquidity, or having a professional to copy.
 
-**Look at the rules, not the prices.** The one anomaly that survived every correction is extra-inning baseball. Extras end within a single run about 70% of the time because of the ghost-runner rule, and the narrow-margin outcome is underpriced in that state by roughly 20 points, by the exchange and the sportsbooks, by the same amount. It is not a venue defect. It is a rare, slow-feedback state that nobody has been forced to learn.
+**Check what your split is conditioning on.** The one anomaly I thought had survived every correction was extra-inning baseball: because of the runner-on-second rule extra innings end within a single run about 70% of the time, and the contract paying on a narrow margin looked underpriced in that state by roughly 20 points — at the exchange and at the books alike. **I retracted it on 2026-09-23, and the way it died is more useful than the finding ever was.** Whether a game goes to extra innings is settled *during* the game. Splitting a calibration test on something the forecaster could not know breaks the arithmetic of calibration by itself, so the test returns the same answer no matter whose prices go in: a constant that always quotes the base rate scores +21.2 points on that split, against the market's +20.2. A constant cannot misprice the runner-on-second rule. Asked properly — is the error predictable from what the market knew before the first pitch? — the sign flips, to a small *over*-pricing in the games most likely to go long. So: no venue defect, no shared blind spot, and one methodological rule worth more than the anomaly. Before you believe a conditional calibration result, including your own, run it on a constant first. If the constant shows the same effect, the test has no power and the number means nothing.
 
 **Cost is the competitive variable, and it is the one you set.** Everyone here is accurate and nobody is meaningfully more accurate, so accuracy is not a differentiator. If a market-order customer pays the same all-in as they would at a sportsbook, the distinction the product is marketed on is not one the data can see. What is real is the maker side, and it is the part hardest to explain and least advertised. If you want the forecasting-instrument framing to mean something to the person using it, that is the thing to build toward.
 
@@ -79,6 +79,12 @@ WHAT CHANGED AFTER READING THE ACTUAL REPO, AND WHY
    replicated on the registered holdout at +19.6pt vs +20.2pt frozen.
    This is a much better story for your thesis anyway, because a shared blind
    spot supports "the boundary is the market type, not the institution."
+   [SUPERSEDED 2026-09-23: the replacement was itself retracted. The extras
+   split conditions on a state realized during the game, and a constant
+   forecaster scores +21.19pt on it. The holdout "replication" (R6) is
+   withdrawn as a test that could not fail. There is no shared blind spot; the
+   boundary argument rests on outrights and niche games. See the retraction
+   block in docs/findings.md.]
 
 2. THE COST STORY WAS BACKWARDS AND I HAD BUILT A CHART OF IT.
    The CV tab line "~1% exchanges vs ~4.2% sportsbooks" is the QUOTED
