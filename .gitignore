@@ -28,3 +28,12 @@ results/*
 .ipynb_checkpoints/
 .venv-icloud-broken/
 data/backups/
+
+# personal / career material — not part of the research artifact
+Claude outputs/
+docs/huggingface-application-*.md
+docs/linkedin-rebuild-*.md
+docs/outreach-*.md
+results/linkedin_banner.png
+scripts/
+.claude/

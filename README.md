@@ -264,6 +264,14 @@ consensus, not news transmission.
 
 ## License and use
 
-Research code, released for inspection and reproduction. Not investment advice,
-not a betting system, and deliberately not framed as one — the project's
-question is whether these venues forecast well, never whether they can be beaten.
+Released under the [MIT License](LICENSE) for inspection and reproduction.
+
+Note on data: the committed derived files (`data/processed/analysis_core.csv`,
+`data/processed/recon_validation.csv`) are included so the headline results can be
+verified. Raw sportsbook odds are **not** redistributed here — see *Data
+availability* above. Anyone rebuilding the book leg needs their own Odds API
+subscription.
+
+Not investment advice, not a betting system, and deliberately not framed as one —
+the project's question is whether these venues forecast well, never whether they
+can be beaten.
