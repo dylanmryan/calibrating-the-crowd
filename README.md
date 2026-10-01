@@ -109,9 +109,9 @@ than re-execute.
 For a fresh clone, the readable entry point is
 [`notebooks/data_tour.ipynb`](notebooks/data_tour.ipynb) — it ships its rendered
 outputs, so the headline can be read straight off GitHub without executing
-anything. Re-executing it needs one file beyond `analysis_core.csv`
-(`kalshi_trades_24h.csv`, the trade tape) that carries de-vigged book prices and
-is therefore not redistributed.
+anything. Re-executing it needs one file beyond `analysis_core.csv` — the 70MB
+trade tape `kalshi_trades_24h.csv`, which is held back for its size, not its
+contents.
 
 ## Data availability — read this before judging reproducibility
 
