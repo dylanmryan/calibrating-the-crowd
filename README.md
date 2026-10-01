@@ -179,9 +179,16 @@ is therefore not redistributed.
 
 ## Data availability — read this before judging reproducibility
 
-**Exchange data is fully re-derivable.** Kalshi and Polymarket are public APIs
-with no authentication and no cost. Anyone can rebuild that half from scratch
-with the collectors in `src/collect/`.
+**Exchange data is committed.** Kalshi and Polymarket are public APIs with no
+authentication and no cost, so there is nothing to withhold: the price tables
+for all three markets are here, not merely re-derivable from the collectors in
+`src/collect/`. That includes
+[`kalshi_hist_prices.csv`](data/processed/kalshi_hist_prices.csv),
+[`polymarket_hist_prices.csv`](data/processed/polymarket_hist_prices.csv), and
+[`polyus_prices.csv`](data/processed/polyus_prices.csv) with its catalogue —
+the Polymarket US leg that `four_way.py` reads, which `analysis_core.csv` has
+no column for — plus the ESPN registry and Kalshi settlement tables the joins
+need.
 
 **Sportsbook data is not.** Historical odds came from The Odds API under a paid
 plan. The proposal anticipated free sources; historical coverage turned out to
@@ -189,8 +196,14 @@ be paid, and the grant funded it. Consequences, stated plainly:
 
 - Raw book odds are **not redistributed** here.
 - What *is* committed is [`data/processed/analysis_core.csv`](data/processed/analysis_core.csv)
-  — one de-vigged row per game, all venues, sufficient to reproduce the
-  headline calibration results.
+  — one de-vigged row per game, sufficient to reproduce the headline
+  calibration results. It is the **three-way** table: Kalshi, Polymarket Global
+  and the book consensus. 5,333 of its 10,118 rows carry all three; the rest
+  carry one or two and exist for the niche-market and coverage analyses. It is
+  sorted by date, so the first 603 rows — 2025-04-15 to 2025-05-22, before
+  Polymarket and book collection began — are Kalshi-only and look empty on a
+  first read. `DATA_DICTIONARY.md` tabulates exactly which venue is missing
+  where, and why.
 - A third party cannot independently re-collect the book leg without their own
   subscription, and the project's own access lapses September 2026. Book data
   is banked locally and backed up.

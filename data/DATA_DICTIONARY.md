@@ -5,11 +5,19 @@ what to watch out for. All prices are probabilities in [0,1] unless noted.
 Team orientation: `team1`/`home`/`p1` is the home side throughout; outcomes are
 `1` = home won, `2` = away won. All timestamps UTC unless suffixed otherwise.
 
-**Which of these are in this repository.** Two: `analysis_core.csv` and
-`recon_validation.csv`. The rest are described here because they are the
-provenance of `analysis_core.csv` and because the sportsbook tables cannot be
-redistributed (The Odds API, paid plan) — they are banked locally, not lost. See
-*Data availability* in the README.
+**Which of these are in this repository.** Nine. Every free-API table is here:
+`kalshi_hist_prices.csv`, `kalshi_settled_markets.csv`, `kalshi_espn_matches.csv`,
+`polymarket_hist_prices.csv`, `polyus_prices.csv`, `polyus_catalog.csv` and
+`espn_games.csv`, plus the derived `analysis_core.csv` and `recon_validation.csv`.
+So all three prediction markets — Kalshi, Polymarket Global and Polymarket US —
+ship with their prices, and the Polymarket US leg that `analysis_core.csv` has no
+column for is reproducible from `polyus_prices.csv` + `polyus_catalog.csv` the way
+`four_way.py` does it.
+
+The tables **not** here are the sportsbook ones: they come from The Odds API on a
+paid plan and cannot be redistributed. They are described below because they are
+the provenance of `analysis_core.csv`'s book columns — banked locally, not lost.
+See *Data availability* in the README.
 
 **Start here: `analysis_core.csv`** — one row per game, every venue joined,
 clean column names. The starter notebook (`notebooks/data_tour.ipynb`) loads it

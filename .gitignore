@@ -20,6 +20,17 @@ data/processed/*
 # vs our own Kalshi trade reconstruction — the evidence underwriting ~80% of
 # the exchange leg. See src/analysis/validate_recon.py.
 !data/processed/recon_validation.csv
+# free-API exchange data (Kalshi, Polymarket Global + US, ESPN): no paid source,
+# no redistribution restriction. Published so the exchange half of the study —
+# including the Polymarket US leg of four_way.py — is reproducible, not merely
+# re-derivable.
+!data/processed/kalshi_hist_prices.csv
+!data/processed/kalshi_settled_markets.csv
+!data/processed/kalshi_espn_matches.csv
+!data/processed/polymarket_hist_prices.csv
+!data/processed/polyus_prices.csv
+!data/processed/polyus_catalog.csv
+!data/processed/espn_games.csv
 results/*
 !results/*.png
 !results/MANIFEST.md
