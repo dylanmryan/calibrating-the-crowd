@@ -204,9 +204,20 @@ be paid, and the grant funded it. Consequences, stated plainly:
   Polymarket and book collection began — are Kalshi-only and look empty on a
   first read. `DATA_DICTIONARY.md` tabulates exactly which venue is missing
   where, and why.
+- The book *consensus* is published — in `analysis_core.csv` and in
+  [`games_master.csv`](data/processed/games_master.csv), the merged table with
+  audit flags that `three_way.load()` reads. What is not published is the
+  per-bookmaker feed those were built from.
 - A third party cannot independently re-collect the book leg without their own
   subscription, and the project's own access lapses September 2026. Book data
   is banked locally and backed up.
+
+**The four-way set is a file too.**
+[`analysis_four_way.csv`](data/processed/analysis_four_way.csv) — 2,631 games
+priced by all four venues, no missing values, rebuilt from the tables here and
+reproducing `four_way.py`'s frozen log exactly (Brier 0.2303 / 0.2305 / 0.2304 /
+0.2307). It is derived rather than frozen; `analysis_core.csv` remains the
+artifact the suite ran on.
 
 Every field is documented in [`data/DATA_DICTIONARY.md`](data/DATA_DICTIONARY.md).
 Four games are included in cross-venue detail under `data/exhibits/` (NBA

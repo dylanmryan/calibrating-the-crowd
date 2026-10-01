@@ -31,6 +31,8 @@ data/processed/*
 !data/processed/polyus_prices.csv
 !data/processed/polyus_catalog.csv
 !data/processed/espn_games.csv
+!data/processed/games_master.csv
+!data/processed/analysis_four_way.csv
 results/*
 !results/*.png
 !results/MANIFEST.md

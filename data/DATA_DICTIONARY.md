@@ -5,19 +5,37 @@ what to watch out for. All prices are probabilities in [0,1] unless noted.
 Team orientation: `team1`/`home`/`p1` is the home side throughout; outcomes are
 `1` = home won, `2` = away won. All timestamps UTC unless suffixed otherwise.
 
-**Which of these are in this repository.** Nine. Every free-API table is here:
+**Which of these are in this repository.** Eleven. Every free-API table is here:
 `kalshi_hist_prices.csv`, `kalshi_settled_markets.csv`, `kalshi_espn_matches.csv`,
 `polymarket_hist_prices.csv`, `polyus_prices.csv`, `polyus_catalog.csv` and
 `espn_games.csv`, plus the derived `analysis_core.csv` and `recon_validation.csv`.
-So all three prediction markets — Kalshi, Polymarket Global and Polymarket US —
-ship with their prices, and the Polymarket US leg that `analysis_core.csv` has no
-column for is reproducible from `polyus_prices.csv` + `polyus_catalog.csv` the way
-`four_way.py` does it.
+Also here: `games_master.csv`, the merged table with audit flags that
+`three_way.load()` reads, and `analysis_four_way.csv` (below).
 
-The tables **not** here are the sportsbook ones: they come from The Odds API on a
-paid plan and cannot be redistributed. They are described below because they are
-the provenance of `analysis_core.csv`'s book columns — banked locally, not lost.
-See *Data availability* in the README.
+So all three prediction markets — Kalshi, Polymarket Global and Polymarket US —
+ship with their prices, and the three-way and four-way sets can both be rebuilt
+from this repository alone.
+
+The tables **not** here are the per-bookmaker sportsbook tapes from The Odds API
+(`sportsbook_hist_prices.csv`, `sportsbook_us_books.csv`, `sportsbook_sharp_prices.csv`
+and the rest). The book *consensus* those tapes produce is published, in
+`analysis_core.csv` and `games_master.csv`; the per-book feed behind it is banked
+locally. See *Data availability* in the README.
+
+### analysis_four_way.csv (2,631 games)
+The four-way set, as a file: one row per game priced by **all four** venues, so
+the fourth institutional cell is readable without re-running the join. Columns
+`kalshi_p1`, `poly_p1`, `pus_p1`, `book_p1` (home-side probabilities),
+`book_count`, `home_won`, and the two PolyUS quality fields `stale_min` /
+`fills_24h`. No column has a missing value.
+
+This is **derived, not frozen**. `analysis_core.csv` is the artifact the suite
+ran on and is unchanged. This file was rebuilt on 2026-09-30 from published
+tables only, reusing `four_way.py`'s own `build_prices()` and `match_games()`,
+and it reproduces that module's frozen log exactly: 2,794 games matched, 2,631
+after the quality filters (stale <= 120min, fills >= 5), with Brier 0.2303
+Kalshi / 0.2305 Poly-Global / 0.2304 Sportsbook / 0.2307 Poly-US. Regenerate it
+with `python -m src.analysis.four_way` or rebuild it from the tables here.
 
 **Start here: `analysis_core.csv`** — one row per game, every venue joined,
 clean column names. The starter notebook (`notebooks/data_tour.ipynb`) loads it
