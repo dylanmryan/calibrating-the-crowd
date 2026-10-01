@@ -33,6 +33,14 @@ data/processed/*
 !data/processed/espn_games.csv
 !data/processed/games_master.csv
 !data/processed/analysis_four_way.csv
+# per-bookmaker sportsbook tapes (The Odds API, paid plan). Published at the
+# author's decision so the suite runs end to end from a clone.
+!data/processed/sportsbook_hist_prices.csv
+!data/processed/sportsbook_open_prices.csv
+!data/processed/sportsbook_us_books.csv
+!data/processed/sportsbook_sharp_prices.csv
+!data/processed/sportsbook_outrights.csv
+!data/processed/sportsbook_alt_spreads.csv
 results/*
 !results/*.png
 !results/MANIFEST.md

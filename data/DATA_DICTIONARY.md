@@ -16,11 +16,16 @@ So all three prediction markets — Kalshi, Polymarket Global and Polymarket US 
 ship with their prices, and the three-way and four-way sets can both be rebuilt
 from this repository alone.
 
-The tables **not** here are the per-bookmaker sportsbook tapes from The Odds API
-(`sportsbook_hist_prices.csv`, `sportsbook_us_books.csv`, `sportsbook_sharp_prices.csv`
-and the rest). The book *consensus* those tapes produce is published, in
-`analysis_core.csv` and `games_master.csv`; the per-book feed behind it is banked
-locally. See *Data availability* in the README.
+The per-bookmaker sportsbook tapes are here as well — `sportsbook_hist_prices.csv`,
+`sportsbook_open_prices.csv`, `sportsbook_us_books.csv`, `sportsbook_sharp_prices.csv`,
+`sportsbook_outrights.csv`, `sportsbook_alt_spreads.csv` — so the book leg can be
+rebuilt from the feed rather than taken from the consensus. They came from The Odds
+API on a paid plan; re-users should check that provider's terms.
+
+What is **not** here is the microstructure and live tail: the Kalshi liquidity sweep
+(137MB, past GitHub's file limit), the 24h trade tape, the minute paths and the VPS
+snapshot mirror. Those drive the liquidity, immediacy and live-capture modules, not
+the headline. See *Data availability* in the README.
 
 ### analysis_four_way.csv (2,631 games)
 The four-way set, as a file: one row per game priced by **all four** venues, so

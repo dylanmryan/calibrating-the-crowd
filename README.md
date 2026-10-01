@@ -190,11 +190,15 @@ the Polymarket US leg that `four_way.py` reads, which `analysis_core.csv` has
 no column for — plus the ESPN registry and Kalshi settlement tables the joins
 need.
 
-**Sportsbook data is not.** Historical odds came from The Odds API under a paid
-plan. The proposal anticipated free sources; historical coverage turned out to
-be paid, and the grant funded it. Consequences, stated plainly:
-
-- Raw book odds are **not redistributed** here.
+**Sportsbook data is here too.** Historical odds came from The Odds API under a
+paid plan — the proposal anticipated free sources, historical coverage turned out
+to be paid, and the grant funded it. The per-bookmaker tapes are published
+anyway: `sportsbook_hist_prices.csv` and `sportsbook_open_prices.csv` (the
+closing and T-24h consensus), `sportsbook_us_books.csv` (11 US retail books),
+`sportsbook_sharp_prices.csv` (28 books incl. Pinnacle and Betfair),
+`sportsbook_outrights.csv` and `sportsbook_alt_spreads.csv` — 338,952 rows.
+Anyone re-using them should check The Odds API's own terms, which govern that
+data regardless of its appearing here. Consequences, stated plainly:
 - What *is* committed is [`data/processed/analysis_core.csv`](data/processed/analysis_core.csv)
   — one de-vigged row per game, sufficient to reproduce the headline
   calibration results. It is the **three-way** table: Kalshi, Polymarket Global
@@ -204,13 +208,15 @@ be paid, and the grant funded it. Consequences, stated plainly:
   Polymarket and book collection began — are Kalshi-only and look empty on a
   first read. `DATA_DICTIONARY.md` tabulates exactly which venue is missing
   where, and why.
-- The book *consensus* is published — in `analysis_core.csv` and in
+- The book *consensus* is published too — in `analysis_core.csv` and in
   [`games_master.csv`](data/processed/games_master.csv), the merged table with
-  audit flags that `three_way.load()` reads. What is not published is the
-  per-bookmaker feed those were built from.
-- A third party cannot independently re-collect the book leg without their own
-  subscription, and the project's own access lapses September 2026. Book data
-  is banked locally and backed up.
+  audit flags that `three_way.load()` reads.
+- A third party still cannot independently *re-collect* the book leg without
+  their own subscription, and the project's own access lapses September 2026.
+- Not every table the suite reads is here. The headline three-way and four-way
+  results rebuild from this repository; a handful of microstructure and live
+  tables (the liquidity sweep, the 24h trade tape, the VPS snapshots) are too
+  large for a git repository and remain banked locally.
 
 **The four-way set is a file too.**
 [`analysis_four_way.csv`](data/processed/analysis_four_way.csv) — 2,631 games
