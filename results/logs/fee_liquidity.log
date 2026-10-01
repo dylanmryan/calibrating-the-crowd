@@ -1,0 +1,20 @@
+games with both volumes: 746 (353 pre-fee, 393 post-fee; {'NBA': 400, 'NHL': 346})
+median per-game volume: Poly $1,472,284 | Kalshi final-24h notional $115,477 (units differ; only the ratio's CHANGE is used)
+
+=== within-game volume-ratio comparison (Δ = log poly − log kalshi) ===
+  MAIN: Feb vs Apr-May (full coverage) post = -0.534 log-pts (-41.4%)  z=-3.61  p=0.000  n=606
+  placebo mid-Feb split        post = +0.165 log-pts (+17.9%)  z=+1.33  p=0.182  n=237
+  full sample (March coverage-biased) post = -0.570 log-pts (-43.5%)  z=-4.02  p=0.000  n=746
+
+=== levels (descriptive; playoff ramp NOT controlled) ===
+  Polymarket  mean log volume pre 14.28 -> post 14.18 (-10%)
+  Kalshi 24h  mean log volume pre 11.41 -> post 11.82 (+51%)
+/Users/dylanryan/Desktop/Summer Research/src/analysis/fee_liquidity.py:79: UserWarning: Converting to PeriodArray/Index representation will drop timezone information.
+  d["bi"] = d.t.dt.to_period("W").dt.start_time
+
+=== quoted spread at T-30m (OddPool archived books) ===
+  post n= 21  median spread 1.0pts  mean 1.00pts
+  pre  n= 30  median spread 1.0pts  mean 1.03pts
+  Mann-Whitney pre vs post: p=0.426
+
+saved results/fee_liquidity.png

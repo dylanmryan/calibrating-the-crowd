@@ -1,0 +1,137 @@
+BOOK-CONSENSUS PANEL AUDIT — is the benchmark a clean instrument for timing?
+
+=== 1. CONSENSUS MEMBERSHIP CENSUS (15min clock) ===
+  book-side steps 24,963 over 478 games | n_books median 11, min 1, max 11
+  within-game breadth range: mean 0.94, median 0 | games with ANY change 42.1%, with >=3 12.3%
+
+  steps with a membership change: 2.2% (533 of 24,485)
+  mean |consensus move| when membership CHANGED :  1.35 pts
+  mean |consensus move| when membership CONSTANT:  0.12 pts
+  ratio: 11.3x
+  share of the consensus-change series' total squared variation carried by those
+  2.2% of steps: 54.3%
+
+  churn by time-to-start (the headline horizon results live inside 2h):
+    window    steps    churn
+     0-60m    1,539    0.52%
+      1-2h    1,597    0.88%
+      2-4h    3,627    1.32%
+      4-8h    7,194    1.61%
+       >8h   10,528    3.30%
+
+  direction: 391 joins vs 142 exits — books posting lines as the game approaches;
+  61% of exits reverse on the very next step (feed flicker, not a book
+  withdrawing a line).
+
+15-min panel: 818 games, 44,354 grid steps
+
+=== 2. EVENT-POPULATION CONTAMINATION ===
+  base rate of membership change across all 24,456 book steps: 2.1%
+   threshold   events  contaminated  enrichment
+        1.0p      341         8.5%        4.0x
+        1.5p      209        10.0%        4.7x
+        2.0p      122        15.6%        7.4x   <- book_moves default
+        3.0p       61        18.0%        8.5x
+        5.0p       42        23.8%       11.2x
+
+  READ: a membership change is a jump-shaped event, so the bigger the cut the
+  larger the artifact share. This is a property of the INSTRUMENT, not of the
+  market, and it is why S3 re-detects the events on a constant panel.
+
+=== 3. BOOK-MOVE EVENT STUDY, CLEAN vs CONTAMINATED PANEL (>= 2pt) ===
+                        population  events   size     kalshi antic% (p)       poly antic% (p)
+            all events (published)      70   4.1p        34% (p=0.0115)        23% (p=9.1e-06)
+    event step membership-constant      63   4.1p        32% (p=0.00515)        22% (p=1.11e-05)
+        whole +-1h window constant      43   2.9p        26% (p=0.00191)        21% (p=0.00017)
+
+  response decomposition on the CLEAN population (pts, signed by the book's move):
+     responder  pre(-1h)      at  post(+1h)   total
+        kalshi    +0.38  +0.74     -0.07  +1.05
+    polymarket    +0.32  +0.87     -0.18  +1.01
+    sportsbook    -0.23  +4.07     +0.39  +4.23
+
+  READ: if the published anticipation shares were an averaging artifact they
+  must move toward 50% once the artifact events are gone. The rows above are
+  the test; the comparison is stated in findings.md, not asserted here.
+
+=== 4. PREDICTIVE REGRESSIONS, MEMBERSHIP HELD CONSTANT (15-min) ===
+  coefficient on the lagged BOOK move, predicting the exchange's next move
+                             subsample                    kalshi                polymarket
+                             all steps    +0.000(z=+0.0,p=0.987)    -0.004(z=-0.1,p=0.924)
+                   membership CONSTANT    +0.003(z=+0.2,p=0.849)    -0.014(z=-0.3,p=0.778)
+         membership CONSTANT, final 2h    +0.063(z=+1.7,p=0.087)    +0.070(z=+2.6,p=0.008)
+          membership CONSTANT, >2h out    -0.008(z=-0.4,p=0.715)    -0.027(z=-0.5,p=0.615)
+                                                              --- final 2h, identified ---
+                  same, date-clustered    +0.063(z=+1.6,p=0.100)    +0.070(z=+2.5,p=0.012)
+     exchange quote AWAKE (moved <30m)    +0.063(z=+1.8,p=0.074)    +0.055(z=+1.2,p=0.244)
+    exchange quote RESTING (frozen 30m)    +0.064(z=+1.4,p=0.157)    +0.079(z=+5.5,p=0.000)
+        book move >=0.5pt (news-sized)                n=138 thin                n=138 thin
+              book move <0.5pt (drift)    +0.113(z=+1.5,p=0.137)    +0.165(z=+3.0,p=0.002)
+
+  mirror, same window — predict the BOOK: book(own):-0.196(z=-1.8)  kalshi:+0.005(z=+0.3)  polymarket:+0.047(z=+1.7)  n=3,072
+
+  READ: smearing and composition both attenuate, so a coefficient that only
+  APPEARS after cleaning is the case to take seriously. Identify it before
+  reporting it as transmission: news concentrates in awake quotes and scales
+  with move size. A coefficient that lives in RESTING quotes and in sub-0.5pt
+  drift is a stale quote stepping toward a consensus that moved without it.
+
+--- 5-minute era (2026-07-31+): 471 games, 77,043 grid steps ---
+
+=== 2. EVENT-POPULATION CONTAMINATION ===
+  base rate of membership change across all 19,749 book steps: 1.3%
+   threshold   events  contaminated  enrichment
+        1.0p       59         5.1%        3.9x
+        2.0p        7        14.3%       11.0x   <- book_moves default
+
+  READ: a membership change is a jump-shaped event, so the bigger the cut the
+  larger the artifact share. This is a property of the INSTRUMENT, not of the
+  market, and it is why S3 re-detects the events on a constant panel.
+
+=== 4. PREDICTIVE REGRESSIONS, MEMBERSHIP HELD CONSTANT (5-min) ===
+  coefficient on the lagged BOOK move, predicting the exchange's next move
+                             subsample                    kalshi                polymarket
+                             all steps    +0.047(z=+2.4,p=0.017)    +0.164(z=+4.5,p=0.000)
+                   membership CONSTANT    +0.049(z=+2.3,p=0.020)    +0.174(z=+4.5,p=0.000)
+         membership CONSTANT, final 2h    +0.006(z=+0.1,p=0.929)    -0.008(z=-0.1,p=0.922)
+          membership CONSTANT, >2h out    +0.049(z=+2.5,p=0.014)    +0.203(z=+5.0,p=0.000)
+                                                              --- final 2h, identified ---
+                  same, date-clustered               n=2267 thin               n=2267 thin
+     exchange quote AWAKE (moved <30m)    -0.007(z=-0.1,p=0.955)                n=184 thin
+    exchange quote RESTING (frozen 30m)    -0.022(z=-0.4,p=0.679)    -0.027(z=-0.4,p=0.720)
+        book move >=0.5pt (news-sized)                 n=27 thin                 n=27 thin
+              book move <0.5pt (drift)    +0.003(z=+0.0,p=0.972)    -0.039(z=-0.7,p=0.472)
+
+  mirror, same window — predict the BOOK: book(own):+0.148(z=+4.4)  kalshi:+0.003(z=+1.3)  polymarket:-0.013(z=-1.7)  n=2,267
+
+  READ: smearing and composition both attenuate, so a coefficient that only
+  APPEARS after cleaning is the case to take seriously. Identify it before
+  reporting it as transmission: news concentrates in awake quotes and scales
+  with move size. A coefficient that lives in RESTING quotes and in sub-0.5pt
+  drift is a stale quote stepping toward a consensus that moved without it.
+
+=== 5. WHAT THIS PANEL CANNOT ANSWER ===
+  live book rows: 40,152; per-book quotes retained: 0 (`book_price()` averages at ingest and keeps only the mean and n_books).
+  EU/sharp per-book tape: 110,212 quotes, 28 books, 5,393 games — but 12.37 distinct timestamps per game:
+    a CLOSING CROSS-SECTION, not a time series.
+  US retail per-book tape: 51,130 quotes, 11 books, 4,729 games — but 8.25 distinct timestamps per game:
+    a CLOSING CROSS-SECTION, not a time series.
+
+  ONE thing the closing cross-section DOES bound: how staggered the field is.
+  Within-game spread between the freshest and stalest book: median 2.0 min, p90 6.1 min; only 14.4% of games
+  exceed 5 minutes, and per-book mean age spans just 16.9-18.6 min across 11 books.
+  At the close the US field is near-synchronous, so smearing is small THERE. It says
+  nothing about the wide pre-game window, where the census above shows the churn
+  actually lives.
+
+  Consequence, stated plainly: 'does Pinnacle lead Kalshi, and does the
+  retail field follow Pinnacle?' is NOT identified by any data this project
+  banked, at any resolution. The no-leader result is a result about the
+  CONSENSUS, and S1-S4 are what can be said about that instrument's fitness.
+  Answering the per-book question needs one row per bookmaker per snapshot —
+  the same Odds API call already made, without the averaging step, so the
+  marginal credit cost is zero but the panel must be collected forward.
+
+  NOTE: n_books equality is a LOWER BOUND on membership churn — one book
+  leaving as another joins is invisible to it. Every contamination figure
+  above understates, and every 'clean' subsample still holds some turnover.

@@ -1,0 +1,33 @@
+=== A. World Cup 3-way (n=8 pre-kickoff games; descriptive) ===
+
+  outcome-type calibration (mean priced vs realized share):
+   outcome  realized   Kalshi     book
+      home    25.0%   46.0%   45.9%
+      draw    37.5%   27.7%   27.6%
+      away    37.5%   26.3%   26.4%
+
+  ranked probability score (ordered home>draw>away; lower better):
+    kalshi      RPS = 0.2157
+    sportsbook  RPS = 0.2149
+
+  mean |Kalshi - book| across all 888 snapshot rows: home 0.6pt, draw 0.3pt, away 0.5pt
+  (the draw is priced as tightly across venues as the teams are)
+
+=== B. margin DISTRIBUTIONS head-to-head (RPS on shared rungs) ===
+  games with both ladders: 3,670 (median shared thresholds 7)
+  MLB   n= 1241  RPS Kalshi=0.2011  book=0.2008  diff=+0.29e-3  z=+1.15  (book better)
+  NBA   n= 1199  RPS Kalshi=0.1879  book=0.1867  diff=+1.14e-3  z=+2.27  (book better)
+  NHL   n= 1230  RPS Kalshi=0.1930  book=0.1930  diff=+0.03e-3  z=+0.11  (book better)
+  ALL   n= 3670  RPS Kalshi=0.1941  book=0.1936  diff=+0.48e-3  z=+2.41  (book better)
+  (dead heat on WHO wins; this asks BY HOW MUCH. After the ladder-
+   convention fix the MLB gap is n.s.; what survives is a small NBA
+   edge to the books -- see src/analysis/ladder_convention.py)
+
+=== B2. the margin-of-victory probability graph vs reality ===
+  MLB: n=1,202 | total variation distance to reality: Kalshi 1.8pts, books 2.3pts
+  NBA: n=78 | total variation distance to reality: Kalshi 13.9pts, books 14.5pts
+  saved results/margin_distribution.png
+
+=== C. settled multi-outcome futures on Kalshi (inventory probe) ===
+  (any event with >2 outcomes is a true multi-outcome market —
+   candidate sample for the outright favorite-longshot test)

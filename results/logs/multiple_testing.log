@@ -1,0 +1,105 @@
+=== inventory drift: derived-from-logs vs what the inventory carried ===
+  (a hand-maintained p-value goes stale; this is why the list now reads
+   its own logs. 'was' is the pre-2026-09-03 asserted value.)
+
+  claim                                                            was       now  evidence                   moved
+  Extras end within 1 run vs regulation (two-proportion)         1e-10    <1e-16  0.698 vs 0.244, |z|=18.48      -
+  RETRACTED — MLB extra-inning 1-2-run cell under-priced, B      1e-08   8.7e-14  |z|=7.46                       -
+  Markets beat walk-forward Elo floor                            1e-10   3.6e-13  |z|=7.27                       -
+  Minute-scale bidirectional K<->P predictability                1e-10   1.2e-12  |z|=7.11                       -
+  Ladder-cost: selling MLB ladder rungs LOSES money              1e-05     6e-08  |z|=5.42                       -
+  BOOKS' outright longshots overpriced (0-3mo, cluster-t)        1e-05   1.1e-07  $0.34 vs $1, t=-8.25 on 19 df  -
+  Exchanges price closer to the books that just updated (Po        new   5.7e-07  |z|=5.00                       -
+  Book consensus predicts exchanges' next 5-min move (Poly)      1e-05   6.8e-06  |z|=4.50                       -
+  Cross-venue 15-min predictability, P->K only                   1e-05   1.1e-05  |z|=4.40                       -
+  Exchanges drift AGAINST an imminent book move (Poly, clea        new   0.00017  p=0.00017                      -
+  Poly relative volume falls at the fee date (DiD)              0.0003   0.00031  |z|=3.61                       ~same
+  Late flow predicts beyond the closing book                     0.001     0.001  p=0.001                        ~same
+  Exchanges drift AGAINST an imminent book move (Kalshi, cl        new    0.0019  p=0.00191                      -
+  MLB 1-2-run cell OVER-priced in extras-prone games (pre-g        new    0.0027  |z|=3.00                       -
+  Book consensus predicts Poly's next 15-min move, final 2h        new     0.008  p=0.008                        -
+  Books beat Kalshi ladders as DISTRIBUTIONS (pooled RPS)        0.015     0.016  |z|=2.41                       ~same
+  Kalshi encompasses Polymarket at close                         0.044     0.021  p=0.021                        stronger
+  Kalshi encompasses book at close                               0.054     0.033  p=0.033                        ~same
+  Books lead Kalshi at T-24h                                     0.063     0.072  p=0.072                        ~same
+  Murphy sup-t: Kalshi edge vs Shin-de-vigged book               0.037      0.13  p=0.129                        WEAKER
+
+=== Benjamini-Hochberg, q=0.05 (20 positive claims, p-values derived from the frozen logs at run time, clustered p where available) ===
+  [KEEP] p=<1e-16   Extras end within 1 run vs regulation (two-proportion)  (mlb_extras.log [the ghost-runner base rate itself — a fact about baseball, unaffected by the 2026-09-23 retraction above. It is no longer described as the rate 'the cell is mispriced against': on pre-game information the cell is not under-priced at all])
+  [KEEP] p=8.7e-14  RETRACTED — MLB extra-inning 1-2-run cell under-priced, BOTH venues  (mlb_extras.log [RETRACTED 2026-09-23 — the p-value is real and the statistic is NOT. `extras` is realized DURING the game, outside the forecaster's information set, so splitting on it breaks the calibration identity mechanically. extras_conditioning.log S1: a CONSTANT at the unconditional base rate scores +21.19pt on the same split and a pre-game-information-only forecast +21.23pt, against the market's +20.22pt — neither can misprice the ghost-runner rule, so the statistic has no power to detect mispricing. The whole published gap IS the extras/margin dependence. Kept in the family so the BH computation is over the claims actually made, not a curated subset; BH still marks it KEEP because its p-value was never the problem])
+  [KEEP] p=3.6e-13  Markets beat walk-forward Elo floor  (model_benchmark.log [weakest of the three venue comparisons is quoted])
+  [KEEP] p=1.2e-12  Minute-scale bidirectional K<->P predictability  (minute_lead_lag.log)
+  [KEEP] p=6e-08    Ladder-cost: selling MLB ladder rungs LOSES money  (ladder_cost.log [uses each contract's own settlement; not a Kalshi-specific bias])
+  [KEEP] p=1.1e-07  BOOKS' outright longshots overpriced (0-3mo, cluster-t)  (book_outrights.log [H0: $1 back per $1; t on 19 df — statistically identical to Kalshi's $0.33])
+  [KEEP] p=5.7e-07  Exchanges price closer to the books that just updated (Poly)  (book_freshness.log [NEW 2026-09-16. Closing cross-section, so it is PROXIMITY not precedence: an exchange that leads and books that catch up produce the same picture. Economically small — 9% of the fresh-stale price gap. Kalshi's term is the same sign and size (-0.021pt, t=-3.7).])
+  [KEEP] p=6.8e-06  Book consensus predicts exchanges' next 5-min move (Poly)  (five_min.log [ZERO in the final 2h, lives in sub-0.5pt book moves, and as strong from a frozen quote — drift alignment, not news transmission])
+  [KEEP] p=1.1e-05  Cross-venue 15-min predictability, P->K only  (lead_lag.log [the book->P term this claim once included is now z=-0.1 and retired])
+  [KEEP] p=0.00017  Exchanges drift AGAINST an imminent book move (Poly, clean panel)  (book_panel.log [as above; Polymarket's share is the more stable of the two (23%->21% across cleaning)])
+  [KEEP] p=0.00031  Poly relative volume falls at the fee date (DiD)  (fee_liquidity.log)
+  [KEEP] p=0.001    Late flow predicts beyond the closing book  (late_flow.log)
+  [KEEP] p=0.0019   Exchanges drift AGAINST an imminent book move (Kalshi, clean panel)  (book_panel.log [NEW 2026-09-16. The anticipation-share claim was never in this family; registering it was overdue and it enters on the membership-constant population, not the published one. Cleaning the instrument moved the share AWAY from 50% (34%->26%), so the effect is not the averaging artifact it was suspected of being.])
+  [KEEP] p=0.0027   MLB 1-2-run cell OVER-priced in extras-prone games (pre-game Z)  (extras_conditioning.log [NEW 2026-09-23, and it is the RETRACTED claim's replacement with the sign reversed. Regressing (realized - implied) on a cross-fitted ex-ante extras propensity — a Z the market could see — gives coef=-1.1495, z=-3.00 date-clustered (-2.89 game-clustered, -2.41 iid), i.e. the market slightly OVER-prices the narrow-margin cell in the games most likely to reach extras. ~4pt swing across the whole propensity range: small, robust to the error structure, and opposite in sign to what the retracted statistic appeared to show. Flagged as specification-search-adjacent: it was found while auditing the retracted claim, not registered in advance])
+  [KEEP] p=0.008    Book consensus predicts Poly's next 15-min move, final 2h, constant panel  (book_panel.log [NEW 2026-09-16, and it exists only AFTER the composition noise is removed — the pooled panel shows -0.004 (z=-0.1). Registered as a positive claim because it is one, but the identification cuts in the same log read it as catch-up bookkeeping, not transmission: it lives in RESTING quotes (z=+5.5) not awake ones (z=+1.2), lives in sub-0.5pt drift not news-sized moves, and does NOT sharpen at the 5-min clock (final-2h -0.008, z=-0.1), which is the opposite of a fixed wall-clock lag's signature.])
+  [KEEP] p=0.016    Books beat Kalshi ladders as DISTRIBUTIONS (pooled RPS)  (multi_outcome.log [post-convention-fix the edge is NBA-carried and small; MLB n.s.])
+  [KEEP] p=0.021    Kalshi encompasses Polymarket at close  (encompassing.log [FRAGILE — survives BH here, but this family has printed 0.004, 0.048, 0.044, 0.054 and 0.021 across five vintages of the same claim: a result at the resolution limit, not a stable effect])
+  [KEEP] p=0.033    Kalshi encompasses book at close  (encompassing.log [FRAGILE — same caveat as the K-vs-P term above])
+  [drop] p=0.072    Books lead Kalshi at T-24h  (horizon_equivalence.log [softened on the completed 84%-coverage T-24h sample])
+  [drop] p=0.13     Murphy sup-t: Kalshi edge vs Shin-de-vigged book  (murphy.log [RETRACTED 2026-09-03 — see the docstring; kept in the family so the BH computation is over the claims actually made, not a curated subset])
+
+=== Benjamini-Hochberg, q=0.1 (20 positive claims, p-values derived from the frozen logs at run time, clustered p where available) ===
+  [KEEP] p=<1e-16   Extras end within 1 run vs regulation (two-proportion)  (mlb_extras.log [the ghost-runner base rate itself — a fact about baseball, unaffected by the 2026-09-23 retraction above. It is no longer described as the rate 'the cell is mispriced against': on pre-game information the cell is not under-priced at all])
+  [KEEP] p=8.7e-14  RETRACTED — MLB extra-inning 1-2-run cell under-priced, BOTH venues  (mlb_extras.log [RETRACTED 2026-09-23 — the p-value is real and the statistic is NOT. `extras` is realized DURING the game, outside the forecaster's information set, so splitting on it breaks the calibration identity mechanically. extras_conditioning.log S1: a CONSTANT at the unconditional base rate scores +21.19pt on the same split and a pre-game-information-only forecast +21.23pt, against the market's +20.22pt — neither can misprice the ghost-runner rule, so the statistic has no power to detect mispricing. The whole published gap IS the extras/margin dependence. Kept in the family so the BH computation is over the claims actually made, not a curated subset; BH still marks it KEEP because its p-value was never the problem])
+  [KEEP] p=3.6e-13  Markets beat walk-forward Elo floor  (model_benchmark.log [weakest of the three venue comparisons is quoted])
+  [KEEP] p=1.2e-12  Minute-scale bidirectional K<->P predictability  (minute_lead_lag.log)
+  [KEEP] p=6e-08    Ladder-cost: selling MLB ladder rungs LOSES money  (ladder_cost.log [uses each contract's own settlement; not a Kalshi-specific bias])
+  [KEEP] p=1.1e-07  BOOKS' outright longshots overpriced (0-3mo, cluster-t)  (book_outrights.log [H0: $1 back per $1; t on 19 df — statistically identical to Kalshi's $0.33])
+  [KEEP] p=5.7e-07  Exchanges price closer to the books that just updated (Poly)  (book_freshness.log [NEW 2026-09-16. Closing cross-section, so it is PROXIMITY not precedence: an exchange that leads and books that catch up produce the same picture. Economically small — 9% of the fresh-stale price gap. Kalshi's term is the same sign and size (-0.021pt, t=-3.7).])
+  [KEEP] p=6.8e-06  Book consensus predicts exchanges' next 5-min move (Poly)  (five_min.log [ZERO in the final 2h, lives in sub-0.5pt book moves, and as strong from a frozen quote — drift alignment, not news transmission])
+  [KEEP] p=1.1e-05  Cross-venue 15-min predictability, P->K only  (lead_lag.log [the book->P term this claim once included is now z=-0.1 and retired])
+  [KEEP] p=0.00017  Exchanges drift AGAINST an imminent book move (Poly, clean panel)  (book_panel.log [as above; Polymarket's share is the more stable of the two (23%->21% across cleaning)])
+  [KEEP] p=0.00031  Poly relative volume falls at the fee date (DiD)  (fee_liquidity.log)
+  [KEEP] p=0.001    Late flow predicts beyond the closing book  (late_flow.log)
+  [KEEP] p=0.0019   Exchanges drift AGAINST an imminent book move (Kalshi, clean panel)  (book_panel.log [NEW 2026-09-16. The anticipation-share claim was never in this family; registering it was overdue and it enters on the membership-constant population, not the published one. Cleaning the instrument moved the share AWAY from 50% (34%->26%), so the effect is not the averaging artifact it was suspected of being.])
+  [KEEP] p=0.0027   MLB 1-2-run cell OVER-priced in extras-prone games (pre-game Z)  (extras_conditioning.log [NEW 2026-09-23, and it is the RETRACTED claim's replacement with the sign reversed. Regressing (realized - implied) on a cross-fitted ex-ante extras propensity — a Z the market could see — gives coef=-1.1495, z=-3.00 date-clustered (-2.89 game-clustered, -2.41 iid), i.e. the market slightly OVER-prices the narrow-margin cell in the games most likely to reach extras. ~4pt swing across the whole propensity range: small, robust to the error structure, and opposite in sign to what the retracted statistic appeared to show. Flagged as specification-search-adjacent: it was found while auditing the retracted claim, not registered in advance])
+  [KEEP] p=0.008    Book consensus predicts Poly's next 15-min move, final 2h, constant panel  (book_panel.log [NEW 2026-09-16, and it exists only AFTER the composition noise is removed — the pooled panel shows -0.004 (z=-0.1). Registered as a positive claim because it is one, but the identification cuts in the same log read it as catch-up bookkeeping, not transmission: it lives in RESTING quotes (z=+5.5) not awake ones (z=+1.2), lives in sub-0.5pt drift not news-sized moves, and does NOT sharpen at the 5-min clock (final-2h -0.008, z=-0.1), which is the opposite of a fixed wall-clock lag's signature.])
+  [KEEP] p=0.016    Books beat Kalshi ladders as DISTRIBUTIONS (pooled RPS)  (multi_outcome.log [post-convention-fix the edge is NBA-carried and small; MLB n.s.])
+  [KEEP] p=0.021    Kalshi encompasses Polymarket at close  (encompassing.log [FRAGILE — survives BH here, but this family has printed 0.004, 0.048, 0.044, 0.054 and 0.021 across five vintages of the same claim: a result at the resolution limit, not a stable effect])
+  [KEEP] p=0.033    Kalshi encompasses book at close  (encompassing.log [FRAGILE — same caveat as the K-vs-P term above])
+  [KEEP] p=0.072    Books lead Kalshi at T-24h  (horizon_equivalence.log [softened on the completed 84%-coverage T-24h sample])
+  [drop] p=0.13     Murphy sup-t: Kalshi edge vs Shin-de-vigged book  (murphy.log [RETRACTED 2026-09-03 — see the docstring; kept in the family so the BH computation is over the claims actually made, not a curated subset])
+
+=== held OUT of the BH family: p-value has no generating line ===
+  - Sports FUTURES longshots overpriced ($0.33/$1, pooled) (inventory carried p=0.006)
+      futures_calibration.log prints per-bucket exact binomials and a sub-10c $0.33 (se 0.28); no line computes the pooled p the inventory carried. Reported descriptively; needs a proper pooled test to re-enter the family.
+
+=== nulls / equivalence claims (not FDR-controlled discoveries) ===
+  - Three-way closing DM (all pairs): n.s. + TOST equivalent at ±1e-3
+  - Four-way: Poly-US vs each source: n.s. + TOST equivalent at ±1e-3
+  - Fee natural experiment DiD on accuracy: p=0.74 (placebo p=0.39)
+  - Taker-size markout gradient: flat across quintiles
+  - Taker imbalance beyond book: p=0.80/0.48
+  - Closing-price efficiency (move beyond close): p=0.99/0.35/0.52
+  - Behavioral fingerprints (home bias, franchise, weekend): all n.s.
+  - FLB: all slope CIs include 1 (home-side): -
+  - Layer-2 main-line calibration (push-corrected): MLB 50.4% vs 49.9%; NBA n.s. — 45.0% claim retracted
+  - Kalshi margin PIT, all leagues (convention-corrected): pooled p=0.718; MLB p=0.104 — the pre-fix MLB rejection was the ladder-convention artifact. The BOOKS' far denser ladders show small deviations of their own (MLB p<.001, NHL p=.024, KS 0.04-0.07) — density/power, not superiority; see book_pit.log
+  - Kalshi TOTALS PIT, MLB: KS=0.015 p=0.90 PASSES (n=1,466 ladders). The margin layer now ALSO passes post convention fix — the totals-pass/margins-reject contrast is retracted; both layers of the run process are priced correctly, the extras cell included once that cell is tested on pre-game information (see the 2026-09-23 conditioning correction)
+  - Kalshi TOTALS PIT, NBA/NHL controls: p=0.86 / 0.25 — pass on full samples (n=1,284 / 1,211)
+  - Kalshi totals right-tail bias (MLB): no threshold off by more than 2.8pt, all |z|<=1.01
+  - Totals ladder coherence, live-book only: 99.3-100% monotone every league; raw 86.9-95.6% is trade-reconstruction noise
+  - T-24h encompassing (K beyond book a day out): p=0.68
+  - Minute-scale first-passage leads: median 0.0, sign-test p=1.0
+  - Resolution ladder 30->5 min: any venue leads: no cross-lag corr sharpens as the clock sharpens; nothing predicts the book at any grid
+  - Book->exchange lead in the final 2h (5-min clock): K +0.006 (z=+0.1), P -0.008 (z=-0.1)
+  - Book->Kalshi lead in the final 2h (15-min, constant-membership panel): +0.063 (z=+1.7, p=0.087) — n.s.; the Poly term in the same cell is a registered claim above
+  - Book-panel composition drives the no-leader nulls: refuted: clean-panel anticipation shares move AWAY from 50%, and the constant-membership regressions reproduce the pooled ones (book_panel.log S3-S4)
+  - Niche-sport games (no benchmark): excess ECE: 0.00pt vs noise floor; slope CI 0.84-1.15
+  - Exchanges vs PINNACLE at close (n=5,294): all n.s.; 90% CIs within ±0.34e-3 (TOST-equiv)
+  - Exchanges vs PINNACLE quoted <10 min from start (n=2,992): K -0.004e-3 (z=-0.02), P +0.079e-3 (z=+0.50); TOST-equivalent, MDE 0.49/0.44e-3 — the dead heat at MATCHED freshness, so the book is not handicapped by a stale quote
+  - Book staleness shifts the differential (fresh-dummy interaction): +0.06..+0.41e-3, all n.s. (z=0.14-1.30) — directionally what the timing caveat predicts, too small to detect and inside the equivalence margin either way [book_freshness.log]
+  - Levitt shading vs sharp line (24 EU books): sub-1pt deviations, both signs
+  - Levitt shading, US retail (DK/FD/MGM +8, n=2.6K): -0.22..-0.01pt on home favs: none
+  - Book-by-book Brier vs Kalshi (11 US books): all n.s.; dead heat holds per book
+  - Poly outrights alone (22 fields): direction matches Kalshi, underpowered
+
+(retired claims documented in the module docstring)

@@ -1,0 +1,35 @@
+constant sample (all sources at 24h AND close): 3,906 games
+{'NHL': np.int64(1367), 'NBA': np.int64(801), 'CFB': np.int64(677), 'MLB': np.int64(562), 'WNBA': np.int64(278), 'NFL': np.int64(221)}
+
+=== T-24h three-way (a full day before start) ===
+  Kalshi 24h  Brier=0.2210
+  Poly 24h    Brier=0.2206
+  Book 24h    Brier=0.2204
+  Kalshi 24h - Poly 24h: ΔBrier=+0.408e-3  z=+1.00 p=0.319  90%CI=(-0.27,+1.08)e-3
+  Kalshi 24h - Book 24h: ΔBrier=+0.517e-3  z=+1.80 p=0.072  90%CI=(+0.04,+0.99)e-3
+  Poly 24h - Book 24h: ΔBrier=+0.109e-3  z=+0.29 p=0.773  90%CI=(-0.51,+0.73)e-3
+
+=== closing three-way (same constant sample) ===
+  Kalshi 0h   Brier=0.2195
+  Poly 0h     Brier=0.2196
+  Book close  Brier=0.2194
+
+=== convergence: mean |gap| between sources, 24h vs close ===
+  |Kalshi-Book|: 24h=1.27pts -> close=1.04pts
+  |Poly-Book|: 24h=1.12pts -> close=0.84pts
+  |Kalshi-Poly|: 24h=1.28pts -> close=0.89pts
+
+=== do the books sharpen too? (open-vs-close, Page-Clemen for books) ===
+  book close vs book 24h: ΔBrier=-0.999e-3  z=-2.11 p=0.035
+  mean |book move| 24h->close: 1.98pts
+
+=== Brier by horizon (constant sample; Kalshi & Poly paths) ===
+    horizon   Kalshi     Poly
+  T-1440min   0.2210   0.2206
+  T- 720min   0.2203   0.2204
+  T- 360min   0.2200   0.2200
+  T- 180min   0.2198   0.2198
+  T-  60min   0.2197   0.2197
+  T-  15min   0.2194   0.2197
+  T-   0min   0.2195   0.2196
+  (n=3,906 with complete paths on both exchanges)

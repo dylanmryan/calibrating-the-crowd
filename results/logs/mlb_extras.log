@@ -1,0 +1,24 @@
+=== MLB endings, n=4,262 finals (8.6% extras) ===
+            game state      n  P(|margin|=1)  P(|margin|<=2)
+             all games  4,262          0.283           0.463
+    regulation (9 inn)  3,894          0.244           0.425
+         extra innings    368          0.698           0.870
+             home wins  2,266          0.331           0.498
+             away wins  1,996          0.229           0.424
+     home wins, extras    186          0.887           0.957
+     away wins, extras    182          0.505           0.780
+
+=== ladder 'win by 1-2' cell: implied vs empirical (n=4,025 sides) ===
+             slice      n   implied  empirical  gap(pts)      z
+               all  4,025    0.2388     0.2306     -0.82  -1.23
+         home side  2,013    0.2695     0.2578     -1.17  -1.20
+         away side  2,012    0.2080     0.2033     -0.47  -0.53
+        regulation  3,686    0.2386     0.2111     -2.76  -4.08
+            extras    339    0.2403     0.4425    +20.22  +7.46
+
+  aggregate gap -0.82pts is a CANCELLATION, not an absence:
+    regulation -2.76pts on 91.6% of sides -> contributes -2.52pts
+    extras     +20.22pts on 8.4% of sides -> contributes +1.70pts
+  the extras cell is the real effect; ladder_vs_books shows the BOOKS miss it
+  by a matching ~+22pts, making it baseball-wide, not Kalshi-specific
+  home-side gap -1.17pts vs away-side -0.47pts (walk-off asymmetry)

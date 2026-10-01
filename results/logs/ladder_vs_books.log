@@ -1,0 +1,36 @@
+matched ladder contracts: 26,133 (3,701 games; MLB 7,547 / NBA 14,011)
+
+=== level agreement: Kalshi vs book ladder prices ===
+  corr=0.9887   mean(K-B)=-1.00pts   |K-B| median=1.45pts
+                         n  mean_K_minus_B
+league band                               
+MLB    (0.0, 0.1]     19.0           -1.99
+       (0.1, 0.25]  2961.0           -2.03
+       (0.25, 0.5]  4487.0           -0.88
+       (0.5, 0.75]    80.0            0.78
+NBA    (0.0, 0.1]    468.0           -1.20
+       (0.1, 0.25]  5738.0           -1.72
+       (0.25, 0.5]  5350.0           -0.75
+       (0.5, 0.75]  2172.0            1.21
+       (0.75, 0.9]   283.0            1.79
+NHL    (0.0, 0.1]     36.0           -2.08
+       (0.1, 0.25]  2107.0           -1.44
+       (0.25, 0.5]  2388.0           -0.80
+       (0.5, 0.75]    44.0            0.42
+
+=== tail calibration on identical contracts ===
+  Kalshi  Brier=0.1863  ECE=0.0078
+  Book    Brier=0.1858  ECE=0.0072
+
+=== MLB 'win by 1-2' cell: Kalshi vs book (same games, same rungs) ===
+    source      n   implied  empirical  gap(pts)      z
+      Book  2,473    0.2255     0.2301     +0.46  +0.54
+    Kalshi  2,535    0.2391     0.2284     -1.07  -1.27
+  Book: regulation gap -1.52pts (n=2265), extras gap +21.99pts (n=208)
+  Kalshi: regulation gap -3.04pts (n=2322), extras gap +20.48pts (n=213)
+  (matching gaps were read as a baseball-wide blind spot, book~0 as
+   Kalshi-specific. RETRACTED 2026-09-23: `extras` is realized DURING the
+   game, so this split breaks the calibration identity mechanically and a
+   CONSTANT forecaster scores +21.19pt on it. The gaps above are the
+   extras/margin dependence, not either venue's error. See
+   extras_conditioning.py for the placebo and the correct pre-game test.)

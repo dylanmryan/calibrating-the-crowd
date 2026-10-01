@@ -1,0 +1,24 @@
+contract-sides: 10,666
+
+=== 1. home bias (price - outcome on home sides; >0 = over-priced) ===
+  Kalshi      bias=-0.35 pts  z=-0.54
+  Polymarket  bias=-0.35 pts  z=-0.55
+  Sportsbook  bias=-0.42 pts  z=-0.66
+
+=== 2. popular-franchise premium ===
+  popular-team sides: 1,579
+  Kalshi      popular=+0.33 pts (z=+0.27)   others=-0.06
+  Polymarket  popular=+0.36 pts (z=+0.29)   others=-0.06
+  Sportsbook  popular=+0.21 pts (z=+0.18)   others=-0.04
+
+=== 3. weekend/primetime vs weekday calibration (ECE) ===
+  Kalshi      weekend ECE=0.0179 (n=5,736)   weekday ECE=0.0084 (n=4,930)
+  Polymarket  weekend ECE=0.0148 (n=5,736)   weekday ECE=0.0110 (n=4,930)
+  Sportsbook  weekend ECE=0.0088 (n=5,736)   weekday ECE=0.0093 (n=4,930)
+
+=== 4. crowd size: Kalshi accuracy vs trade count ===
+    bucket      n  median trades  |K-book| gap  Kalshi ECE
+   Q1 thin  1,208            209         0.72p      0.0232
+        Q2  1,205            652         0.69p      0.0196
+        Q3  1,206          1,238         0.72p      0.0181
+   Q4 deep  1,206          3,058         0.75p      0.0181

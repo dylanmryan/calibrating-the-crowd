@@ -1,0 +1,59 @@
+MLB 'win by 1-2' sides with a cover-3 rung, a moneyline and a totals ladder: 4,025 (2,015 games, 8.4% extras)
+  reproduces the published cell: all -0.82pt | regulation -2.76pt | extras +20.22pt
+
+=== 1. PLACEBO: run the published split on forecasters that CANNOT be missing the rule ===
+                                    forecaster  extras gap  regulation gap
+                        the market (published)     +20.22pt          -2.76pt
+     a constant at the unconditional base rate     +21.19pt          -1.95pt
+  best achievable forecast, PRE-GAME info only     +21.23pt          -1.96pt
+
+  READ: a constant cannot misprice a rule, and a forecast fitted on pre-game
+  information cannot use a state realized after the first pitch. Both show the
+  published effect. The statistic does not measure mispricing.
+
+  For scale: P(win by 1-2 | extras) - P(win by 1-2) = +21.19pt. That is the
+  extras/margin dependence alone, and it is the whole of the published gap.
+
+=== 2. WAS THERE ANYTHING TO PRICE? extras predictability before the first pitch ===
+  games 2,015, extras rate 8.4%
+  cross-fitted AUC of P(extras | matchup closeness, implied total): 0.540  (0.5 = coin flip)
+   ex-ante extras propensity   games  predicted   actual
+                    Q1 least     403      6.4%     7.7%
+                          Q2     403      7.9%     6.7%
+                          Q3     403      8.5%     7.4%
+                          Q4     403      9.1%     9.4%
+                     Q5 most     403     10.3%    10.9%
+
+=== 3. THE REAL TEST: is the pricing error predictable from PRE-GAME information? ===
+  calibration asserts E[realized - implied | Z] = 0 for any Z the market could see.
+                                         Z        coef       z        p
+                 ex-ante extras propensity     -1.1495   -3.00    0.003
+                         matchup closeness     +0.0996   +1.02    0.310
+                      implied median total     +0.0107   +2.08    0.037
+                  all three jointly [zhat]     -2.6359   -2.27    0.023
+             all three jointly [closeness]     -0.2629   -1.40    0.163
+             all three jointly [med_total]     -0.0165   -1.25    0.210
+
+  the headline Z (ex-ante extras propensity) under every error structure:
+         date-clustered (house convention)     -1.1495   -3.00    0.003
+                            game-clustered     -1.1495   -2.89    0.004
+                                       iid     -1.1495   -2.41    0.016
+
+  and does the PRICE itself move with ex-ante extras propensity? coef=+0.9742 (z=+47.66, p=0.000)
+
+=== 4. THE SAME CUT, BY EX-ANTE EXTRAS PROPENSITY ===
+   ex-ante extras propensity   sides   implied  realized       gap
+                    Q1 least     806    0.2177    0.2345    +1.68pt
+                          Q2     804    0.2340    0.2276    -0.64pt
+                          Q3     806    0.2399    0.2308    -0.91pt
+                          Q4     805    0.2469    0.2298    -1.71pt
+                     Q5 most     804    0.2554    0.2301    -2.53pt
+
+  READ: if the market had missed the ghost-runner rule, the gap would grow with
+  ex-ante extras propensity — the games a forecaster could have seen coming. It does
+  the OPPOSITE: the column falls monotonically and S3's coefficient is negative at
+  z=-3.0 date-clustered (p=0.003; -2.9 game-clustered, -2.4 iid). So the published
+  SIGN does not survive the correction either. On pre-game information the market
+  slightly OVER-prices the narrow-margin cell in extras-prone games — a ~4pt swing
+  across the whole propensity range. Small, robust, and opposite to the retracted
+  claim. Report it as a sign reversal, not as a null.

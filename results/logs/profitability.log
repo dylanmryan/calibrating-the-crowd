@@ -1,0 +1,32 @@
+tradeable contract-sides with real quotes: 10,632 (5,349 games)
+
+=== baselines: the ordinary gambler on Kalshi ===
+  bet EVERYTHING   n=10,632  ROI=-4.24%
+  bet favorites    n= 5,314  ROI=-4.68%
+  bet longshots    n= 5,318  ROI=-3.49%
+  bet home teams   n= 5,319  ROI=-3.33%
+
+=== edge strategy: buy Kalshi when ask < book fair value - fee ===
+   min edge  n bets  gross ROI  95% CI
+         0%     446     -7.17%  (-24.7%,+10.5%)  ≈ zero
+         1%     126    -37.30%  (-69.1%,-3.4%)  losing
+         2%      20    -68.34%  (-100.0%,-2.0%)  losing
+         3%       4   (too few)
+         5%       2   (too few)
+
+=== mechanism: which direction does Kalshi err vs the book? ===
+  contracts where Kalshi deviates >2pts from book: 592 (5.6%)
+  mean deviation on favorites : +0.56 pts (Kalshi richer)
+  mean deviation on longshots : -0.33 pts (Kalshi cheaper)
+  mean deviation on home sides: +0.21 pts (Kalshi richer)
+  mean deviation on away sides: +0.02 pts (Kalshi richer)
+
+  by league (mean deviation on favorites, pts):
+    CFB    +1.14
+    MLB    +0.31
+    NBA    +0.77
+    NFL    +0.49
+    NHL    +0.32
+    WNBA   +0.56
+
+saved results/profitability.png

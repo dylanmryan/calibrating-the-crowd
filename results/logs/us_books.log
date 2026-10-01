@@ -1,0 +1,32 @@
+US per-book sample: 4,655 games | books kept: 11 | pinnacle joined: 4,629
+
+=== US retail deviation from Pinnacle (pts) ===
+              book     all  home favs      n
+             betus   -0.08      -0.22  4,542
+          fanatics   -0.06      -0.21  4,463
+        mybookieag   -0.05      -0.19  4,501
+         betrivers   -0.04      -0.17  4,610
+           fanduel   -0.06      -0.15  4,615
+            betmgm   -0.05      -0.13  4,523
+            bovada   -0.05      -0.13  4,577
+       betonlineag   -0.05      -0.12  4,585
+            lowvig   -0.05      -0.10  4,578
+        draftkings   -0.02      -0.08  4,623
+    williamhill_us   -0.03      -0.01  4,592
+
+=== book-level Brier vs exchanges (clustered DM vs Kalshi) ===
+            betmgm: Brier 0.2195 (vs Kalshi dBrier +0.14e-3, z=+0.85, p=0.396)
+        draftkings: Brier 0.2198 (vs Kalshi dBrier -0.06e-3, z=-0.38, p=0.707)
+           fanduel: Brier 0.2201 (vs Kalshi dBrier -0.28e-3, z=-1.73, p=0.084)
+    williamhill_us: Brier 0.2203 (vs Kalshi dBrier +0.04e-3, z=+0.24, p=0.813)
+       betonlineag: Brier 0.2203 (vs Kalshi dBrier -0.12e-3, z=-0.84, p=0.404)
+        mybookieag: Brier 0.2204 (vs Kalshi dBrier +0.00e-3, z=+0.00, p=0.998)
+            lowvig: Brier 0.2208 (vs Kalshi dBrier -0.15e-3, z=-1.00, p=0.315)
+          fanatics: Brier 0.2209 (vs Kalshi dBrier -0.02e-3, z=-0.15, p=0.878)
+         betrivers: Brier 0.2211 (vs Kalshi dBrier +0.10e-3, z=+0.52, p=0.603)
+             betus: Brier 0.2214 (vs Kalshi dBrier -0.05e-3, z=-0.30, p=0.763)
+            bovada: Brier 0.2215 (vs Kalshi dBrier +0.56e-3, z=+2.85, p=0.004)
+
+=== dispersion ===
+  cross-book range (max-min devig prob): median 2.0pt
+  Kalshi's price inside the US-book envelope: 70% of games

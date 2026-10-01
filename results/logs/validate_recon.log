@@ -1,0 +1,23 @@
+=== trade-reconstruction vs archived order books (OddPool) ===
+  what this underwrites: 8,024 of 10,069 Kalshi game prices (80%) are
+  reconstructed from the trade tape rather than read off a quoted book
+  validated sample: 98 games (99 fetched, 1 with no archived book)
+
+  exact bid match: 94.9%   exact ask match: 96.9%
+  |mid error|: mean 0.43pt, median 0.00pt, within 1pt: 99.0%
+  archived snapshot gap to official start: median 0.5 min
+
+    league     n  mean |mid err|    median  within 1pt
+     CBB-M    38           0.00pt     0.00pt      100.0%
+       MLB    11           0.05pt     0.00pt      100.0%
+       NBA    24           1.67pt     0.00pt       95.8%
+       NHL    25           0.06pt     0.00pt      100.0%
+
+  COVERAGE LIMIT: no validated rows for CFB, NFL, WNBA. The
+  reconstruction is a per-market mechanism, not a league-specific one, but
+  the report must say the validation does not cover these leagues directly.
+
+  Read: the reconstruction recovers the archived touch almost exactly. The
+  residual is concentrated in NBA, the league whose books move fastest
+  between the last fill and the bell. robustness_cuts section 2 shows the
+  three-way verdict is the same on recon-priced and book-mid-priced games.

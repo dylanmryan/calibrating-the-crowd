@@ -1,0 +1,42 @@
+fills: 710,129 | games: 513 | contracts: 180,361,278
+
+=== timing: consumption clusters at the event ===
+  final 3h of 24: 53% of fills, 60% of notional (uniform would be 12.5%)
+  T-1h..T-0h: 31.3% of fills (31.30%/hour)
+  T-3h..T-1h: 21.9% of fills (10.96%/hour)
+  T-6h..T-3h: 17.4% of fills (5.80%/hour)
+  T-12h..T-6h: 16.3% of fills (2.71%/hour)
+  T-24h..T-12h: 13.1% of fills (1.09%/hour)
+
+=== wall clock for fills FAR from any game (T-24..T-12h) ===
+  evening ET (7pm-midnight): 41% of far fills (5/24 hours = 21% if uniform)
+  working hours ET (9am-5pm): 10% (8/24 = 33% if uniform)
+
+=== lot sizes ===
+  fills of <=10 contracts: 28% of all fills (but only 1% of volume)
+  round-number lots: 34% of fills
+  fills of >=500 contracts: 7.6% of fills, 78% of volume
+  median fill: 30 contracts ≈ $14 at stake
+
+=== taker P&L to settlement, by size class ===
+      size    fills     $ staked  gross ret net of fee
+      <=10  201,281      559,610     -3.8%     -6.6%
+    11-100  343,224    7,403,042     -3.7%     -6.7%
+   101-500  118,856   14,205,775     -6.1%     -9.0%
+      >500   46,768   73,566,218     -4.9%     -7.6%
+       ALL  710,129   95,734,645     -5.0%     -7.7%
+
+=== fingerprint by league (robustness) ===
+  CBB-M: n= 48,171 | final-3h share 50% | median fill 28
+    CFB: n= 93,476 | final-3h share 55% | median fill 33
+    MLB: n= 36,489 | final-3h share 53% | median fill 28
+    NBA: n=147,830 | final-3h share 47% | median fill 30
+    NFL: n=336,397 | final-3h share 57% | median fill 30
+    NHL: n= 41,343 | final-3h share 46% | median fill 21
+   WNBA: n=  6,423 | final-3h share 47% | median fill 34
+
+  reading: flow is event-clustered, evening-tilted, and tiny —
+  a betting-shop clientele — while the markout analysis shows no
+  size class beats the close: consumption pays, makers price.
+
+saved results/retail_fingerprint.png

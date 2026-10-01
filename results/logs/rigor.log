@@ -1,0 +1,99 @@
+clean all-three games: 5,333 across 386 dates (clusters)
+
+=== cluster-robust (by date) pairwise DM + 90% CI of Brier difference ===
+  Kalshi - Polymarket: ΔBrier=-0.226e-3  clustSE=0.170e-3  z=-1.33 p=0.184  90%CI=(-0.506,+0.054)e-3  |CI|max=0.506e-3 = 2.25pt
+  Kalshi - Sportsbook: ΔBrier=-0.008e-3  clustSE=0.129e-3  z=-0.06 p=0.950  90%CI=(-0.221,+0.205)e-3  |CI|max=0.221e-3 = 1.49pt
+  Polymarket - Sportsbook: ΔBrier=+0.218e-3  clustSE=0.182e-3  z=+1.20 p=0.231  90%CI=(-0.081,+0.517)e-3  |CI|max=0.517e-3 = 2.27pt
+
+=== equivalence margins, translated to the probability scale ===
+  ΔBrier = ε² for a systematic offset ε, so a margin δ admits √δ:
+    δ=0.11e-3 -> 1.05pt   δ=0.44e-3 -> 2.10pt   δ=0.99e-3 -> 3.15pt   δ=1.00e-3 -> 3.16pt
+
+  Economic anchor: an edge below (taker cost × price) cannot be monetised.
+  All-in taker cost 4.2% of notional [immediacy.log].
+    price 0.25 -> breakeven edge 1.05pt -> δ=0.110e-3
+    price 0.50 -> breakeven edge 2.10pt -> δ=0.441e-3
+    price 0.75 -> breakeven edge 3.15pt -> δ=0.992e-3
+  The pre-stated δ=1.0e-3 coincides with the anchor at favourite prices (p≈0.75);
+  it was fixed before these comparisons and is not re-chosen here.
+
+=== TOST verdicts: equivalent at δ iff the 90% CI lies inside ±δ ===
+  pair                          |CI|max         p=0.25      p=0.50      p=0.75  pre-stated
+  ----------------------------------------------------------------------------------------
+  Kalshi - Polymarket          0.506e-3             NO          NO         yes         yes
+  Kalshi - Sportsbook          0.221e-3             NO         yes         yes         yes
+  Polymarket - Sportsbook      0.517e-3             NO          NO         yes         yes
+
+  A 'NO' at the tighter anchors reports the measurement's power, not a
+  difference between venues: it means the comparison stops resolving below
+  an edge only a zero-cost participant could ever act on.
+
+=== the size of the difference, against the size of the skill ===
+  source          Brier      UNC  DSC (skill)        MCB
+  Kalshi         0.2196   0.2500        31.7e-3      1.31e-3
+  Polymarket     0.2198   0.2500        31.5e-3      1.33e-3
+  Sportsbook     0.2196   0.2500        31.9e-3      1.45e-3
+
+  mean discrimination (the skill any venue has): 31.7e-3
+  widest pairwise 90% bound:                     0.52e-3
+  -> the venues' accuracy differs by at most 1.6% of the skill any of
+     them has, and their miscalibration differs by less than that.
+  This is the framing the result deserves: not '0.2196 vs 0.2198, a small
+  number among small numbers', but 'indistinguishable to within 2% of
+  everything they know'.
+
+=== block bootstrap: 59 weekly blocks, 4,000 resamples ===
+  distribution-free companion to the analytic TOST interval above
+  pair                                 analytic 90% CI          bootstrap 90% CI   |CI|max   verdict at 1e-3
+  Kals - Polymarket                   (-0.51,+0.05)e-3          (-0.52,+0.05)e-3     0.52   EQUIV
+  Kals - Sportsbook                   (-0.22,+0.20)e-3          (-0.25,+0.25)e-3     0.25   EQUIV
+  Poly - Sportsbook                   (-0.08,+0.52)e-3          (-0.03,+0.49)e-3     0.49   EQUIV
+  The two intervals agree closely and give the same verdict, so the
+  equivalence result is not an artifact of the normal approximation or
+  of the cluster-SE formula.
+
+=== clustering robustness: does the level change a verdict? (D4) ===
+  SEs x1000, with the G/(G-1) correction; p from t(G-1)
+
+  Kalshi - Polymarket: dBrier=-0.226e-3
+    cluster level              G       SE       t       p   |CI90|max
+    iid (no clustering)     5333    0.139   -1.63   0.103        0.45
+    league x date            859    0.168   -1.35   0.179        0.50
+    date (headline)          386    0.170   -1.33   0.185        0.51
+    week                      59    0.173   -1.31   0.196        0.51
+    month                     15    0.155   -1.46   0.167        0.48
+    home team                271    0.144   -1.57   0.118        0.46
+
+  Kalshi - Sportsbook: dBrier=-0.008e-3
+    cluster level              G       SE       t       p   |CI90|max
+    iid (no clustering)     5333    0.125   -0.06   0.948        0.21
+    league x date            859    0.127   -0.06   0.949        0.22
+    date (headline)          386    0.130   -0.06   0.950        0.22
+    week                      59    0.156   -0.05   0.959        0.26
+    month                     15    0.156   -0.05   0.959        0.26
+    home team                271    0.121   -0.07   0.947        0.21
+
+  Polymarket - Sportsbook: dBrier=+0.218e-3
+    cluster level              G       SE       t       p   |CI90|max
+    iid (no clustering)     5333    0.151   +1.44   0.150        0.47
+    league x date            859    0.182   +1.20   0.230        0.52
+    date (headline)          386    0.182   +1.20   0.232        0.52
+    week                      59    0.160   +1.36   0.179        0.48
+    month                     15    0.149   +1.47   0.165        0.46
+    home team                271    0.147   +1.49   0.138        0.46
+
+  Read: no level crosses alpha=.05 on any pair, and the WIDEST 90% bound at
+  any level is roughly half the pre-stated delta=1.0e-3 — so the equivalence
+  verdict is the same however the dependence is modelled. Clustering costs
+  10-25% of SE against iid, and coarsening past date buys little: week and
+  month are slightly wider on the two Kalshi pairs and slightly narrower on
+  P-B, i.e. noise, not a missed dependence. Team clustering gives SMALLER SEs
+  than date throughout, so no per-team shock is escaping the headline spec.
+  D4's refusal of two-way date x league stands on its own grounds (G=7); this
+  table shows the variance estimator is insensitive in any case.
+
+=== de-vig robustness: multiplicative vs Shin (book fair probs) ===
+  book Brier multiplicative=0.2196  Shin=0.2197
+  mean |shift| in book prob: 0.578 pts
+  Kalshi - Book(Shin): ΔBrier=-0.080e-3  z=-0.70 p=0.486
+  Polymarket - Book(Shin): ΔBrier=+0.146e-3  z=+0.83 p=0.409

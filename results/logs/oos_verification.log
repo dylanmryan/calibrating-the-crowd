@@ -1,0 +1,57 @@
+registered protocol: docs/registered-claims.md (commit f915794); cutoff 2026-08-12; evaluated once on the freeze pull
+
+=== R1/R5. three-way dead heat on the panel holdout ===
+  the VPS live feed's SPORTSBOOK leg stopped 2026-08-07 15:35 UTC (credit reserve exhausted), so only 0 of 0 matched holdout games carry a synchronized book quote — the registered H-3W sample does not exist. The registered protocol forbids a paid top-up without explicit approval, so R1 and R5 are reported as not evaluable rather than quietly re-scoped.
+  [R1] NOT EVALUABLE: the VPS live feed's SPORTSBOOK leg stopped 2026-08-07 15:35 UTC (credit reserve exhausted), so only 0 of 0 matched holdout games carry a synchronized book quote — the registered H-3W sample does not exist. The registered protocol forbids a paid top-up without explicit approval, so R1 and R5 are reported as not evaluable rather than quietly re-scoped.
+  [R5] NOT EVALUABLE: same sample failure as R1 (no post-cutoff book quotes)
+
+  EXPLORATORY (not on the scorecard): K vs P at the SAME final panel snapshot, n=252 holdout games: dBrier=+2.22e-3 z=+0.76 p=0.447 MDE=8.17e-3 — the same-clock exchange dead heat holds where it can be measured
+
+=== R2. exchange dead heat on the master holdout (n=264 games, 17 date clusters) ===
+  Kalshi      Brier=0.2262
+  Polymarket  Brier=0.2263
+  K-P: dBrier=-0.04e-3  z=-0.15  p=0.879  MDE=0.81e-3
+  [R2] CONSISTENT: |dBrier| 0.04e-3, DM p=0.879, MDE 0.81e-3
+
+=== R3. calibration on the holdout ===
+  Kalshi      slope=1.406 [0.90,1.92] covers 1  ECE=0.0223 vs noise floor 0.0424 ok
+  Polymarket  slope=1.427 [0.91,1.95] covers 1  ECE=0.0209 vs noise floor 0.0422 ok
+  [R3] CONSISTENT: Kalshi slope 1.41 [0.90,1.92] ECE 0.022 (floor 0.042); Polymarket slope 1.43 [0.91,1.95] ECE 0.021 (floor 0.042)
+
+=== R4. favorite-longshot bias on the holdout (stacked sides) ===
+  <30c: n=26 — too thin to read
+  >70c: n=26 — too thin to read
+  [R4] UNDERPOWERED: <30c: n=26 too thin; >70c: n=26 too thin
+
+=== R6. shared extras blind spot, direction (fresh MLB ladders) ===
+  !! R6 WITHDRAWN 2026-09-23: this test could not fail. It splits on
+     `extras`, a state realized DURING the game, which breaks the
+     calibration identity mechanically -- a CONSTANT forecaster scores
+     +21.19pt on the same split (extras_conditioning.py S1). A verdict of
+     CONSISTENT below therefore carries NO information and must not be
+     cited as a replication. Computed and printed for the record only;
+     see the third annotation in docs/registered-claims.md.
+  all sides n=448: gap +0.1pt
+  extras n=34: gap +19.6pt (90% CI ±14.3pt)  [frozen estimate +20.2pt]
+  regulation n=414: gap -1.5pt
+  [R6] CONSISTENT: extras +19.6pt ±14 (n=34); aggregate +0.1pt (n=448)
+
+=== R7. WNBA totals tilt — the open observation's real-time test ===
+  n=47 ladders: mean u=0.404 (z=-2.3 vs 0.5)  KS p=0.010  [frozen estimate mean u 0.536]
+  [R7] DEVIATES: mean u 0.404, z -2.3, n=47
+
+=== R8. structural taker cost on fresh quotes ===
+  n=44,525 fresh quotes: median -4.6% per position (IQR -5.6 to -4.0)  [frozen: -4.5%, criterion ±1.0pt]
+  [R8] CONSISTENT: median -4.6%/position (n=44,525)
+
+=== SCORECARD ===
+  R1  NOT EVALUABLE three-way dead heat (panel holdout)
+  R5  NOT EVALUABLE synchronized-clock robustness
+  R2  CONSISTENT   exchange dead heat (master holdout)
+  R3  CONSISTENT   holdout calibration (slopes~1, ECE at floor)
+  R4  UNDERPOWERED no favorite-longshot bias
+  R6  CONSISTENT   extras cell direction (predicted +)
+  R7  DEVIATES     WNBA totals tilt (predicted u>0.5)
+  R8  CONSISTENT   structural taker cost -4.5% ±1pt
+
+saved results/oos_scorecard.png

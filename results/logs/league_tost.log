@@ -1,0 +1,46 @@
+three-way clean games: 5,333
+
+=== per-league TOST (home-side Brier differential ×1000, 90% CI, δ=1.0e-3) ===
+ league      n  pair                     ΔBrier             90% CI   δ_min  verdict
+    ALL   5333  Kals vs Polymarket        -0.23 [ -0.51, +0.05]     0.51  EQUIV
+    ALL   5333  Kals vs Sportsbook        -0.01 [ -0.22, +0.20]     0.22  EQUIV
+    ALL   5333  Poly vs Sportsbook        +0.22 [ -0.08, +0.52]     0.52  EQUIV
+
+    NHL   1384  Kals vs Polymarket        -0.11 [ -0.42, +0.20]     0.42  EQUIV
+    NHL   1384  Kals vs Sportsbook        +0.11 [ -0.17, +0.39]     0.39  EQUIV
+    NHL   1384  Poly vs Sportsbook        +0.22 [ -0.15, +0.60]     0.60  EQUIV
+
+    NBA   1284  Kals vs Polymarket        -0.46 [ -0.88, -0.05]     0.88  EQUIV
+    NBA   1284  Kals vs Sportsbook        -0.33 [ -0.79, +0.13]     0.79  EQUIV
+    NBA   1284  Poly vs Sportsbook        +0.13 [ -0.43, +0.68]     0.68  EQUIV
+
+    MLB   1240  Kals vs Polymarket        +0.18 [ -0.12, +0.48]     0.48  EQUIV
+    MLB   1240  Kals vs Sportsbook        +0.08 [ -0.21, +0.37]     0.37  EQUIV
+    MLB   1240  Poly vs Sportsbook        -0.10 [ -0.44, +0.24]     0.44  EQUIV
+
+    CFB    721  Kals vs Polymarket        -1.13 [ -2.61, +0.36]     2.61  wide-CI
+    CFB    721  Kals vs Sportsbook        -0.42 [ -0.95, +0.11]     0.95  EQUIV
+    CFB    721  Poly vs Sportsbook        +0.70 [ -0.91, +2.31]     2.31  wide-CI
+
+   WNBA    426  Kals vs Polymarket        +0.53 [ -0.86, +1.93]     1.93  wide-CI
+   WNBA    426  Kals vs Sportsbook        +1.23 [ -0.21, +2.68]     2.68  wide-CI
+   WNBA    426  Poly vs Sportsbook        +0.70 [ -0.25, +1.65]     1.65  wide-CI
+
+    NFL    278  Kals vs Polymarket        -0.34 [ -1.05, +0.36]     1.05  wide-CI
+    NFL    278  Kals vs Sportsbook        -0.32 [ -1.11, +0.46]     1.11  wide-CI
+    NFL    278  Poly vs Sportsbook        +0.02 [ -0.90, +0.94]     0.94  EQUIV
+
+=== sharpness: mean p(1-p), lower = sharper (home side) ===
+ league      n      Kalshi  Polymarket  Sportsbook   spread(max-min)
+    ALL   5333      0.2172      0.2174      0.2193   0.0020
+    NHL   1384      0.2403      0.2404      0.2407   0.0005
+    NBA   1284      0.1973      0.1976      0.2007   0.0034
+    MLB   1240      0.2434      0.2435      0.2437   0.0004
+    CFB    721      0.1788      0.1798      0.1846   0.0058
+   WNBA    426      0.1967      0.1950      0.1985   0.0035
+    NFL    278      0.2093      0.2091      0.2106   0.0015
+
+=== resolution (×1000, higher = more informative; same-game comparison) ===
+  Kalshi      resolution=  28.1  brier=0.2196
+  Polymarket  resolution=  27.9  brier=0.2198
+  Sportsbook  resolution=  27.7  brier=0.2196

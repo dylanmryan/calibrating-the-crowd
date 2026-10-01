@@ -1,0 +1,18 @@
+trades: 710,129 across 513 games ({'CBB-M': np.int64(75), 'CFB': np.int64(80), 'MLB': np.int64(68), 'NBA': np.int64(80), 'NFL': np.int64(79), 'NHL': np.int64(80), 'WNBA': np.int64(51)})
+size: median=30 p90=330 p99=3988 contracts
+
+=== markout by trade-size quintile (game-clustered SEs) ===
+   size Q        n  avg size  markout->close      z  markout->settle      z
+        1  142,026         3          -0.39pt   -3.2           -0.12pt   -0.0
+        2  142,026        13          -0.31pt   -2.1           -0.89pt   -0.2
+        3  142,025        31          -0.30pt   -1.8           -2.05pt   -0.5
+        4  142,026        82          -0.36pt   -2.6           -2.47pt   -0.6
+        5  142,026      1140          -0.33pt   -2.6           -2.72pt   -0.7
+  (Kalshi taker fee ~1.75pt at evens: takers need markout > fee to profit)
+
+=== game level: does LARGE-trade imbalance predict outcomes beyond the book? ===
+  book             weight=+1.129  z=+6.19  p=0.000
+  imbalance LARGE  weight=-0.154  z=-0.26  p=0.797
+  imbalance small  weight=-0.911  z=-0.70  p=0.483
+  (n=337 games; imbalance = size-weighted net taker direction, top-quartile
+   sizes vs rest. Informed trading => LARGE significant, small not.)

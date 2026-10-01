@@ -1,0 +1,28 @@
+threshold contracts priced: 34,895 | games: 4,927 | ladders(>=3 rungs): 6,781
+source mix: {'trade-recon': 21791, 'book-mid': 13104}
+
+=== ladder coherence ===
+ladders analyzed: 6,781  (median rungs 3)
+perfectly monotone (mids, tick-tolerance): 98.0%
+adjacent-pair violation rate: 0.70% of all rungs
+ladders w/ EXECUTABLE arbitrage (bid/ask crossing): 0.07%
+
+by source (book-mid = live order book; trade-recon = reconstructed):
+  book-mid    ladders=  3657 monotone= 99.9% arb-ladders= 0.03%
+  trade-recon ladders=  3124 monotone= 95.8% arb-ladders= 0.13%
+
+by league:
+  MLB   ladders=  4063 monotone= 99.9% arb= 0.00%
+  NBA   ladders=  2176 monotone= 93.9% arb= 0.23%
+  WNBA  ladders=   542 monotone= 99.8% arb= 0.00%
+
+=== moneyline bracket consistency ===
+games checked: 1,328  consistent: 99.6% (an UPPER bound)
+  the check tests only the +-1.5 rung against the moneyline, so a
+  violation elsewhere in the ladder is not counted: quote this as
+  'at most this share is incoherent', never as an exact rate.
+
+=== threshold-contract calibration (extreme probabilities) ===
+Brier=0.1856  ECE=0.0071  n=34,895
+longshot rungs (p<=0.10): n=1,641 mean_pred=0.0746 obs=0.0902
+saved results/spread_coherence.png

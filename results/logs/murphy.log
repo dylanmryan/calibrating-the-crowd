@@ -1,0 +1,12 @@
+three-way clean games: 5,333 (book = Shin de-vig; see artifact note)
+  Kalshi      mean elementary score integral x2 = 0.2195 (Brier check)
+  Polymarket  mean elementary score integral x2 = 0.2197 (Brier check)
+  Sportsbook  mean elementary score integral x2 = 0.2196 (Brier check)
+
+  de-vig artifact check (sup-t global p vs each book variant):
+    Kalshi      vs mult book: sup-t=5.56 p=0.001  |  vs Shin book: sup-t=2.91 p=0.129
+    Polymarket  vs mult book: sup-t=5.39 p=0.001  |  vs Shin book: sup-t=2.88 p=0.190
+  Kalshi - Polymarket: max |diff| = 1.397e-3 | pointwise band covers 0 at 94% of thresholds | sup-t = 2.67 vs crit 3.21 -> global p = 0.290
+  Kalshi - Sportsbook: max |diff| = 2.785e-3 | pointwise band covers 0 at 87% of thresholds | sup-t = 2.91 vs crit 3.16 -> global p = 0.129
+  Polymarket - Sportsbook: max |diff| = 2.327e-3 | pointwise band covers 0 at 92% of thresholds | sup-t = 2.88 vs crit 3.22 -> global p = 0.190
+saved results/murphy.png

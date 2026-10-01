@@ -1,0 +1,21 @@
+joint constant sample (all 7 horizons on BOTH exchanges): 3,906 games
+league
+NHL     1367
+NBA      801
+CFB      677
+MLB      562
+WNBA     278
+NFL      221 
+
+ horizon   K Brier   P Brier   K ECE   P ECE  dBrier K-P      z      p
+     24h    0.2210    0.2206  0.0285  0.0214      +0.41e-3  +1.00  0.319
+     12h    0.2203    0.2204  0.0256  0.0233      -0.05e-3  -0.29  0.771
+      6h    0.2200    0.2200  0.0264  0.0216      +0.03e-3  +0.19  0.850
+      3h    0.2198    0.2198  0.0289  0.0212      +0.03e-3  +0.19  0.851
+      1h    0.2197    0.2197  0.0264  0.0255      +0.07e-3  +0.45  0.652
+     15m    0.2194    0.2197  0.0255  0.0254      -0.36e-3  -1.91  0.056
+   start    0.2195    0.2196  0.0290  0.0236      -0.12e-3  -0.64  0.525
+
+book reference (same games): T-24h Brier 0.2204, close 0.2194
+mean |move| 24h->start: Kalshi 2.2pts, Polymarket 2.3pts
+saved results/horizon_cross.png

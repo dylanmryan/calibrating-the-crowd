@@ -1,0 +1,7 @@
+games with ladder bracketing the realized margin: 4,678
+PIT uniformity (all): KS=0.0093  p=0.812  mean=0.501 (0.5=unbiased)
+  MLB   n=1,962  KS=0.0282 p=0.087 mean=0.509
+  NBA   n=1,200  KS=0.0274 p=0.323 mean=0.504
+  NHL   n=1,230  KS=0.0310 p=0.184 mean=0.487
+  WNBA  n=  286  KS=0.0329 p=0.907 mean=0.500
+saved results/margin_pit.png

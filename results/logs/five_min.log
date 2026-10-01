@@ -1,0 +1,103 @@
+5-min era panel (from 2026-07-31): 471 games, 77,043 grid steps, 19,272 with all three venues
+share of 5-min steps with a >0.4pt move: kalshi=4.5%  polymarket=3.5%  sportsbook=1.4%
+
+contemporaneous correlation of 5-min changes:
+source      kalshi  polymarket  sportsbook
+source                                    
+kalshi       1.000       0.014       0.043
+polymarket   0.014       1.000       0.060
+sportsbook   0.043       0.060       1.000
+=== 1. RESOLUTION LADDER — does a lead appear as the clock sharpens? ===
+  a lead is a fixed delay: corr(dA_t, dB_t+1) must GROW as the step shrinks toward it
+
+  grid   5min: 471 games, 19,272 all-three complete steps
+
+  grid  10min: 471 games, 9,617 all-three complete steps
+
+  grid  15min: 471 games, 6,444 all-three complete steps
+
+  grid  30min: 471 games, 3,207 all-three complete steps
+
+          pair      5min     10min     15min     30min
+    kals->poly    +0.025    +0.031    +0.021    +0.032
+    kals->spor    +0.035    +0.039    +0.033    +0.042
+    poly->kals    +0.010    +0.016    +0.018    +0.044
+    poly->spor    +0.026    +0.029    +0.031    +0.024
+    spor->kals    +0.006    +0.028    +0.033    +0.059
+    spor->poly    +0.051    +0.040    +0.041    +0.026
+             n    75,253    37,311    24,776    12,098
+
+  READ: flat/noisy across grids => no hidden delay between 5 and 30 min.
+
+=== 2. PREDICTIVE REGRESSIONS at 5 min: dB_t ~ dB_(t-1) + dA_(t-1) ===
+  predict dkalshi      <- kalshi(own):-0.276(z=-6.8)  polymarket:+0.010(z=+2.1)  sportsbook:+0.047(z=+2.4)   n=19,136
+  predict dpolymarket  <- polymarket(own):-0.001(z=-0.2)  kalshi:+0.011(z=+1.0)  sportsbook:+0.164(z=+4.5)   n=19,142
+  predict dsportsbook  <- sportsbook(own):+0.201(z=+11.0)  kalshi:+0.009(z=+1.4)  polymarket:+0.004(z=+1.7)   n=19,124
+
+=== 2b. IS THE LEAD MECHANICAL? consensus-composition and dose checks ===
+  coefficient on lagged BOOK move, predicting the exchange's next 5-min move
+  subsample                                          kalshi         polymarket
+  all steps                                  +0.047(z=+2.4)     +0.164(z=+4.5)
+  consensus membership UNCHANGED             +0.049(z=+2.3)     +0.174(z=+4.5)
+  consensus membership CHANGED                   n=261 thin         n=261 thin
+  book moved >=0.5pt                             n=192 thin         n=192 thin
+  book moved <0.5pt                          +0.059(z=+1.5)     +0.102(z=+3.4)
+  final 2h before start                      +0.006(z=+0.1)     -0.008(z=-0.1)
+  more than 2h out                           +0.046(z=+2.5)     +0.190(z=+5.0)
+  exchange quote AWAKE (moved in last 30m)     +0.089(z=+2.8)     +0.138(z=+2.9)
+  exchange quote RESTING (frozen 30m)        +0.001(z=+0.1)     +0.176(z=+3.3)
+
+  READ: a bookkeeping artifact concentrates where membership changes and
+  does not scale with move size; information scales with size and with
+  proximity to the event.
+
+=== 3. BOOK-MOVE EVENT STUDY at 5 min (+-30min, events >= 2pts) ===
+
+=== threshold sensitivity: events re-detected at each cut (sportsbook moves) ===
+   thresh  events  mean size        kalshi antic% (p) polymarket antic% (p)
+     1.0p      55       1.4p             27% (p=0.001)          17% (p=0.000)
+     1.5p      18       1.9p             22% (p=0.031)          17% (p=0.008)
+     2.0p       7   (too few events to read)
+     3.0p       0   (too few events to read)
+  Read: across 2 readable cut(s) the anticipation share spans 17%-27%
+  — BELOW 50% throughout, i.e. the exchanges had if anything drifted the
+  wrong way before a book jump. There is no anticipation to find at any
+  cut, so the null is a property of the data rather than of where the
+  event boundary was drawn.
+  Significantly below chance for both exchanges at: 1.0pt, 1.5pt.
+
+  only 7 clean non-overlapping events at THRESH=2pts — underpowered at this window width
+
+=== 3. EVENT STUDY: book moves >= 2pts over 15 min, response on the 5-min clock (+-30min) ===
+  n=19 events, mean size 2.4pts (offset 0 = the 5-min step completing the move)
+  responder       -30    -25    -20    -15    -10     -5     +0     +5    +10    +15    +20    +25    +30
+  kalshi        -0.05  +0.03  -0.01  +0.07  +0.18  +0.27  +0.11  +0.16  +0.10  +0.03  -0.02  +0.14  -0.06
+  polymarket    +0.00  +0.00  +0.06  +0.18  +0.05  +0.05  +0.68  +0.26  +0.00  +0.08  +0.00  +0.05  +0.05
+  sportsbook    +0.00  -0.02  +0.01  -0.05  +0.27  +0.74  +1.38  +0.18  +0.12  +0.05  -0.03  +0.04  +0.07
+
+  exchange response split (pts):
+    kalshi       during the move (-15..0): +0.57pts | after (+5..+30min): +0.36pts (+38% of total) | before: +0.49pts
+    polymarket   during the move (-15..0): +0.79pts | after (+5..+30min): +0.45pts (+31% of total) | before: +0.32pts
+  READ: mass to the RIGHT of 0 = the exchanges chase the book with a sub-15-min lag; mass at/left of 0 = they were already there.
+
+=== 4. MIRROR: does the book follow the exchanges within 5 min? ===
+  around kalshi moves >=2pts (n=77): book responds +0.00 pre / +0.11 at / -0.01 post (total +0.10pts, same-step share 105%)
+  around polymarket moves >=2pts (n=258): book responds +0.04 pre / +0.12 at / +0.02 post (total +0.34pts, same-step share 36%)
+
+saved results/five_min.png
+
+=== VERDICT ===
+  The no-leader result is NOT a resolution artifact: no cross-lag
+  correlation sharpens as the clock goes 30 -> 5 min, and nothing
+  predicts the book at any grid.
+  What the finer clock DOES reveal is a small one-step book->exchange
+  coefficient (Kalshi +0.047 z=2.4, Polymarket +0.164 z=4.5). Three
+  cuts say it is drift alignment, not news transmission:
+    - it is ZERO in the final 2h before start (K +0.006, P -0.008),
+      the window where information actually arrives;
+    - it lives in sub-half-point book moves, not news-sized ones;
+    - for Polymarket it is as strong from a quote frozen for 30 min
+      (+0.176) as from an active one (+0.138) — catch-up, not response.
+  Around real 2pt book moves the exchanges are already moving DURING
+  the book's 15-min window; ~31-38% of their (small) total arrives in
+  the following half hour (n=19 events — suggestive, not a claim).

@@ -1,0 +1,85 @@
+three-way clean games: 5,333 over 386 dates
+equivalence margin delta = 1.0e-3 (pre-stated; D2)
+d_min and MDE are printed x1000; MDE at alpha=.05, power=80% (power.py)
+EQUIV and a significant z can co-occur and do not contradict: at this n a
+gap far too small to matter is still detectable. TOST answers 'is it small',
+DM answers 'is it zero'; the paper's claim is the first one.
+
+=== 0. quote quality on the headline sample (carried, never filtered on) ===
+  column                         n      p50      p90      p99      max   tail
+  Kalshi quote age (min)     5,333     0.10     0.90     9.34   151.60   0.11% older than 60 min
+  Poly quote age (min)       5,333     0.90     0.90     1.00     8.10   0.00% older than 60 min
+  Kalshi quoted spread ($)   5,302     0.01     0.02     0.03     0.14   1.5% wider than 2c
+  books in the consensus     5,333    11.00    11.00    11.00    11.00   0.4% of games under 5 books
+  Read: the quotes are essentially simultaneous with the bell and the
+  consensus is essentially always the full book panel, so no quality
+  filter is applied and none would change the sample materially. The
+  book leg is the one with a real timing caveat (30-min snapshot
+  bucketing, sportsbook_hist), and it is conceded in the limitations.
+
+=== 1. by favourite strength (bucketed on the outcome-blind consensus price) ===
+  cut                            n       K       P       B     worst|z|   d_min     MDE   verdict
+  coin-flip <5pt              1396  0.2487  0.2489  0.2487    0.62 P-B     0.78    0.97   EQUIV@1e-3
+  mild 5-15pt                 2075  0.2456  0.2455  0.2457    0.51 P-B     0.47    0.61   EQUIV@1e-3
+  clear 15-25pt                885  0.2094  0.2097  0.2091    1.67 P-B     1.21    1.02   power-limited
+  heavy >25pt                  977  0.1319  0.1327  0.1321    1.24 K-P     1.88    1.90   power-limited
+  (a difference confined to the tails would not show in the pooled Brier;
+   the tail buckets are the small ones, so their nulls are MDE-limited)
+
+=== 2. by Kalshi price construction (k_src) ===
+  construction                   n       K       P       B     worst|z|   d_min     MDE   verdict
+  trade-recon                 4263  0.2145  0.2148  0.2146    2.00 K-P     0.67    0.60   EQUIV@1e-3
+  book-mid                    1070  0.2400  0.2396  0.2393    1.70 K-B     1.25    1.19   power-limited
+  (4,263/5,333 = 80% of Kalshi closes are reconstructed
+   from the trade tape; the reconstruction itself is validated against
+   archived order books in validate_recon — see that log)
+
+=== 3. by book-consensus construction (n=4,655 games with per-book detail, mean 10.8 books) ===
+  construction                 Brier   vs K z       p    d_min     MDE    mean |diff| vs headline
+  book_p1 (headline)          0.2197    +0.07   0.942     0.24    0.39                          —
+  mean_then_devig             0.2197    +0.26   0.798     0.26    0.39                    0.016pt
+  devig_then_mean             0.2197    +0.26   0.796     0.26    0.39                    0.017pt
+  devig_then_median           0.2197    +0.22   0.828     0.26    0.39                    0.147pt
+  bestprice_devig             0.2198    -0.61   0.539     0.31    0.39                    0.367pt
+  (bestprice = line-shopped across all books, the benchmark's best possible
+   case; the equivalence verdict does not turn on any of these choices)
+
+=== 4. by sample exclusion (settlement disagreements kept vs dropped) ===
+  sample                         n       K       P       B     worst|z|   d_min     MDE   verdict
+  clean set (the paper's)     5333  0.2196  0.2198  0.2196    1.33 K-P     0.52    0.51   EQUIV@1e-3
+  INCLUDING disagreers        5412  0.2200  0.2203  0.2200    1.48 K-P     0.56    0.52   EQUIV@1e-3
+  (79/5,412 = 1.5% dropped; the drop is venue-asymmetric —
+   72 Kalshi vs 7 Polymarket settlement disagreements — so the check
+   that matters is whether keeping them and trusting ESPN moves anything)
+
+=== 5. by news arrival before the bell (n=4,552 games with a T-24h book price) ===
+  news bucket                    n       K       P       B     worst|z|   d_min     MDE   verdict
+  quiet (0.6pt avg)           2277  0.2112  0.2115  0.2109    1.66 P-B     1.14    1.01   power-limited
+  some (2.1pt avg)            1364  0.2290  0.2292  0.2291    1.03 K-P     0.61    0.80   EQUIV@1e-3
+  busy (4.0pt avg)             683  0.2292  0.2294  0.2292    0.68 K-P     0.79    1.03   EQUIV@1e-3 (low power)
+  news (top 5%) (8.9pt avg)    228  0.2426  0.2428  0.2432    0.76 K-B     1.95    2.43   power-limited
+  If forecasting skill differed anywhere it would differ where there was
+  something to forecast. Nothing rejects at any intensity; the top bucket
+  is the thin one and carries its MDE.
+
+=== 6. league composition: what requiring all three venues does ===
+  league       Kalshi-priced   three-way     shift
+  CBB-M               10.2%        0.0%    -10.2%
+  CFB                  9.3%       13.5%     +4.2%
+  MLB                 41.2%       23.3%    -17.9%
+  NBA                 14.3%       24.1%     +9.8%
+  NFL                  3.7%        5.2%     +1.5%
+  NHL                 15.4%       26.0%    +10.6%
+  WNBA                 6.0%        8.0%     +2.0%
+  (Kalshi-priced clean n=9,863 -> three-way n=5,333)
+
+  weighting                         Kalshi  Polymarket  Sportsbook
+  natural (as reported)             0.2196      0.2198      0.2196
+  league-equal                      0.2145      0.2147      0.2144
+  Same ordering and the same spacing under both weightings, so the pooled
+  dead heat is not an artifact of which leagues happen to dominate the
+  joint sample. The composition shift itself belongs in the data section.
+
+REPORT RULE: these are robustness cuts, not subgroup discoveries. None
+enters the FDR family (multiple_testing D1); each is read the way every
+other null in this project is read — with its MDE in the same sentence.

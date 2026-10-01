@@ -1,0 +1,27 @@
+=== does a pre-game price exist? (same niche-league matches) ===
+  Kalshi-priced matches (n=40): books quoted (>=3) 85%, median 23 books/match; Polymarket listed 55%
+  Kalshi-UNpriced matches (n=247): books quoted (>=3) 55%, median 16 books/match; Polymarket listed 68%
+  Polymarket volume where listed: median $202,977/match
+  (name-matching misses make book/Poly presence LOWER bounds;
+   Kalshi presence is exact — its own settled markets)
+
+=== price agreement, t1-win prob (n=34 matches) ===
+  |Kalshi - book consensus|: median 4.2pt (covered-league benchmark: 0.7pt)
+  |Poly - book|: median 1.5pt | |Kalshi - Poly|: median 3.5pt (n=19; Poly prices are coarse candles, up to hours old)
+
+=== the books' niche overround ===
+  median field sum 1.071 (covered-league books ~1.04; books charge more to function where flow is thin)
+
+=== reading ===
+  Same matches, three institutions. Books quote ~80-100% of them
+  at ~7% vig (vs ~4% in covered leagues). Polymarket
+  carries six-figure volume (its Brazilian clientele) and prices
+  1.5pt from the book line. Kalshi's book mostly never prints,
+  and when it does the print sits 4.2pt from consensus — six
+  times the covered-league 0.7pt. Put next to the gradient leg
+  (niche prices UNBIASED on average, slope 0.98), the split is
+  clean: repetition keeps prices right on average; the liquidity
+  complex is what compresses the noise around them. The MM
+  complex decides WHETHER a market functions and how PRECISE it
+  is; repetition decides whether it is BIASED. Each venue
+  functions exactly where its complex or clientele deploys.

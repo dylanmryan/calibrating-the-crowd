@@ -1,0 +1,59 @@
+=== data quality audit ===
+  [PASS] espn: espn_id unique
+  [PASS] espn: winner values
+  [PASS] espn: scores sane
+  [PASS] espn: no tied-score winners
+  [PASS] kalshi inv: ticker unique
+  [PASS] kalshi inv: won binary
+  [PASS] kalshi inv: 2 sides/event
+  [PASS] matches: espn_id unique (1:1 enforced)
+  [PASS] kalshi px: game_id unique
+  [PASS] kalshi px: p1+p2 ~ 1
+  [PASS] kalshi px: bid<=ask side1
+  [PASS] kalshi px: bid<=ask side2
+  [PASS] kalshi px: quotes in [0,1]
+  [PASS] poly px: game_id unique
+  [PASS] poly px: p1+p2 ~ 1
+  [PASS] book close: game_id unique
+  [PASS] book T-24h: game_id unique
+  [PASS] book close: overround in [1.00,1.15]
+  [PASS] master: game_id unique
+  [PASS] master: outcome in {1,2}
+  [PASS] master: kalshi p1+p2 ~ 1
+  [PASS] master: poly p1+p2 ~ 1
+  [PASS] master: book p1+p2 ~ 1
+  [PASS] master: outcome == ESPN winner (clean rows)
+  [PASS] master: three-way clean set size
+         (three-way clean n = 5,333)
+  [PASS] ladders: ticker unique
+  [PASS] ladders: won binary
+  [PASS] ladders: prob in (0,1)
+  [PASS] ladders: bid<=ask
+  [PASS] kalshi_horizons.csv: game_id unique
+  [PASS] kalshi_horizons.csv: horizons in (0,1)
+  [PASS] poly_horizons.csv: game_id unique
+  [PASS] poly_horizons.csv: horizons in (0,1)
+  [PASS] ladders: cover_line() reproduces Kalshi settlement >99%
+  [PASS] ladders: MLB settlement convention
+  [PASS] ladders: NBA settlement convention
+  [PASS] ladders: NHL settlement convention
+  [PASS] ladders: WNBA settlement convention
+  [PASS] trades: price in (0,1)
+  [PASS] trades: count > 0
+  [PASS] trades: exact-dup rows < 1%
+  [PASS] trades: fills inside 24h window
+  [PASS] minute_paths: (game,minute) unique
+  [PASS] minute_paths: prices in (0,1)
+  [PASS] polyus catalog: slug unique
+  [PASS] polyus prices: (slug,tape_date) unique
+  [PASS] polyus prices: close in (0,1)
+  [PASS] polyus prices: stale_min >= 0
+  [PASS] fee_volumes: game_id unique
+  [PASS] fee_spreads: game_id unique
+  [PASS] poly_spreads.csv: spreads >= 0
+  [PASS] fee_spreads.csv: spreads >= 0
+  [PASS] live: p1+p2 ~ 1
+  [PASS] live: depth non-negative
+  [PASS] hygiene: no ' 2.' stray copies
+
+audit: 55 pass, 0 warn, 0 FAIL

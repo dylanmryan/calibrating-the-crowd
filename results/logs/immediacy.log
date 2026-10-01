@@ -1,0 +1,46 @@
+depth panel from 2026-07-25: 162,615 book snapshots, 564 games, leagues {'MLB': 135911, 'WNBA': 26704}
+
+=== 1. WHAT STANDS THERE (median resting size, home side) ===
+  venue          touch bid   touch ask  within 5c bid  within 5c ask   spread
+  kalshi             1,480       2,386         14,673         27,914     1.0c
+  polymarket         7,072       6,122         83,653         87,572     1.0c
+  (Kalshi units are $1 contracts, Polymarket units are $1 shares)
+
+=== 2. THE IMMEDIACY CURVE (median cost vs mid, home side) ===
+   size (units)                     kalshi                 polymarket
+             10     0.50c ( 1.1% | 100% fill)     0.50c ( 1.0% | 100% fill)
+            100     0.50c ( 1.1% |  99% fill)     0.50c ( 1.0% | 100% fill)
+          1,000     0.50c ( 1.1% |  95% fill)     0.50c ( 1.0% | 100% fill)
+         10,000     0.50c ( 1.1% |  60% fill)     0.51c ( 1.1% |  91% fill)
+         50,000     0.50c ( 1.0% |  46% fill)     0.83c ( 1.6% |  64% fill)
+        200,000     0.61c ( 1.2% |  38% fill)     1.72c ( 3.3% |  22% fill)
+
+  'fill' = share of snapshots where the whole order fits inside the
+  measured 5c band; cost is the median over those snapshots.
+
+=== 3. WHERE THE MEDIAN CUSTOMER SITS ===
+  kalshi       a 30-unit order (the median fill, ~$16 at stake) sits inside the touch in 92.4% of snapshots; median cost 0.50c = 1.0% of notional
+  polymarket   a 30-unit order (the median fill, ~$16 at stake) sits inside the touch in 95.0% of snapshots; median cost 0.50c = 0.9% of notional
+  => for the customer the market is measured in, depth is not the
+     binding cost. The spread and the fee are.
+
+=== 4. DOES THE BOOK THICKEN INTO THE EVENT? ===
+  median size resting within 5c of the ask (CROSS-GAME — the late
+  buckets contain a different, more liquid mix of games; use the
+  within-game ratio below for the ramp, not this table):
+      window           kalshi       polymarket
+        <30m    393,114 (n=2,330)     75,715 (n=2,324)
+      30m-2h    329,541 (n=7,598)     65,529 (n=7,562)
+        2-6h    150,421 (n=24,072)     42,053 (n=23,812)
+       6-24h     17,111 (n=47,711)    110,036 (n=47,206)
+
+  within-game check (same games, late window / early window):
+    kalshi       n=507 games: median late/early depth ratio 2.14x, deeper late in 87% of games
+    polymarket   n=505 games: median late/early depth ratio 1.58x, deeper late in 60% of games
+
+=== 5. TOUCH ASYMMETRY (who is the best quote?) ===
+  kalshi       a <=10-unit order is the best quote on some side in 15.4% of snapshots; touch imbalance 0.25 vs 5c-band imbalance 0.27
+  polymarket   a <=10-unit order is the best quote on some side in 2.7% of snapshots; touch imbalance 0.51 vs 5c-band imbalance 0.50
+  (touch thin + band balanced = a retail-sized surface over a professional layer)
+
+saved results/immediacy.png

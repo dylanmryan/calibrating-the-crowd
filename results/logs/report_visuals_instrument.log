@@ -1,0 +1,9 @@
+candidate figures for the instrument legs
+    checked against book_freshness.log: K vs Pinnacle, fresh arm = -0.004e-3
+  saved results/report/C1_matched_freshness_forest.png / .pdf
+  saved results/report/C2_freshness_natural_experiment.png / .pdf
+    checked against book_panel.log: clean-panel anticipation (Kalshi) = 26%
+  saved results/report/C3_clean_panel_anticipation.png / .pdf
+  saved results/report/C4_panel_integrity.png / .pdf
+
+  candidates written to results/report/ as C1–C4; renumber on selection.

@@ -1,7 +1,7 @@
 # Report outline — Calibrating the Crowd
 *Drafting outline (2026-08-06; numbers re-verified against the 2026-08-29
-freeze, the 2026-09-03 re-stamp at 61 and the 2026-09-16 re-stamp at 63 modules,
-0 failures throughout). Provenance in
+freeze, the 2026-09-03 re-stamp at 61, the 2026-09-16 re-stamp at 63 and the
+2026-09-23 re-stamp at 65 modules, 0 failures throughout). Provenance in
 brackets. Figures referenced by filename exist in `results/`. Sections 7 and 8
 were revised 2026-09-03 following the interpretation audit — see
 `docs/interpretation-audit-2026-09-03.md`.*
@@ -584,7 +584,7 @@ answer to that second reading: the dead heat replicated on games collected
 after the claims were fixed, at full registered power.
 
 ## 8. Reproducibility and data
-One-command regeneration (63 modules, audit-gated); committed core table +
+One-command regeneration (65 modules, audit-gated); committed core table +
 dictionary + tour notebook; free-API re-derivability for exchange data;
 book data banked (subscription lapses Sept 2026); VPS backups.
 

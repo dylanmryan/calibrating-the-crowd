@@ -1,0 +1,18 @@
+pushes excluded: 157
+main lines: 3,672 games ({'MLB': np.int64(1137), 'NBA': np.int64(1268), 'NHL': np.int64(1267)})
+mean |main line prob - 0.5| = 8.65pts
+
+=== book P(cover) calibration at the main line ===
+  MLB  n=1,137  mean pred=0.4992  empirical cover=0.5040  Brier=0.2465  ECE=0.0087
+  NBA  n=1,268  mean pred=0.5002  empirical cover=0.5205  Brier=0.2499  ECE=0.0203
+  NHL  n=1,267  mean pred=0.4735  empirical cover=0.4641  Brier=0.2010  ECE=0.0169
+  ALL  n=3,672  mean pred=0.4907  empirical cover=0.4959  Brier=0.2319  ECE=0.0135
+  (a fair coin forecaster scores Brier 0.2500 here — spreads live at 50/50)
+
+=== Kalshi vs book at the main line (matched rungs, n=1,452) ===
+  corr=0.995  mean(K-B)=-0.22pts
+  Book   Brier=0.2122  ECE=0.0200
+  Kalshi Brier=0.2120  ECE=0.0159
+    MLB: n=11  mean(K-B)=-1.51pts  Brier K=0.2041 B=0.2380
+    NBA: n=282  mean(K-B)=+0.03pts  Brier K=0.2504 B=0.2500
+    NHL: n=1,159  mean(K-B)=-0.27pts  Brier K=0.2028 B=0.2028

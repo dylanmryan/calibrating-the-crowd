@@ -1,0 +1,87 @@
+BOOK QUOTE FRESHNESS — the timing caveat, measured (5,333 joint games)
+
+=== 1. QUOTE-AGE CENSUS: the split is the collector's, not the games' ===
+  per-game median book quote age, minutes before start (n=4,655 games):
+    p5=4.7  p25=4.9  p50=5.2  p75=34.8  p95=45.0
+    <10 min: 2,617 games (56%)   |   >30 min: 1,420 games (31%)   |   between: 618
+  Bimodal, with almost nothing in between — the signature of a batched
+  collector, not of a property of the games. That is what makes it usable.
+
+  Within-game spread (freshest vs stalest book): median 2.0 min, p90 6.1 min.
+  Per-book mean age spans 16.9-18.6 min across 11 books: the field is
+  near-synchronous within a game; the variation that matters is BETWEEN games.
+
+  Timestamp provenance: `book_p1` is built in sportsbook_hist, the timestamps in
+  sportsbook_us_books. Rebuilding the consensus from the timestamped file reproduces
+  `book_p1` to a median 0.003pt (mean 0.017, p95 0.008, corr 0.99997) on
+  4,655 games — the same quotes, so the ages below are the headline price's.
+
+=== 2. THE CAVEAT, MEASURED: the dead heat inside each freshness arm ===
+  comparison                              n   BrierA   BrierB   dBrier(A-B)      z       p    |CI|max  TOST        MDE
+  --- Kalshi vs US consensus ----------------------------------
+  Kalshi v US consensus: all          4,655   0.2197   0.2197     +0.010e-3   0.07   0.942   0.237e-3   yes   0.386e-3
+  Kalshi v US consensus: quote <10 min  2,617   0.2159   0.2158     +0.100e-3   0.51   0.608   0.419e-3   yes   0.544e-3
+  Kalshi v US consensus: quote >30 min  1,420   0.2192   0.2194     -0.229e-3  -0.95   0.341   0.624e-3   yes   0.673e-3
+  --- Kalshi vs PINNACLE ----------------------------------
+  Kalshi v PINNACLE: all              5,284   0.2206   0.2207     -0.116e-3  -0.88   0.377   0.333e-3   yes   0.369e-3
+  Kalshi v PINNACLE: quote <10 min    2,992   0.2165   0.2165     -0.004e-3  -0.02   0.982   0.293e-3   yes   0.492e-3
+  Kalshi v PINNACLE: quote >30 min    1,608   0.2207   0.2211     -0.412e-3  -1.60   0.109   0.834e-3   yes   0.720e-3
+  --- Poly vs US consensus ----------------------------------
+  Poly v US consensus: all            4,655   0.2200   0.2197     +0.280e-3   1.41   0.160   0.608e-3   yes   0.559e-3
+  Poly v US consensus: quote <10 min  2,617   0.2161   0.2158     +0.326e-3   1.42   0.154   0.702e-3   yes   0.641e-3
+  Poly v US consensus: quote >30 min  1,420   0.2197   0.2194     +0.268e-3   0.68   0.498   0.917e-3   yes   1.106e-3  UNDERPOWERED
+  --- Poly vs PINNACLE ----------------------------------
+  Poly v PINNACLE: all                5,284   0.2207   0.2207     -0.022e-3  -0.16   0.873   0.253e-3   yes   0.392e-3
+  Poly v PINNACLE: quote <10 min      2,992   0.2165   0.2165     +0.079e-3   0.50   0.619   0.339e-3   yes   0.443e-3
+  Poly v PINNACLE: quote >30 min      1,608   0.2209   0.2211     -0.186e-3  -0.62   0.538   0.683e-3   yes   0.847e-3
+
+  Do NOT read the Brier LEVELS across arms: the fresh arm sits at 0.216 and
+  the stale arm at 0.219-0.221 because the batches caught different leagues
+  and different game difficulty, not because anyone forecasts better when the
+  book is fresh. Every differential above is computed WITHIN an arm on the
+  same games, so composition cancels there and only there.
+
+  Does the differential MOVE with freshness? (coefficient on a fresh dummy,
+   date-clustered.) Signs: dBrier(exchange - book) is NEGATIVE when the
+   exchange is the better forecast, so an exchange edge that shrinks once
+   the book is quoted fresh appears as a POSITIVE shift. That positive shift
+   is exactly what the staleness caveat predicts; its absence, or a negative
+   shift, would mean the handicap was imagined.
+  differential                               fresh shift       z        p        n
+  (Kalshi - US consensus) when book is fresh    +0.328e-3    1.05    0.292    4,037
+  (Kalshi - Pinnacle) when Pinnacle is fresh    +0.408e-3    1.30    0.194    4,600
+  (Poly - US consensus) when book is fresh    +0.058e-3    0.14    0.888    4,037
+  (Poly - Pinnacle) when Pinnacle is fresh    +0.265e-3    0.79    0.428    4,600
+
+  READ: report the shift at its size and sign. The question this module
+  settles is narrower than 'the caveat was wrong' — it is whether the
+  equivalence survives at MATCHED freshness, which is the arm where the
+  book is not handicapped at all. A caveat that is directionally right but
+  small and insignificant should be reported that way, not declared dead.
+
+=== 3. DO THE EXCHANGES SIT ON THE BOOKS THAT JUST UPDATED? ===
+  Splitting each game's books at their own median timestamp: the fresher half and
+  the staler half disagree by 0.336pt on average (1.1 min apart, n=4,642 games).
+
+  mean |exchange - fresh half| MINUS |exchange - stale half|, in points
+  (negative = the exchange sits closer to the books that updated most recently)
+      exchange         gap       t    share of the fresh-stale gap
+        Kalshi     -0.021p    -3.7                             6%
+    Polymarket     -0.030p    -5.0                             9%
+
+  READ: both exchanges sit closer to the books that just updated, which says
+  they are priced off current information rather than off a stale field. It
+  does NOT say which moved first: an exchange that LEADS and books that catch
+  up produce the same cross-section. The effect is also small in level terms.
+
+=== 4. WHAT THIS DOES AND DOES NOT SETTLE ===
+  SETTLES: whether the book was handicapped by a stale quote, which is the
+  paper's stated timing caveat. The headline can be read inside the arm where
+  the benchmark is quoted minutes from start, at full power.
+
+  DOES NOT SETTLE: lead-lag between books. Every price here is one closing
+  cross-section per game, so there is no series in which one book could lead
+  another. That question needs per-book time series the collector did not
+  write until 2026-09-16; see book_panel.py S5 and the limitation in the
+  report outline. S3 above is the closest a cross-section gets, and it is a
+  statement about proximity, not about precedence.

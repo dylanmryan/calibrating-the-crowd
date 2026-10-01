@@ -1,0 +1,35 @@
+15-min change observations: 44,354 rows, 818 games; all-three complete steps: 23,912
+share of steps with a >0.4pt move: kalshi=9.4%  polymarket=8.4%  sportsbook=4.4%
+
+=== contemporaneous correlation of 15-min changes ===
+source      kalshi  polymarket  sportsbook
+source                                    
+kalshi       1.000       0.099       0.116
+polymarket   0.099       1.000       0.117
+sportsbook   0.116       0.117       1.000
+
+=== cross-lag correlations: corr(dA_t, dB_t+1) — A leads B if positive ===
+  A -> B                          corr       n
+       kalshi leads polymarket   -0.015  42,023
+       kalshi leads sportsbook   -0.035  23,949
+   polymarket leads kalshi       +0.022  42,020
+   polymarket leads sportsbook   +0.008  23,472
+   sportsbook leads kalshi       -0.001  23,969
+   sportsbook leads polymarket   -0.009  23,494
+
+=== predictive regressions: dB_t ~ dB_(t-1) + dA_(t-1), game-clustered ===
+  predict dkalshi      <- kalshi(own):-0.176(z=-2.7)  polymarket:+0.031(z=+4.4)  sportsbook:+0.000(z=+0.0)   n=23,452
+  predict dpolymarket  <- polymarket(own):-0.020(z=-0.9)  kalshi:-0.052(z=-0.7)  sportsbook:-0.004(z=-0.1)   n=23,462
+  predict dsportsbook  <- sportsbook(own):-0.020(z=-0.1)  kalshi:-0.053(z=-0.9)  polymarket:+0.010(z=+0.9)   n=23,421
+
+  (positive z on a cross term = that source's last move predicts this
+   source's next move: information flows from it. Early-sample caveat.)
+
+=== event windows: big moves (|d| >= 2pts), signed response in pts ===
+  event source     n |     B@-2     B@-1      B@0      B@1      B@2   (per other source B)
+        kalshi   220 |    +0.13    +0.10    +0.63    +0.08    +0.18   B=polymarket
+        kalshi   220 |    +0.03    +0.06    +0.56    -0.13    +0.06   B=sportsbook
+    polymarket   508 |    +0.03    +0.05    +0.31    +0.05    +0.13   B=kalshi
+    polymarket   508 |    +0.09    +0.04    +0.49    +0.04    +0.14   B=sportsbook
+    sportsbook   122 |    +0.02    +0.01    +0.75    +0.02    +0.14   B=kalshi
+    sportsbook   122 |    +0.44    +0.09    +0.95    +0.13    +0.29   B=polymarket

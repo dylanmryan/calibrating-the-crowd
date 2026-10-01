@@ -1,0 +1,22 @@
+covered fills: 710,129 | niche fills: 43,080 (218 contracts with any pre-start tape of 962 priced)
+
+=== taker P&L to settlement: MM-present vs MM-absent ===
+                   class    fills    $ staked   gross  net fee  cl.se
+  covered games (MM $817K)  710,129  95,734,645  -5.0%   -7.7%   7.0%
+   niche games (MM ~$6K)   43,080   1,845,382  -7.1%  -10.0%  10.5%
+
+  median fill size: covered 30 vs niche 26 contracts
+  niche fills per contract: median 70 (vs ~1,384 per covered game)
+
+=== reading ===
+  The class actions' implicit prediction — customers fare better
+  away from the house's book — finds no support: takers lost 5.0%
+  gross (7.7% net) where the MM complex stands and 7.1% (10.0%
+  net) where it does not; the difference is inside the cluster
+  SEs, so the supportable claim is 'no better, possibly worse.'
+  The first-order effect of the house's absence is QUANTITY:
+  only 218 of 962 niche contracts saw any pre-start fill at all.
+  The house's presence is what makes there be a price; what it
+  costs is the same ~5% a sportsbook charges. Whether that is
+  'betting the house' or 'liquidity provision' is the question
+  the CFTC's 2026-07-30 bona fide MM proposal exists to answer.

@@ -1,0 +1,11 @@
+games with both venues' executable books: 92 ({'MLB': np.int64(29), 'NBA': np.int64(15), 'NHL': np.int64(11), 'WNBA': np.int64(37)})
+mid-price gap |Kalshi-Poly|: median=1.00pts  mean=0.95pts  max=23.50pts
+
+best-route GROSS crossing: positive in 7.6% of games (median -0.35pts)
+best-route NET-of-fees:    positive in 2.2% of games (median -2.48pts)
+  net-positive cases: 2 (max 20.26pts) — inspect for timing-gap artifacts:
+    NBA 401871329: K 0.17/0.18 (book-mid) vs P 0.40/0.42  net=+20.26pts
+    NBA 401869409: K 0.61/0.62 (book-mid) vs P 0.51/0.52  net=+6.59pts
+
+  ~0% net crossings = the two exchanges are one integrated market at the
+  quote level: the law of one price holds across venues, not just within.

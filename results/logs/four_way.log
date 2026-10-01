@@ -1,0 +1,30 @@
+tape closes in major leagues: 4,126
+matched to ESPN games: 3,303 ({'MLB': 1374, 'NBA': 928, 'NHL': 681, 'NFL': 158, 'WNBA': 155, 'CFB': 7})
+side validation on extreme closes (n=48): 97.9% agree with realized outcome
+anchor integrity: excluding 36 of 3303 matched games (endDate-fallback anchors / post-start closes)
+
+four-way joint clean set: 2,794 matched, 2,631 after quality filters (stale<=120min, fills>=5)
+league
+MLB     960
+NBA     804
+NHL     667
+NFL     106
+WNBA     87
+CFB       7
+
+=== four-way Brier (same games) ===
+  Kalshi      0.2303
+  Poly-Global 0.2305
+  Sportsbook  0.2304
+  Poly-US     0.2307
+
+=== Poly-US vs each (clustered DM; dbar>0 => US worse; TOST d_min) ===
+  vs Kalshi      dBrier=+0.39e-3  z=+1.80  p=0.072  delta_min=0.74e-3 EQUIV@1e-3
+  vs Poly-Global dBrier=+0.17e-3  z=+0.68  p=0.495  delta_min=0.57e-3 EQUIV@1e-3
+  vs Sportsbook  dBrier=+0.31e-3  z=+1.21  p=0.225  delta_min=0.72e-3 EQUIV@1e-3
+
+=== law of one price: Poly-US vs Poly-Global (segregated pools) ===
+  |US - Global|: median 0.50pt, mean 0.77pt, >5pt in 0.4%
+  benchmark |K - Global|: median 0.40pt, mean 0.47pt, >5pt in 0.2%
+
+saved results/four_way.png

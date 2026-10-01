@@ -1,0 +1,4 @@
+Kalshi      MCB=1.31  DSC=31.7  CORP curve inside 90% consistency band: 85% of [0.01,0.99]
+Polymarket  MCB=1.33  DSC=31.5  CORP curve inside 90% consistency band: 81% of [0.01,0.99]
+Sportsbook  MCB=1.45  DSC=31.9  CORP curve inside 90% consistency band: 83% of [0.01,0.99]
+saved results/corp_reliability.png

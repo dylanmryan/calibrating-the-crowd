@@ -1,0 +1,14 @@
+games: 8,409 | median trades/game: 425 | median lookback: 51.9h
+games with a price at ALL horizons (constant sample): 6,012
+
+ horizon  n(all)    Brier      ECE   resol   [constant sample: Brier]
+     24h   6,012   0.2041   0.0237    40.4   0.2041
+     12h   6,581   0.2050   0.0210    39.5   0.2029
+      6h   7,929   0.2108   0.0238    34.3   0.2024
+      3h   8,326   0.2124   0.0224    33.1   0.2022
+      1h   8,385   0.2125   0.0211    33.0   0.2021
+     15m   8,405   0.2124   0.0220    32.8   0.2019
+   start   8,409   0.2124   0.0241    33.0   0.2019
+
+mean |Δprice| from 24h -> start: 2.6 pts (median 2.0); moves >5pts: 12.2% of games
+saved results/horizon_calibration.png

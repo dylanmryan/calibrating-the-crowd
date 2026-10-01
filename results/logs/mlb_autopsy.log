@@ -1,0 +1,14 @@
+=== MLB margin autopsy (12,044 cell-observations) ===
+       cell      n   implied  empirical  gap(pts)      z
+ margin 1-2  4,058    0.2388     0.2287     -1.01  -1.53
+   margin 3  3,991    0.0743     0.0712     -0.31  -0.76
+  margin 4+  3,995    0.1880     0.1950     +0.70  +1.11
+  (positive gap = market UNDER-prices that margin cell)
+
+=== ensemble information test (n=5,333) ===
+  Kalshi          Brier=0.2196
+  Polymarket      Brier=0.2198
+  Sportsbook      Brier=0.2196
+  ENSEMBLE(mean)  Brier=0.2196
+  ensemble vs best single (kalshi_p1): DM=+0.29 p=0.774 -> no significant gain (shared information)
+  top-decile disagreement games (n=533): ensemble vs best single DM=-0.25 p=0.803

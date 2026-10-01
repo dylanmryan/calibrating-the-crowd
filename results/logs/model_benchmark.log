@@ -1,0 +1,53 @@
+ESPN training games: 10,355 across 7 leagues
+evaluation set (three-way clean ∩ model burn-in): 4,887 games
+
+=== the floor's hyperparameters: is the gap an artifact of a bad Elo? ===
+  setting                             n    floor  best mkt  gap (e-3)
+  default                         4,887   0.2351    0.2220       13.1  <- module default
+  K=10                            4,887   0.2371    0.2220       15.1
+  K=32                            4,887   0.2355    0.2220       13.5
+  regress=0                       4,887   0.2354    0.2220       13.4
+  regress=0.167                   4,887   0.2352    0.2220       13.2
+  regress=0.5                     4,887   0.2350    0.2220       13.0
+  regress=1                       4,887   0.2353    0.2220       13.3
+  burn=4                          5,062   0.2353    0.2220       13.3
+  burn=20                         3,736   0.2359    0.2285        7.5
+  burn=40                         2,986   0.2353    0.2277        7.6
+
+  narrowest gap over the whole grid: 7.5e-3 (burn=20: floor 0.2359 vs market 0.2285)
+  The burn rows narrow the gap only by CHANGING THE SAMPLE — a longer
+  burn-in drops early-season games, which are exactly where a cold Elo is
+  worst and the market's edge is largest; note the market's own Brier rises
+  on those rows too. That is a smaller question, not a better model.
+  No setting of any knob brings the public-statistics floor within reach
+  of the venues, so the information-hierarchy claim is not an artifact of
+  an under-tuned benchmark. The grid is scored on the same games the claim
+  uses, so this is an UPPER bound on the floor's quality — a genuinely
+  out-of-sample tuning could not do better.
+
+=== the information hierarchy (same games) ===
+  source         Brier      ECE   slope
+  Elo model     0.2351   0.0343   0.970 (0.85,1.09)
+  Kalshi        0.2220   0.0155   0.953 (0.86,1.04)
+  Polymarket    0.2221   0.0153   0.950 (0.86,1.04)
+  Sportsbook    0.2220   0.0118   0.996 (0.90,1.09)
+
+=== clustered DM: model vs each market (dbar>0 => model worse) ===
+  model vs Kalshi      dBrier=+13.06e-3  z=+7.27  p=0.0000
+  model vs Polymarket  dBrier=+12.95e-3  z=+7.17  p=0.0000
+  model vs Sportsbook  dBrier=+13.07e-3  z=+7.36  p=0.0000
+
+=== per-league Brier (model | K / P / B) ===
+  NHL    n= 1301  model 0.2481  | 0.2447 / 0.2449 / 0.2446
+  MLB    n= 1240  model 0.2515  | 0.2454 / 0.2452 / 0.2453
+  NBA    n= 1212  model 0.2099  | 0.1961 / 0.1967 / 0.1965
+  CFB    n=  521  model 0.2330  | 0.1779 / 0.1779 / 0.1783
+  WNBA   n=  357  model 0.2232  | 0.2166 / 0.2159 / 0.2152
+  NFL    n=  256  model 0.2286  | 0.2131 / 0.2135 / 0.2132
+
+=== encompassing: does anything survive the book? (log-odds logits, date-clustered) ===
+  book | model           book:+0.97(z=+16.5)  model:+0.07(z=+0.8)
+  model | book           model:+0.07(z=+0.8)  book:+0.97(z=+16.5)
+  kalshi | model+book    kalshi:+1.15(z=+1.7)  model:+0.06(z=+0.7)  book:-0.24(z=-0.3)
+
+saved results/model_benchmark.png

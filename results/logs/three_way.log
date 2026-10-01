@@ -1,0 +1,22 @@
+all-three games (clean): 5,333
+
+=== per-source metrics (home-team framing for Brier) ===
+  Kalshi      Brier=0.2196  slope=0.964  ECE=0.0129
+  Polymarket  Brier=0.2198  slope=0.961  ECE=0.0128
+  Sportsbook  Brier=0.2196  slope=1.008  ECE=0.0087
+
+=== pairwise Diebold-Mariano (who forecasts better?) ===
+  Kalshi vs Polymarket: DM=-1.63 (p=0.103) -> Kalshi better (n.s.)
+  Kalshi vs Sportsbook: DM=-0.06 (p=0.948) -> Kalshi better (n.s.)
+  Polymarket vs Sportsbook: DM=+1.44 (p=0.150) -> Sportsbook better (n.s.)
+
+=== per league: Brier by source ===
+  league      n    Kalshi    Poly    Book   best
+  CFB       721    0.1739  0.1751  0.1744   Kalshi
+  MLB      1240    0.2454  0.2452  0.2453   Polymarket
+  NBA      1284    0.1972  0.1977  0.1975   Kalshi
+  NFL       278    0.2110  0.2114  0.2114   Kalshi
+  NHL      1384    0.2440  0.2441  0.2439   Sportsbook
+  WNBA      426    0.2153  0.2148  0.2141   Sportsbook
+
+saved results/three_way_calibration.png

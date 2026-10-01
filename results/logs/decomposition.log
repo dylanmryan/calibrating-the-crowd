@@ -1,0 +1,45 @@
+three-way clean games: 5,333
+
+=== Brier decomposition (both-sides, ×1000 for readability) ===
+  uncertainty (same for all) = 250.0
+  source        Brier Reliab(cal) Resol(disc)   Skill
+  Kalshi        219.6        0.26        30.3    30.1
+  Polymarket    219.8        0.23        30.2    29.9
+  Sportsbook    219.6        0.14        30.1    29.9
+  (lower Reliability = better calibrated; higher Resolution = more informative)
+
+=== favorite-longshot: calibration slope (95% CI, home-side; stacked
+    mirrored sides would halve the variance spuriously) ===
+  Kalshi      slope=0.956 (0.87,1.04)  overconfident-ish
+  Polymarket  slope=0.954 (0.87,1.04)  overconfident-ish
+  Sportsbook  slope=1.002 (0.91,1.09)  ok
+
+=== favorite-longshot: sensitivity to the logit clip ===
+    A boundary guard compresses the tails and biases the slope TOWARD 1 —
+    the direction that favours our own no-FLB conclusion. So: does it bind?
+    series (home side)         min     max   clipped at 1c/99c
+    Kalshi                    2.5c   98.5c            0 of 5,333
+    Polymarket                1.8c   99.2c            1 of 5,333
+    Sportsbook                3.8c   97.6c            0 of 5,333
+
+  source                    clip 0.01              clip 0.005              clip 0.001
+  Kalshi            0.956 (0.87,1.04)       0.956 (0.87,1.04)       0.956 (0.87,1.04)
+  Polymarket        0.954 (0.87,1.04)       0.954 (0.87,1.04)       0.954 (0.87,1.04)
+  Sportsbook        1.002 (0.91,1.09)       1.002 (0.91,1.09)       1.002 (0.91,1.09)
+  The guard touches a handful of observations at most, the slopes are
+  identical to three decimals across a 10x range of clips, and every CI
+  covers 1: the no-FLB conclusion is not an artifact of the boundary guard.
+
+=== resolution by sport (discrimination; higher=better) ===
+  league      n    Kalshi    Poly    Book
+  CFB       721      75.6    74.8    74.3
+  MLB      1240       5.1     5.7     5.8
+  NBA      1284      51.8    51.3    50.9
+  NFL       278      42.6    43.1    42.5
+  NHL      1384       7.5     6.7     6.6
+  WNBA      426      36.0    38.6    38.4
+
+=== Kalshi calibration by liquidity (spread tertiles) ===
+  spread tight n= 4615  Kalshi ECE=0.0146  reliability=0.29
+  spread mid   n=  608  Kalshi ECE=0.0317  reliability=1.44
+  spread wide  n=   79  Kalshi ECE=0.1330  reliability=24.75

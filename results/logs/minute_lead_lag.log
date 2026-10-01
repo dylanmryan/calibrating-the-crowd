@@ -1,0 +1,44 @@
+joint 1-min panel: 563 games, 201,987 complete minute-changes
+{'MLB': 464, 'NBA': 9, 'NHL': 10, 'WNBA': 80}
+
+=== cross-correlograms (positive lag = Kalshi's past move vs Poly's now) ===
+  1-min: -10:+0.005  -9:+0.012  -8:+0.004  -7:+0.003  -6:+0.015  -5:+0.015  -4:+0.011  -3:+0.013  -2:+0.015  -1:+0.021  +0:+0.021  +1:+0.030  +2:+0.022  +3:+0.009  +4:+0.007  +5:+0.004  +6:+0.005  +7:+0.008  +8:+0.007  +9:+0.011  +10:+0.005
+  5-min: -10m:+0.039  -5m:+0.060  +0m:+0.120  +5m:+0.035  +10m:+0.029
+
+=== predictive regressions: sum of 5 cross-lags (game-clustered) ===
+  dPoly <- Kalshi lags   sum-coef=+0.092  z=+7.11  n=199,148
+  dKalshi <- Poly lags   sum-coef=+0.096  z=+7.66  n=199,151
+
+=== joint repricing episodes: who crosses half its move first? ===
+  episodes: 23 | median lead +0.0 min | Kalshi-first 39%, ties 17% | sign-test p=1.000
+
+=== MLB repricing intensity (mean |1-min move|, pts) — lineup window T-4h..T-1.5h ===
+     kalshi   poly
+b                 
+0     0.026  0.022
+15    0.013  0.010
+30    0.012  0.008
+45    0.012  0.006
+60    0.011  0.006
+75    0.007  0.005
+90    0.007  0.009
+105   0.007  0.006
+120   0.008  0.006
+135   0.007  0.007
+150   0.008  0.008
+165   0.008  0.009
+180   0.008  0.008
+195   0.006  0.007
+210   0.008  0.009
+225   0.006  0.007
+240   0.006  0.005
+255   0.009  0.005
+270   0.006  0.003
+285   0.006  0.005
+300   0.007  0.004
+315   0.005  0.004
+330   0.007  0.004
+345   0.006  0.004
+360     NaN    NaN
+
+saved results/minute_lead_lag.png

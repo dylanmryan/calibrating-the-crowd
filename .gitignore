@@ -25,6 +25,7 @@ results/*
 !results/MANIFEST.md
 !results/.gitkeep
 !results/report/
+!results/logs/
 .ipynb_checkpoints/
 .venv-icloud-broken/
 data/backups/

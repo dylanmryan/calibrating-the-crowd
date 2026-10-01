@@ -1,0 +1,82 @@
+# Report tables — rendered from the suite logs
+
+## Table 1 — Data sources
+
+| Source | Instrument | Price construction | Coverage |
+|---|---|---|---|
+| Kalshi | Moneyline (game winner) | Order-book mid at official start (candlesticks) post-cutoff; validated trade-reconstruction pre-cutoff | 10,069 of 10,118 master games |
+| Polymarket Global | Moneyline | CLOB minute price at official start | 6,416 games |
+| Polymarket US | Moneyline | Last trade at/before start from the public DCM tape | 2,631 four-way clean games |
+| Sportsbooks | Moneyline | The Odds API historical closing consensus (~10.5 books/game), de-vigged; EU per-book incl. Pinnacle; 11 US books per-book | 5,437 games |
+| Kalshi | Alternate-spread ladders | Book-mid / trade-recon per rung, settled under league-specific cover lines | 34,895 contracts |
+| Kalshi | Totals ladders | Same construction; settlement-verified uniform convention | 45,224 contracts |
+| Kalshi + books | Outrights 2020-26 | Monthly in-season snapshots, de-vigged fields | n=1614 sub-10c, 20 sport-season clusters |
+| All three | Live panel | VPS collector, 5-min cadence, synchronized quotes | 818 games / 239,015 rows |
+| ESPN | Outcomes + schedule | Scoreboard finals, cross-checked vs both platforms' settlements | anchor for everything above |
+
+Joint three-way clean set: **5,333 games** across 386 dates.
+
+## Table 2 — Power: minimum detectable effect by subgroup
+
+| Group | n | dates | MDE K-P | MDE K-B | MDE P-B | verdict at δ=1e-3 |
+|---|---|---|---|---|---|---|
+| ALL | 5,333 | 386 | 0.48e-3 | 0.36e-3 | 0.51e-3 | powered |
+| NHL | 1,384 | 214 | 0.53e-3 | 0.47e-3 | 0.64e-3 | powered |
+| NBA | 1,284 | 211 | 0.71e-3 | 0.78e-3 | 0.95e-3 | powered |
+| MLB | 1,240 | 99 | 0.50e-3 | 0.50e-3 | 0.57e-3 | powered |
+| CFB | 721 | 84 | 2.52e-3 | 0.90e-3 | 2.74e-3 | UNDERPOWERED |
+| WNBA | 426 | 169 | 2.37e-3 | 2.45e-3 | 1.62e-3 | UNDERPOWERED |
+| NFL | 278 | 82 | 1.20e-3 | 1.34e-3 | 1.57e-3 | marginal |
+
+Reading rule (locked): every subgroup null is quoted with its MDE. UNDERPOWERED leagues are 'consistent with equivalence but unable to detect it', never evidence for it. δ=1e-3 admits a systematic 3.16pt offset (ΔBrier=ε²).
+
+## Table 3 — The headline equivalence
+
+| Source | Brier | Calibration slope | ECE |
+|---|---|---|---|
+| Kalshi | 0.2196 | 0.964 | 0.0129 |
+| Polymarket | 0.2198 | 0.961 | 0.0128 |
+| Sportsbook | 0.2196 | 1.008 | 0.0087 |
+
+| Pair | ΔBrier | p (clustered DM) | 90% CI | vs pre-stated δ=1.0e-3 | vs mid-price anchor 0.44e-3 |
+|---|---|---|---|---|---|
+| Kalshi - Polymarket | -0.226e-3 | 0.184 | (-0.506, +0.054)e-3 | equivalent | does not resolve |
+| Kalshi - Sportsbook | -0.008e-3 | 0.950 | (-0.221, +0.205)e-3 | equivalent | equivalent |
+| Polymarket - Sportsbook | +0.218e-3 | 0.231 | (-0.081, +0.517)e-3 | equivalent | does not resolve |
+
+Four-way: Polymarket US TOST-equivalent to each other source (δ_min ≤ 0.73e-3) [four_way.log]. Vs Pinnacle: every CI within ±0.34e-3 [sharp_books.log].
+
+## Table 4 — The 2×2 of discipline (the centerpiece)
+
+|  | Benchmarked (professional books present) | Un-benchmarked |
+|---|---|---|
+| **Repeated, fast-resolving** | Game markets: dead heat — Brier 0.2196 / 0.2198 / 0.2196 (K/P/B), formally equivalent | Niche tier: ECE 2.43pt vs a 3.26pt noise floor → excess **0.00pt**; slope 0.980 (90% CI 0.841–1.152) |
+| **One-shot, long-horizon** | Outrights: $1 on sub-10c longshots returns **$0.33** (Kalshi, n=344), **$0.53** (Polymarket), **$0.34** (books, se 0.08, n=1614) | 74% of the outright tail has no two-sided book at all; where quoted, the same failure |
+
+Read across a row: the institution explanation dies (every institution prices
+the same market type the same way). Read down a column: the benchmark
+explanation dies (repeated markets are clean without books; one-shot markets
+fail with them). What is left is repetition and fast resolution.
+De-vig caveat carried from the figure program: the books' sub-10c return
+rises to ~$0.52 under Shin — the equal-failure claim holds under
+multiplicative de-vig, so the sentence is "the books fail the same way,
+within de-vig uncertainty."
+
+## Table 5 — What participation costs, and what it returns
+
+| Rate | Value | Where it comes from |
+|---|---|---|
+| Kalshi structural taker cost | **-4.6% per position** (IQR -5.5% to -4.0%) | fixed by quote + fee schedule; n=95,654 live quotes [horizon_translation.log] |
+| Kalshi realized taker P&L | -5.0% gross / **-7.7% net** of fees, on $95.7M | held to settlement; game-clustered CI spans zero — outcomes are noisy, the cost is not [retail_fingerprint.log] |
+| Ordinary-gambler backtest ROI | -4.24% (bet everything) | every strategy lands at ~cost [profitability.log] |
+| Maker path | ≈ free (realized +5.64%, n.s.) | a route books do not offer [why_sports.log] |
+| Sportsbook cost | ~4% overround (covered leagues) | field sums [market_functioning.log]; niche rises to 7% |
+| Polymarket taker | ~1–1.75% all-in | ~1% fee schedule + one-tick spread [tick_pricing.log, fee_liquidity.log] |
+
+Bankroll after a ~26-week season of re-staking at the structural rate:
+monthly 76%, fortnightly 55%, weekly 30%, twice-weekly 9%, daily ~0%
+[horizon_translation.log]. **Calibration disciplines the price; it does not
+protect the participant.**
+
+
+saved -> results/report/tables.md

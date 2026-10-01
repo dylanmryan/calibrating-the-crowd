@@ -1,0 +1,8 @@
+book ladders PIT-able: 3,801 games
+  BOOK MLB  n=1,246  KS=0.0702 p=0.000 mean=0.527
+  BOOK NBA  n=1,284  KS=0.0350 p=0.083 mean=0.505
+  BOOK NHL  n=1,271  KS=0.0402 p=0.032 mean=0.515
+  (Kalshi benchmark, same test: see margin_dist.log — quoting it here
+   went stale once already. Post ladder-convention fix Kalshi's MLB PIT
+   passes while the books' rejects, but the book ladder is far denser
+   and includes push lines, so it is the better-powered test.)

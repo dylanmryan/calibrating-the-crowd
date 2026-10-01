@@ -1,0 +1,66 @@
+=== 1. THE MEASURED PER-POSITION RATES (recomputed, not quoted) ===
+  STRUCTURAL cost of one taker position (half-spread + fee, as a
+  share of notional): -4.6%  [IQR -5.5% to -4.0%, n=95,654 live quotes]
+  REALIZED taker P&L held to settlement: -5.0% gross, -7.7% net of fee
+    ($95,734,645 staked across 513 games; game-clustered 90% CI -19.5% to +2.9%)
+
+  The realized interval is wide and spans zero — with 513 games the
+  OUTCOMES are noisy. The cost is not: it is set by the quote and the
+  fee schedule before any ball is thrown. So the structural rate is
+  the anchor below and the realized rate is the consistency check —
+  and they agree to within a couple of points, which is the finding.
+  outrights held from T-7d: -43.7% per TICKET (= $0.56 per $1, the paper's figure; -23.5% if a
+    dollar is spread across the whole field); sub-10c longshots -60.6%  [n=571, 336 sub-10c]
+  outrights held from T-30d: -24.7% per TICKET (= $0.75 per $1, the paper's figure; -21.5% if a
+    dollar is spread across the whole field); sub-10c longshots -27.0%  [n=284, 177 sub-10c]
+
+  Note the shapes differ. The game-market rate is a well-calibrated
+  price minus a spread and a fee. The outright rate is a MISPRICED
+  price: this paper shows books do the same thing on their own
+  futures ($0.34/$1 on sub-10c longshots), so it is not exchange-
+  specific. Both are what the customer receives.
+
+=== 2. WHAT A RE-STAKED BANKROLL DOES OVER ONE SEASON ===
+  SCENARIO GRID, NOT A MEASUREMENT: Kalshi's public tape carries no
+  account identifiers, so per-person cadence is unobservable to any
+  outside researcher. These are illustrative re-stake frequencies.
+
+         cadence  positions  at cost rate  at realized rate
+         monthly          6        75.4%            61.8%
+     fortnightly         13        54.3%            35.2%
+          weekly         26        29.5%            12.4%
+    twice a week         52         8.7%             1.5%
+           daily        182         0.0%             0.0%
+
+  (fraction of an initial bankroll remaining after a ~26-week season,
+   re-staking proceeds each time — the 'strategy' reading. A customer
+   who instead stakes a fixed sum and pockets nothing loses
+   4.6% of everything they put through, linearly.)
+
+=== 3. THE HORIZON-MATCHED COMPARISON ===
+  Holding ONE futures ticket from a week out returns -43.7%.
+  Reaching the same place through the well-priced game markets
+  takes 12.2 settled positions at -4.6% each.
+  So about 12 game bets is equivalent to buying the one
+  product this paper shows is badly priced at EVERY institution —
+  and a weekly bettor reaches that point 47% of the way
+  through one 26-week season, then keeps going.
+
+  For scale only, a fixed textbook constant and NOT an estimate from
+  this project: long-run real equity returns are conventionally taken
+  at about +7%/year. The weekly-cadence cell above is the
+  relevant comparison for the survey's 'part of a financial plan'
+  respondents. No recommendation is made or implied.
+
+=== 4. WHAT THIS SAYS THAT THE CALIBRATION RESULTS DO NOT ===
+  Every accuracy result in this paper is about the PRICE: the game
+  markets are formally equivalent to Pinnacle and to 30+ books, their
+  ladders are coherent and arbitrage-free, and no venue leads another.
+  None of that reaches the customer. The taker's outcome is set by the
+  spread, the fee and how often they re-stake — and at any cadence a
+  'financial plan' would imply, a perfectly calibrated market still
+  returns close to nothing. Calibration disciplines the price; it does
+  not protect the participant. That is the paper's institutional
+  finding stated in the units the demand-side surveys use.
+
+saved results/horizon_translation.png

@@ -1,0 +1,19 @@
+games with 24h price path + book line: 4,628
+mean |flow| 24h->start: 2.46pts
+
+  --- pooled, all leagues (n=4,628) ---
+    book           weight=-0.568  clustered z=-0.94 p=0.347   LR excl. p=0.378
+    K 24h level    weight=+1.471  clustered z=+2.57 p=0.010   LR excl. p=0.014
+    K flow 24h->0  weight=+1.789  clustered z=+3.18 p=0.001   LR excl. p=0.003
+
+  --- NBA only (whisper league) (n=1,207) ---
+    book           weight=-0.447  clustered z=-0.47 p=0.637   LR excl. p=0.701
+    K 24h level    weight=+1.392  clustered z=+1.54 p=0.123   LR excl. p=0.209
+    K flow 24h->0  weight=+1.721  clustered z=+1.90 p=0.057   LR excl. p=0.117
+
+  --- all except NBA (n=3,421) ---
+    book           weight=-0.640  clustered z=-0.83 p=0.405   LR excl. p=0.407
+    K 24h level    weight=+1.514  clustered z=+2.09 p=0.036   LR excl. p=0.033
+    K flow 24h->0  weight=+1.810  clustered z=+2.57 p=0.010   LR excl. p=0.010
+
+  games with |flow| >= 3pts: n=1,419; flow points toward the eventual winner 57.0% of the time (coin flip = the flow is noise)

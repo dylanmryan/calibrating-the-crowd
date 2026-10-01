@@ -1,0 +1,28 @@
+depth snapshots: 85,453 of 85,453 captured | games: 564 | 2026-07-25 .. 2026-08-28
+  both sides present when we looked: 100%
+
+=== layer 1: the touch (best price level) ===
+  median size at touch: bid 1520 / ask 2423 contracts
+  a retail-sized order (<=10 contracts) IS the best quote on at least one side: 15% of snapshots
+  touch-size imbalance median 0.72 — the tip of the book is asymmetric, retail-sized order flow
+
+=== layer 2: the depth within 5 cents ===
+  median depth: bid 15,097 / ask 29,214 contracts per side
+  depth imbalance median 0.48 (vs 0.72 at the touch) — the mass behind the tip is two-sided
+  median depth-to-touch ratio: 6x — the standing liquidity sits BEHIND the best level
+  cross-game: median per-game depth 21,371 contracts/side across 564 simultaneous games
+
+=== reading ===
+  Two-layer structure: the touch is thin and asymmetric (median
+  imbalance 0.79; a <=10-contract retail order IS the best quote
+  on one side in 20% of snapshots) while ~20K contracts per side
+  stand within 5c — 11x the touch, twice as balanced — on ~90
+  games at once, ~2M contracts standing. Two-sided size
+  at that scale is professional market-making, not organic peer
+  supply. Public data has no member IDs, so Kalshi Trading's own
+  share cannot be measured; the documentary record (rulebook,
+  CFTC 2026-07-30 proposal) establishes the affiliate is among
+  these quoters, restricted to bona fide two-sided making. The
+  economics: takers surrender ~5% to settlement and the quoting
+  layer collects it — dealer-like revenue inside a peer-to-peer
+  shell, without directional exposure if the bona fide rules bind.

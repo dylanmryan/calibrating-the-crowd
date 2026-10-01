@@ -1,0 +1,24 @@
+contracts with executable quotes: 30,914
+
+  --- MLB — all quote sources ---
+   threshold       n  sell-YES ROI  z(date-clust)
+         2.5   4,052        -4.28%          -5.42
+         3.5   3,963        -3.52%          -4.28
+         4.5   3,914        -3.25%          -4.54
+
+  --- NBA — all quote sources ---
+   threshold       n  sell-YES ROI  z(date-clust)
+         1.5     784       -12.72%          -3.33
+         2.5     811       -10.24%          -3.55
+         3.5     712        -3.72%          -1.07
+         4.5     799        -9.03%          -2.79
+
+  --- MLB — live book quotes only ---
+   threshold       n  sell-YES ROI  z(date-clust)
+         2.5   3,044        -3.36%          -3.70
+         3.5   3,044        -2.74%          -2.88
+         4.5   3,044        -3.04%          -3.73
+
+  interpretation: positive & significant => real inefficiency persists net of
+  costs (thin-market bounded arbitrage); negative/zero => bias harbored inside
+  the cost band, exactly as books harbor biases inside their vig.

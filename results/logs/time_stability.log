@@ -1,0 +1,21 @@
+/Users/dylanryan/Desktop/Summer Research/src/analysis/time_stability.py:39: UserWarning: Converting to PeriodArray/Index representation will drop timezone information.
+  d["q"] = pd.to_datetime(d.start_utc, utc=True, format="ISO8601").dt.to_period("Q").astype(str)
+=== 1. does the dead heat hold in every sub-period? ===
+  quarter      n       K       P       B  worst pair z  delta_min
+   2025Q3    472  0.1876  0.1893  0.1882          1.27      3.72e-3 (power-limited)
+   2025Q4  1,799  0.2158  0.2160  0.2156          1.87      0.82e-3 EQUIV@1e-3
+   2026Q1  1,274  0.2163  0.2165  0.2170          2.96      1.02e-3 (power-limited)
+   2026Q2  1,678  0.2352  0.2350  0.2349          1.33      0.82e-3 EQUIV@1e-3
+  (worst pair z < 1.96 in a period = no detectable difference there;
+   delta_min = smallest TOST margin all three pairs meet in that period)
+
+=== 2. the corrected 1-2-run cell over time (self-correction test) ===
+             era   sides  implied  empirical     gap      z  | extras n extras gap      z
+     2025 season      62    30.3%      16.1%  -14.2p   -3.0  |        5         --     --
+   2026 1st half   1,731    23.8%      22.0%   -1.9p   -1.9  |      156     +18.3p   +4.6
+   2026 2nd half   2,232    23.8%      24.1%   +0.4p   +0.4  |      178     +22.3p   +5.9
+  (the +7.4/+11.2pt series previously printed here was the ladder-
+   convention artifact, retracted 2026-08-23. Corrected, the aggregate
+   cell is near-unbiased in every era. The extras blind spot once
+   reported here was RETRACTED 2026-09-23 as a conditioning artifact
+   (extras_conditioning.py); its era-level figures are withdrawn too.)

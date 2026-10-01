@@ -1,0 +1,45 @@
+three-way clean games: 5,333; leagues: ['CFB', 'MLB', 'NBA', 'NFL', 'NHL', 'WNBA']
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 4 jobs)
+NUTS: [mu_a, mu_b, sig_a, sig_b, za, zb]
+Sampling 4 chains for 1_500 tune and 1_000 draw iterations (6_000 + 4_000 draws total) took 21 seconds.
+
+=== Kalshi (divergences=0, max R-hat=1.003) ===
+  league           alpha (90% HDI)           beta (90% HDI)  P(calibrated)  MLE slope
+  CFB     +0.041 [-0.04,+0.13]       1.007 [0.89,1.13]                 71%      1.061
+  MLB     +0.044 [-0.03,+0.12]       0.899 [0.72,1.09]                 49%      0.743
+  NBA     +0.033 [-0.04,+0.11]       0.981 [0.88,1.08]                 83%      1.001
+  NFL     +0.013 [-0.09,+0.11]       0.960 [0.80,1.12]                 60%      1.015
+  NHL     +0.002 [-0.07,+0.08]       0.892 [0.72,1.04]                 49%      0.828
+  WNBA    +0.028 [-0.07,+0.11]       0.875 [0.73,1.03]                 40%      0.779
+  hyper: mu_beta 0.935 [0.82,1.05]  sigma_beta 0.110 (P<0.05 = 24%)
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 4 jobs)
+NUTS: [mu_a, mu_b, sig_a, sig_b, za, zb]
+Sampling 4 chains for 1_500 tune and 1_000 draw iterations (6_000 + 4_000 draws total) took 21 seconds.
+
+=== Polymarket (divergences=0, max R-hat=1.001) ===
+  league           alpha (90% HDI)           beta (90% HDI)  P(calibrated)  MLE slope
+  CFB     +0.043 [-0.06,+0.13]       1.005 [0.90,1.13]                 71%      1.057
+  MLB     +0.042 [-0.03,+0.12]       0.907 [0.72,1.08]                 51%      0.766
+  NBA     +0.034 [-0.04,+0.11]       0.978 [0.88,1.07]                 83%      1.000
+  NFL     +0.012 [-0.09,+0.10]       0.954 [0.81,1.11]                 62%      1.006
+  NHL     +0.003 [-0.07,+0.08]       0.892 [0.73,1.06]                 49%      0.826
+  WNBA    +0.026 [-0.07,+0.12]       0.871 [0.71,1.01]                 38%      0.773
+  hyper: mu_beta 0.935 [0.82,1.05]  sigma_beta 0.109 (P<0.05 = 25%)
+Initializing NUTS using jitter+adapt_diag...
+Multiprocess sampling (4 chains in 4 jobs)
+NUTS: [mu_a, mu_b, sig_a, sig_b, za, zb]
+Sampling 4 chains for 1_500 tune and 1_000 draw iterations (6_000 + 4_000 draws total) took 21 seconds.
+
+=== Sportsbook (divergences=0, max R-hat=1.000) ===
+  league           alpha (90% HDI)           beta (90% HDI)  P(calibrated)  MLE slope
+  CFB     +0.037 [-0.05,+0.13]       1.076 [0.95,1.22]                 55%      1.141
+  MLB     +0.042 [-0.03,+0.12]       0.928 [0.73,1.12]                 52%      0.770
+  NBA     +0.030 [-0.04,+0.11]       1.027 [0.93,1.13]                 81%      1.047
+  NFL     +0.012 [-0.09,+0.11]       0.989 [0.82,1.17]                 62%      1.026
+  NHL     -0.000 [-0.07,+0.07]       0.918 [0.73,1.09]                 55%      0.854
+  WNBA    +0.025 [-0.07,+0.12]       0.903 [0.74,1.06]                 48%      0.813
+  hyper: mu_beta 0.975 [0.84,1.10]  sigma_beta 0.130 (P<0.05 = 17%)
+
+saved results/hierarchical_calibration.png

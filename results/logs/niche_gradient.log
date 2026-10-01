@@ -1,0 +1,58 @@
+niche contracts: 962 of 1,279 priced within 6h staleness (44 series; enumerated universe was ~7.5K — only ~17% ever traded pre-start, vs ~near-total pricing in covered leagues)
+sport_class
+soccer-minor    847
+rugby            33
+cricket          23
+other            22
+esports          19
+hoops-minor      18
+
+=== calibration: benchmarked core vs un-benchmarked niche ===
+
+  covered leagues (books present): n=19,726
+    priced      n    avg    won     gap  exact p
+    0-10c    630   4.7%   1.6%   -3.1p    0.000
+   10-20c    726  15.2%  16.0%   +0.7p    0.570
+   20-30c  1,095  25.5%  24.8%   -0.6p    0.652
+   30-40c  2,397  35.7%  38.0%   +2.3p    0.019
+   40-50c  4,958  45.1%  46.6%   +1.4p    0.044
+   50-60c  5,072  54.7%  53.4%   -1.4p    0.047
+   60-70c  2,404  64.3%  62.0%   -2.3p    0.019
+   70-80c  1,088  74.5%  75.2%   +0.6p    0.651
+   80-90c    723  84.8%  84.0%   -0.8p    0.535
+   90-100c    633  95.3%  98.4%   +3.2p    0.000
+
+  niche sports (no book consensus): n=962
+    priced      n    avg    won     gap  exact p
+    0-10c     69   5.1%   7.2%   +2.1p    0.406
+   10-20c    119  15.0%  10.9%   -4.1p    0.248
+   20-30c    188  25.5%  26.1%   +0.6p    0.867
+   30-40c    118  34.9%  31.4%   -3.5p    0.441
+   40-50c    101  44.5%  38.6%   -5.9p    0.271
+   50-60c     85  55.5%  52.9%   -2.6p    0.663
+   60-70c     86  65.4%  66.3%   +0.9p    0.910
+   70-80c     78  74.9%  74.4%   -0.5p    0.897
+   80-90c     71  84.9%  81.7%   -3.2p    0.411
+   90-100c     47  94.2%  93.6%   -0.6p    0.752
+
+  ECE core 1.60pt vs its perfect-calibration noise floor 0.71pt -> excess 0.89pt
+  ECE niche 2.43pt vs its noise floor 3.26pt -> excess 0.00pt
+
+=== staleness-cut sensitivity (the 6h window is a judgement call) ===
+      cut  contracts      ECE    floor   excess    slope
+      1h        889    2.14p    3.40p    0.00p    0.997
+      3h        946    2.36p    3.29p    0.00p    0.978
+      6h        962    2.43p    3.26p    0.00p    0.980  <- module default
+     24h      1,097    2.81p    3.05p    0.00p    0.959
+  Excess ECE stays at or near zero and the slope near 1 at every cut, so
+  'un-benchmarked niche markets are calibrated' is not bought by the loose
+  window. The tightest cuts are the thinnest samples and their noise floors
+  rise accordingly — which is the reason the default is not tighter.
+  calibration slope core 1.007 vs niche 0.980 (niche 90% CI 0.841-1.152; 1.0 = perfect, <1 = overconfident)
+  tier A only (n=495): ECE 3.49pt, slope 0.924
+  tier B only (n=467): ECE 4.51pt, slope 1.050
+
+=== niche 3-way field sums (n=128 fields) ===
+  median 1.020, IQR 1.010-1.020 (games ~1.01, futures 1.03-1.06, books 1.2-1.6)
+
+saved results/niche_gradient.png

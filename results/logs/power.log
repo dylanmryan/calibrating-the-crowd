@@ -1,0 +1,38 @@
+three-way clean games: 5,333 over 386 dates
+equivalence margin delta = 1.0e-3 Brier (admits a systematic 3.16pt offset; dBrier=eps^2 — see D2)
+
+=== MDE by the pooled sample (Brier differential x1000; alpha=0.05, power=80%) ===
+     group      n  dates       Kals-Poly       Kals-Spor       Poly-Spor   verdict at delta=1e-3
+       ALL   5333    386            0.48            0.36            0.51   powered
+
+=== MDE by league (Brier differential x1000; alpha=0.05, power=80%) ===
+     group      n  dates       Kals-Poly       Kals-Spor       Poly-Spor   verdict at delta=1e-3
+       NHL   1384    214            0.53            0.47            0.64   powered
+       NBA   1284    211            0.71            0.78            0.95   powered
+       MLB   1240     99            0.50            0.50            0.57   powered
+       CFB    721     84            2.52            0.90            2.74   UNDERPOWERED
+      WNBA    426    169            2.37            2.45            1.62   UNDERPOWERED
+       NFL    278     82            1.20            1.34            1.57   marginal
+
+=== how much data would each league need? ===
+  (n implied by SE ~ 1/sqrt(n) at the observed cluster structure; a
+   multiple below 1.0x means the league is ALREADY powered)
+    league   n now  worst MDE  n for MDE=1e-3  multiple
+       NHL   1,384       0.64             568      0.4x
+       NBA   1,284       0.95           1,148      0.9x
+       MLB   1,240       0.57             409      0.3x
+       CFB     721       2.74           5,420      7.5x   <-- null is uninformative
+      WNBA     426       2.45           2,564      6.0x   <-- null is uninformative
+       NFL     278       1.57             686      2.5x   <-- null is uninformative
+
+=== what the pooled sample CAN rule out ===
+  Kalshi vs Polymarket: any true gap larger than 0.48e-3 Brier would have been detected with 80% probability
+    = a forecaster mispricing every game by 2.2pt in a fixed direction (a constant bias eps raises Brier by eps^2)
+  Kalshi vs Sportsbook: any true gap larger than 0.36e-3 Brier would have been detected with 80% probability
+    = a forecaster mispricing every game by 1.9pt in a fixed direction (a constant bias eps raises Brier by eps^2)
+  Polymarket vs Sportsbook: any true gap larger than 0.51e-3 Brier would have been detected with 80% probability
+    = a forecaster mispricing every game by 2.3pt in a fixed direction (a constant bias eps raises Brier by eps^2)
+
+REPORT RULE: quote MDE alongside every subgroup null. Leagues flagged
+UNDERPOWERED above must be described as 'consistent with equivalence but
+unable to detect it', never as evidence for it.

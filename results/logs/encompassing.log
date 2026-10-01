@@ -1,0 +1,76 @@
+clean all-three games: 5,333 (386 date clusters)
+price correlations: K-book=0.9987  P-book=0.9968  K-P=0.9969
+
+=== separability: how much of each exchange price is not the book? ===
+  exchange      R2 on book  idiosyncratic  residual coef       z       p
+  Kalshi            0.9946          0.54%          1.282   +2.11   0.035
+  Polymarket        0.9865          1.35%          0.380   +1.13   0.259
+  Read carefully, in both directions. A high R2 is NOT evidence that an
+  exchange copies the book: two independent, equally accurate forecasters
+  of the SAME games are also ~0.99 correlated, because the games differ
+  enormously in difficulty and both track the truth. Equally, the small
+  idiosyncratic share means the lead-lag nulls elsewhere in this project
+  cannot separate parallel discovery from same-step mirroring — a maker
+  quoting continuously off the book produces no lead at any resolution.
+  What the design CAN say is below (does the residual inform?) and in
+  niche_gradient (are exchanges calibrated where no book exists at all?).
+
+=== pairwise encompassing (does the 2nd source add info beyond the 1st?) ===
+
+  --- book + Kalshi (n=5,333) ---
+    book     weight=-0.343  clustered z=-0.54 p=0.590   LR excl. p=0.594
+    kalshi   weight=+1.282  clustered z=+2.11 p=0.035   LR excl. p=0.035
+
+  --- book + Polymarket (n=5,333) ---
+    book     weight=+0.604  clustered z=+1.70 p=0.090   LR excl. p=0.116
+    poly     weight=+0.380  clustered z=+1.13 p=0.259   LR excl. p=0.365
+
+  --- Kalshi + Polymarket (n=5,333) ---
+    kalshi   weight=+1.057  clustered z=+2.31 p=0.021   LR excl. p=0.016
+    poly     weight=-0.101  clustered z=-0.22 p=0.825   LR excl. p=0.845
+
+=== all three ===
+
+  --- book + Kalshi + Polymarket (n=5,333) ---
+    book     weight=-0.341  clustered z=-0.52 p=0.603   LR excl. p=0.620
+    kalshi   weight=+1.285  clustered z=+1.90 p=0.057   LR excl. p=0.058
+    poly     weight=-0.004  clustered z=-0.01 p=0.992   LR excl. p=0.994
+
+  (weights sum >1 is fine — log-odds combination; the question is each
+   source's INCREMENTAL p-value, not the raw weight. r~0.99 collinearity
+   makes single weights unstable; LR exclusion tests are the verdict.)
+
+=== divergent games: who is closer to the outcome? ===
+  |kalshi-book|>3pts: n=  35  kalshi closer 68.6% of the time
+  |poly-book|>3pts: n=  55  poly closer 58.2% of the time
+  |kalshi-poly|>3pts: n=  20  kalshi closer 70.0% of the time
+
+=== timing check: encompassing by book-quote staleness ===
+
+  --- book + Kalshi, book fresh (<10 min) (n=4,237) ---
+    book     weight=-0.457  clustered z=-0.66 p=0.507   LR excl. p=0.501
+    kalshi   weight=+1.394  clustered z=+2.13 p=0.033   LR excl. p=0.030
+    DM Kalshi-book: ΔBrier=-0.019e-3  z=-0.12 p=0.902
+
+  --- book + Kalshi, book stale (>=10 min) (n=1,096) ---
+    book     weight=+1.172  clustered z=+0.63 p=0.531   LR excl. p=0.573
+    kalshi   weight=-0.202  clustered z=-0.11 p=0.911   LR excl. p=0.919
+    DM Kalshi-book: ΔBrier=+0.033e-3  z=+0.16 p=0.873
+
+=== per-league: Kalshi increment beyond the book ===
+  league      n   K weight      z      p
+  CFB       721     +1.479   1.21  0.227
+  MLB      1240     -0.239  -0.08  0.937
+  NBA      1284     +3.141   2.54  0.011
+  NFL       278     +3.502   1.21  0.228
+  NHL      1384     +0.015   0.01  0.994
+  WNBA      426     -0.819  -0.81  0.416
+
+=== liquidity-controlled cluster-robust DM (tight Kalshi spread <=0.01) ===
+  liquid games: 4,615
+  Kalshi - Polymarket: ΔBrier=-0.065e-3  z=-0.44 p=0.661
+  Kalshi - Sportsbook: ΔBrier=+0.010e-3  z=+0.07 p=0.943
+  Polymarket - Sportsbook: ΔBrier=+0.074e-3  z=+0.49 p=0.627
+  Kalshi      liquid Brier=0.2199
+  Polymarket  liquid Brier=0.2200
+  Sportsbook  liquid Brier=0.2199

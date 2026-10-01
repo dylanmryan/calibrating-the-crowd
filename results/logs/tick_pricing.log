@@ -1,0 +1,28 @@
+Kalshi live-book moneyline sides: 4,062
+  spread == exactly 1 tick: 98% of quotes (median spread 1.0c)
+
+Kalshi live-book ladder contracts: 13,104
+     price      n  at-tick  med spread  rel spread  tick/price
+      1-5c    100      73%        1.0c       28.6%       28.6%
+     5-10c    508      72%        1.0c       15.4%       13.3%
+    10-20c   3188      81%        1.0c        6.5%        6.1%
+    20-35c   5987      82%        1.0c        3.9%        3.8%
+    35-65c   3064      83%        1.0c        2.5%        2.5%
+    65-80c    201      60%        1.0c        1.5%        1.4%
+    80-90c     51      69%        1.0c        1.2%        1.2%
+
+Polymarket stored books (moneylines, n=144):
+  spread == exactly 1 tick: 96%; off-cent-grid quotes: 0.7%
+  (moneylines live mid-range where Poly's tick is 0.01; the 0.001 regime
+   applies to extreme-priced markets — sub-cent quotes observed live on a
+   -1.5 spread market, gamma orderPriceMinTickSize=0.001)
+
+Reading: the touch on BOTH venues' moneylines sits at the minimum tick —
+the quoted spread is a censored bound, not an equilibrium choice. Fee-era
+'spread unchanged' is therefore about the bound; depth and volume are the
+free margins (volume moved -41%; depth capture now accumulating). In the
+tails, Kalshi's uniform cent is a 10-20% relative floor where Polymarket's
+0.001 regime floors at 1-2% — tick design, not trader behavior, sets the
+price of tail liquidity.
+
+saved results/tick_pricing.png

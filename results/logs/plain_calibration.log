@@ -1,0 +1,66 @@
+same 5,333 games, all three sources; both sides = 10,666 priced teams
+
+=== Kalshi: teams priced X% — how often did they win? ===
+   priced   teams  avg price     won     gap          95% CI  $1 returned
+      10%     357      10.7%    8.7%   -2.0p    6.2-12.1 % $      0.81 
+      20%     579      20.3%   23.0%   +2.7p   19.7-26.6 % $      1.13 
+      30%     893      30.5%   30.8%   +0.3p   27.9-33.9 % $      1.01 
+      40%   2,041      40.6%   43.1%   +2.5p   41.0-45.3 % $      1.06*
+      50%   2,798      50.0%   50.0%   +0.1p   48.2-51.9 % $      1.00 
+      60%   2,057      59.4%   56.9%   -2.5p   54.8-59.1 % $      0.96*
+      70%     897      69.5%   69.1%   -0.4p   66.0-72.1 % $      0.99 
+      80%     586      79.7%   76.8%   -2.9p   73.2-80.0 % $      0.96 
+      90%     357      89.3%   91.3%   +2.0p   87.9-93.8 % $      1.02 
+  bands where the stated price falls outside the 95% CI: 2/9
+
+=== Polymarket: teams priced X% — how often did they win? ===
+   priced   teams  avg price     won     gap          95% CI  $1 returned
+      10%     362      10.6%    8.6%   -2.0p    6.1-11.9 % $      0.81 
+      20%     572      20.2%   23.1%   +2.8p   19.8-26.7 % $      1.14 
+      30%     883      30.5%   31.3%   +0.8p   28.3-34.4 % $      1.03 
+      40%   2,054      40.7%   43.1%   +2.4p   41.0-45.2 % $      1.06*
+      50%   2,792      50.0%   50.2%   +0.2p   48.3-52.0 % $      1.00 
+      60%   2,081      59.3%   56.6%   -2.8p   54.4-58.7 % $      0.95*
+      70%     891      69.6%   68.8%   -0.8p   65.7-71.8 % $      0.99 
+      80%     584      79.7%   77.1%   -2.7p   73.5-80.3 % $      0.97 
+      90%     362      89.4%   91.4%   +2.0p   88.1-93.9 % $      1.02 
+  bands where the stated price falls outside the 95% CI: 2/9
+
+=== Sportsbook: teams priced X% — how often did they win? ===
+   priced   teams  avg price     won     gap          95% CI  $1 returned
+      10%     342      10.9%    7.0%   -3.9p    4.8-10.2 % $      0.64*
+      20%     584      20.4%   22.9%   +2.6p   19.7-26.5 % $      1.13 
+      30%     880      30.5%   29.1%   -1.4p   26.2-32.2 % $      0.96 
+      40%   2,101      40.7%   44.0%   +3.3p   41.9-46.2 % $      1.08*
+      50%   2,805      50.0%   50.0%   -0.0p   48.1-51.8 % $      1.00 
+      60%   2,104      59.3%   56.0%   -3.3p   53.9-58.1 % $      0.94*
+      70%     880      69.5%   70.9%   +1.4p   67.8-73.8 % $      1.02 
+      80%     584      79.6%   77.1%   -2.6p   73.5-80.3 % $      0.97 
+      90%     342      89.1%   93.0%   +3.9p   89.8-95.2 % $      1.04*
+  bands where the stated price falls outside the 95% CI: 4/9
+
+=== side by side: % of teams that won, by stated price ===
+   priced       Kalshi  Polymarket  Sportsbook      (n range)
+      10%         8.7%        8.6%        7.0%     342-362
+      20%        23.0%       23.1%       22.9%     572-584
+      30%        30.8%       31.3%       29.1%     880-893
+      40%        43.1%       43.1%       44.0%   2,041-2,101
+      50%        50.0%       50.2%       50.0%   2,792-2,805
+      60%        56.9%       56.6%       56.0%   2,057-2,104
+      70%        69.1%       68.8%       70.9%     880-897
+      80%        76.8%       77.1%       77.1%     584-586
+      90%        91.3%       91.4%       93.0%     342-362
+
+  (50% band note: both sides of a near-coin-flip game can land in the
+   same band, so its effective sample is slightly below n.)
+
+=== shared deviations: corr of (won - priced) across price bands ===
+  Kalshi      vs Polymarket : r=+0.99 over 9 bands (n-weighted)
+  Kalshi      vs Sportsbook : r=+0.93 over 9 bands (n-weighted)
+  Polymarket  vs Sportsbook : r=+0.91 over 9 bands (n-weighted)
+  (r near +1 = shared deviations; r near 0 would say venue-specific error.
+   The WC draws give the same result game-level. The extras cell USED to be
+   cited here too; it was retracted 2026-09-23 as a conditioning artifact
+   -- see extras_conditioning.py -- and is no longer part of this motif.)
+
+saved results/plain_calibration.png

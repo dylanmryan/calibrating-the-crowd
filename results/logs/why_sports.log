@@ -1,0 +1,82 @@
+moneyline sides: 19,148 (9,863 games)
+ladder contracts: 34,895
+
+=== A. hold-to-settlement return on stake, by price paid ===
+
+--- moneylines @ MID, gross (BDW traded-price analogue) (n=19,028; stake-weighted, game-clustered) ---
+bucket    n   ret   se
+ 1-10c  528 -67.1 10.8
+10-20c  716   3.6  8.9
+20-30c 1063  -2.5  5.2
+30-40c 2301   6.3  2.8
+40-50c 4797   2.4  1.6
+50-60c 4841  -2.9  1.3
+60-70c 2406  -4.3  1.5
+70-80c 1087   0.7  1.8
+80-90c  734  -0.8  1.6
+90-99c  555   3.5  0.6
+  OVERALL: -0.43% (se 0.10)   [BDW all-Kalshi analogue: ~-20%; sub-10c ~-60%]
+
+--- moneylines @ ASK + taker fee (executable) (n=18,925; stake-weighted, game-clustered) ---
+bucket    n   ret   se
+ 1-10c  472 -73.8 11.4
+10-20c  699 -15.6  8.6
+20-30c 1007  -7.8  5.4
+30-40c 2110  -1.0  3.0
+40-50c 4628  -0.6  1.6
+50-60c 4968  -7.7  1.1
+60-70c 2606  -7.7  1.5
+70-80c 1168  -2.5  1.7
+80-90c  750  -2.8  1.6
+90-99c  517   2.6  0.8
+  OVERALL: -4.59% (se 0.10)   [BDW all-Kalshi analogue: ~-20%; sub-10c ~-60%]
+
+--- spread ladders @ ASK + taker fee (executable) (n=34,892; stake-weighted, game-clustered) ---
+bucket     n  ret   se
+ 1-10c   998 -4.5 17.5
+10-20c  8107 -3.7  3.2
+20-30c 10291 -6.7  1.7
+30-40c  7717 -8.1  1.4
+40-50c  3781 -7.3  1.9
+50-60c  1662 -8.1  2.4
+60-70c  1083 -4.6  2.6
+70-80c   773 -0.5  2.5
+80-90c   431 -1.4  2.5
+90-99c    49 -0.3  4.3
+  OVERALL: -6.21% (se 1.16)   [BDW all-Kalshi analogue: ~-20%; sub-10c ~-60%]
+
+=== A2. sub-10c moneyline diagnostic (probability space) ===
+  ALL sub-10c    n= 572  mean mid= 4.9c  obs win= 1.6% (±1.0)  gap=-3.3pt
+  src=trade-recon n= 565  mean mid= 4.8c  obs win= 1.4% (±1.0)  gap=-3.4pt
+  spread<=2c     n= 567  mean mid= 4.9c  obs win= 1.6% (±1.0)  gap=-3.3pt
+  league mix: {'CBB-M': 286, 'CFB': 196, 'NBA': 66, 'WNBA': 22, 'NFL': 2}
+  -> VERDICT: the sub-10c 'cliff' is confined to trade-recon prices on thin
+     college longshots (one-sided prints overstate reconstructed mids);
+     live order books quote almost no sub-10c moneylines, and the live-book-
+     heavy ladder tail shows no cliff. In the executable 10-99c range, BDW's
+     platform pathologies are absent from sports.
+
+=== B. maker vs taker realized ROI (per-fill, final-24h sample) ===
+fills: 709,126 | games: 509 | taker-yes share: 94.3%
+  taker gross        ROI = -4.99%  (se 6.97, game-clustered)
+  taker net-of-fee   ROI = -7.73%  (se 6.99, game-clustered)
+  maker (no fee)     ROI = +5.64%  (se 7.83, game-clustered)
+  [BDW: makers out-earn takers; FLB in both; avg contract ~-20%]
+
+  taker net ROI by price paid (their FLB-for-takers test):
+
+--- taker fills @ price paid + fee (n=709,126; stake-weighted, game-clustered) ---
+bucket      n   ret   se
+ 1-10c   9927 -78.1 25.0
+10-20c  35475 -92.4 11.2
+20-30c  60668 -65.8 23.7
+30-40c  72388  41.5 37.1
+40-50c 125241 -32.2 19.8
+50-60c 116246  -4.0 15.6
+60-70c 161716   3.5 16.2
+70-80c  61067   3.6 10.1
+80-90c  56084  -3.3 13.9
+90-99c  10314   2.7  2.8
+  OVERALL: -5.98% (se 7.61)   [BDW all-Kalshi analogue: ~-20%; sub-10c ~-60%]
+
+saved results/why_sports.png

@@ -1,0 +1,54 @@
+sweep 2026-08-04: 784,617 open markets, 3,184 series, total resting liquidity $0M
+
+=== the footprint by market class ===
+                                     markets  median_liq  share_liq_ge_1k  share_two_sided  total_liq_$M
+cls                                                                                                     
+covered game                          198.00        0.00             0.00             1.00          0.00
+niche game                            273.00        0.00             0.00             0.99          0.00
+non-sports (Climate and Weather)      637.00        0.00             0.00             0.62          0.00
+non-sports (Crypto)                 4,018.00        0.00             0.00             0.14          0.00
+non-sports (Economics)              3,149.00        0.00             0.00             0.79          0.00
+non-sports (Entertainment)          6,688.00        0.00             0.00             0.65          0.00
+non-sports (Financials)             9,174.00        0.00             0.00             0.65          0.00
+non-sports (Politics)               1,871.00        0.00             0.00             0.94          0.00
+non-sports (Science and Technology)   529.00        0.00             0.00             0.91          0.00
+non-sports (World)                      2.00        0.00             0.00             1.00          0.00
+sports outright                     1,214.00        0.00             0.00             0.26          0.00
+
+=== who pays maker fees (fee_type by class) ===
+cls                                  fee_type                 
+covered game                         quadratic_with_maker_fees     198
+niche game                           quadratic                     273
+non-sports (Climate and Weather)     quadratic                     637
+non-sports (Crypto)                  quadratic                    4016
+                                     quadratic_with_maker_fees       2
+non-sports (Economics)               quadratic                    2644
+                                     quadratic_with_maker_fees     505
+non-sports (Entertainment)           quadratic                    6646
+                                     quadratic_with_maker_fees      42
+non-sports (Financials)              quadratic                    9065
+                                     quadratic_with_maker_fees     109
+non-sports (Politics)                quadratic                    1871
+non-sports (Science and Technology)  quadratic                     529
+non-sports (World)                   quadratic                       2
+sports outright                      quadratic                    1184
+                                     quadratic_with_maker_fees      30
+
+=== signed depth survey (top-volume markets per class) ===
+                  n  book_present  med_spread  med_d5_dollars
+cls                                                          
+covered game     20          1.00        0.01      816,915.37
+niche game       20          0.90        0.01        6,023.25
+sports outright  20          0.70        0.01      234,986.26
+
+=== reading ===
+  The professional book stands ~$800K within 5c per covered game
+  at 1c spreads; niche games get 1/100th of that (~$6K) and stay
+  CALIBRATED; headline outrights carry real depth (~$235K median
+  among top-volume fields) and are MISCALIBRATED anyway, while
+  74% of the outright tail has no two-sided book at all. Standing
+  liquidity neither rescues one-shot markets nor is needed by
+  repeated ones — reinforcing repetition, not liquidity, as the
+  active ingredient. The fee menu points the same way: makers
+  PAY fees where they queue to quote (covered games) and make
+  free where the exchange needs them (niche, outrights, politics).

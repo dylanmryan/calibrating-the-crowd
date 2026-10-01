@@ -153,11 +153,29 @@ python -m src.make_results          # regenerates every figure and log
 
 The suite is audit-gated: 79 data-quality checks run first and the suite halts
 on failure rather than producing plausible output from bad input. (55 in
-`data_audit.log` + 24 in `deep_audit.log`. Corrected 2026-09-15: this line read
-"73 checks", a figure that matches neither log nor their sum.)
+`results/logs/data_audit.log` + 24 in `results/logs/deep_audit.log`. Corrected
+2026-09-15: this line read "73 checks", a figure that matches neither log nor
+their sum.)
 
-Start here instead if you just want to see the headline reproduce from a clean
-load: [`notebooks/data_tour.ipynb`](notebooks/data_tour.ipynb).
+**What that command needs, stated plainly.** The suite reads the full
+`data/processed/` set, and only two of those files are committed here (see *Data
+availability* below) — so `make_results` runs for someone holding the banked
+inputs, not for a fresh clone.
+
+**So the frozen run's logs are committed instead.** All 65 are in
+[`results/logs/`](results/logs/), stamped 2026-09-23, one per module, alongside
+[`results/MANIFEST.md`](results/MANIFEST.md) (per-module runtime and status) and
+the rendered tables in `results/report/`. Every number in the README and the
+report can be checked against them without re-running anything and without the
+book data. That is the intended route for a reader who wants to audit rather
+than re-execute.
+
+For a fresh clone, the readable entry point is
+[`notebooks/data_tour.ipynb`](notebooks/data_tour.ipynb) — it ships its rendered
+outputs, so the headline can be read straight off GitHub without executing
+anything. Re-executing it needs one file beyond `analysis_core.csv`
+(`kalshi_trades_24h.csv`, the trade tape) that carries de-vigged book prices and
+is therefore not redistributed.
 
 ## Data availability — read this before judging reproducibility
 
@@ -187,9 +205,9 @@ Four games are included in full cross-venue detail under `data/exhibits/`
 src/collect/     API collectors (Kalshi, Polymarket Global + US, Odds API, ESPN)
 src/normalize/   venue-specific price construction
 src/match/       cross-venue game matching
-src/analysis/    63 analysis modules, one concern each
+src/analysis/    65 suite modules, one concern each (+8 standalone, not suite-gated)
 src/make_results.py   regenerates everything
-results/         figures + MANIFEST (per-module runtime and status)
+results/         figures, frozen logs/ (65, one per module), MANIFEST, report/ tables
 docs/            findings log, report outline, drafting plan, methodology decisions
 notebooks/       data tour
 ```

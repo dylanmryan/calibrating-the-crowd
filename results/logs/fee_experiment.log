@@ -1,0 +1,20 @@
+clean all-three games: 5,333  pre-fee 3,591 / post-fee 1,742
+league mix:
+post    False  True 
+league              
+CFB       721      0
+MLB        47   1193
+NBA      1088    196
+NFL       278      0
+NHL      1166    218
+WNBA      291    135
+
+=== per-era Polymarket quality (vs book on the same games) ===
+  era             n  Poly Brier  Book Brier  Poly ECE  Poly slope
+  pre-fee     3,591      0.2127      0.2124    0.0183       0.957
+  post-fee    1,742      0.2344      0.2343    0.0066       0.982
+
+=== difference-in-differences on per-game Brier differential ===
+  Polymarket - book      post coeff=+0.178e-3 Brier  z=+0.28  p=0.781
+  Kalshi - book (placebo) post coeff=+0.772e-3 Brier  z=+1.24  p=0.215
+  (positive post coeff = source worsened vs book after the fee date)
