@@ -76,7 +76,7 @@ flagged wherever quoted.
 2. Run `oos_verification.py` once. It prints the R1–R8 scorecard with every
    statistic, criterion, and MDE, and writes `results/oos_scorecard.png`.
 3. The scorecard enters the report as §5A's closing paragraph (per
-   drafting-plan open item 3) and one abstract sentence, whichever way it
+   the drafting plan's open item 3) and one abstract sentence, whichever way it
    reads. A deviation is a finding, not a problem to fix: it gets reported
    with the same prominence as a confirmation.
 4. No statistic in this file may be changed after the pull. Any additional

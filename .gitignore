@@ -55,3 +55,13 @@ src/analysis/calibration.py
 results/reliability_kalshi.png
 results/kalshi_vs_polymarket.png
 results/equivalence_forest.png
+docs/advisor-checkpoint.md
+docs/code-review-findings.md
+docs/report-readiness-audit.md
+docs/drafting-plan.md
+docs/defensibility-audit-*.md
+docs/interpretation-audit-*.md
+docs/public-writeup-draft-*.md
+docs/report-outline.md
+docs/collection-plan.md
+docs/public-writeup-*.html

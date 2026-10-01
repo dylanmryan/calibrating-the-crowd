@@ -208,7 +208,7 @@ src/match/       cross-venue game matching
 src/analysis/    65 suite modules, one concern each (+8 standalone, not suite-gated)
 src/make_results.py   regenerates everything
 results/         figures, frozen logs/ (65, one per module), MANIFEST, report/ tables
-docs/            findings log, report outline, drafting plan, methodology decisions
+docs/            findings log, methodology decisions, registered claims, figure map
 notebooks/       data tour
 ```
 

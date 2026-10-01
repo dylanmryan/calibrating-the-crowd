@@ -120,7 +120,7 @@ decimal; pooled TOST intervals tightened to ±0.46e-3).
 (`src/analysis/data_audit.py`, first entry in `src/make_results.py`)
 
 **Review fixes applied (2026-07-30).** Following the full code review
-(`docs/code-review-findings.md`): 1:1 match enforcement dropped 117
+of 2026-07-30: 1:1 match enforcement dropped 117
 ambiguous doubleheader/series pairings and purged their possibly-wrong
 prices (three-way clean set 5,053 → 5,046; kalshi-disagree flags fell
 179 → 161, confirming some "disagreements" were the wrong siblings);

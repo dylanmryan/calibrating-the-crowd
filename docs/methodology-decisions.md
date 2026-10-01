@@ -1,6 +1,6 @@
 # Methodology decisions
-*Settled 2026-08-20. These close the seven questions raised in
-`advisor-checkpoint.md` (2026-07-21) and the four listed as pending in
+*Settled 2026-08-20. These close the seven questions raised at the
+2026-07-21 advisor checkpoint and the four listed as pending in
 `findings.md`. Decided in-house; each records the reasoning so a reader can
 disagree with the choice rather than guess at it. This file is the source for
 report §4.*
@@ -41,7 +41,7 @@ sentence. Every discovery gets its BH status quoted at first mention.
 
 ### Correction to an existing scale statement
 
-`rigor.py:63` and `report-outline.md` both gloss δ=1.0e-3 Brier as
+`rigor.py:63` and the report outline both gloss δ=1.0e-3 Brier as
 "≈ 0.5 percentage points per game." **That is wrong by a factor of six.**
 
 For a forecast displaced from the truth by ε, the Brier excess is exactly ε².
@@ -311,6 +311,6 @@ limitation rather than a bug to fix, and check 1 is what bounds it.
 | File | Change | Blocking |
 |---|---|---|
 | `src/analysis/rigor.py:63` | Replace the "≈0.5pt/game" gloss; print ε=√δ scale and the three cost-anchored margins | Yes — §5A |
-| `docs/report-outline.md` | Same correction wherever δ is glossed | Yes — §5A |
+| report outline (working doc) | Same correction wherever δ is glossed | Yes — §5A |
 | `src/analysis/margin_dist.py` | Add nonrandomized (mean) PIT panel | No — appendix |
 | `src/analysis/multiple_testing.py` | **Done 2026-09-03**: the inventory now re-derives every p from the frozen logs at run time instead of carrying them. It had drifted again since the July regeneration — the Murphy sup-t claim is retracted (0.037 → 0.129) and both encompassing claims strengthened | — |
