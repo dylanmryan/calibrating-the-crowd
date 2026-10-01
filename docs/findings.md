@@ -1,3 +1,5 @@
+> **Historical working notes — not the final research report.** Some claims below have been superseded or withdrawn. Use the [research report](https://docs.google.com/document/d/1PrgOKQpmin81d3iuxW_3kNqTtV87xXD5v0Rlzd8noe4) for the current findings and limitations. Retained here to preserve the development record.
+
 # Calibrating the Crowd — Findings Summary
 *Dylan Ryan · BPF Undergraduate Research Grant · updated 2026-07-10*
 
