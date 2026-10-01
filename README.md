@@ -196,8 +196,12 @@ be paid, and the grant funded it. Consequences, stated plainly:
   is banked locally and backed up.
 
 Every field is documented in [`data/DATA_DICTIONARY.md`](data/DATA_DICTIONARY.md).
-Four games are included in full cross-venue detail under `data/exhibits/`
-(NBA Finals G5, Super Bowl LX, a Thursday-night NFL game, and a walk-off).
+Four games are included in cross-venue detail under `data/exhibits/` (NBA
+Finals G5, Super Bowl LX, a Thursday-night NFL game, and a walk-off) — 27-32
+books at seven horizons, Kalshi tapes, and Polymarket paths, with per-game
+coverage counts in `exhibits_manifest.csv`. Super Bowl LX has books and
+Polymarket but no Kalshi tape: its game market is not locatable through the
+public API, so that file is present and empty rather than quietly absent.
 
 ## Layout
 

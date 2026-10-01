@@ -5,21 +5,27 @@ what to watch out for. All prices are probabilities in [0,1] unless noted.
 Team orientation: `team1`/`home`/`p1` is the home side throughout; outcomes are
 `1` = home won, `2` = away won. All timestamps UTC unless suffixed otherwise.
 
+**Which of these are in this repository.** Two: `analysis_core.csv` and
+`recon_validation.csv`. The rest are described here because they are the
+provenance of `analysis_core.csv` and because the sportsbook tables cannot be
+redistributed (The Odds API, paid plan) — they are banked locally, not lost. See
+*Data availability* in the README.
+
 **Start here: `analysis_core.csv`** — one row per game, every venue joined,
 clean column names. The starter notebook (`notebooks/data_tour.ipynb`) loads it
 and reproduces the headline results.
 
 ## Core game-level tables
 
-### analysis_core.csv (~9.4K games, built from the tables below)
+### analysis_core.csv (10,118 games, built from the tables below)
 One row per ESPN game. Columns:
 - `game_id` — ESPN event id (the join key across every table)
 - `league` — MLB / NBA / NFL / NHL / WNBA / CFB / CBB-M
 - `start_utc`, `home_team`, `away_team`
 - `home_won` — 1.0/0.0 from ESPN finals (NaN = not yet resolved)
 - `clean_set` — True = passes outcome cross-checks; use this filter for
-  calibration work (the paper's n=5,328 three-way set is `clean_set` plus
-  non-null Kalshi/Polymarket/book probs)
+  calibration work (the paper's n=5,333 three-way set is `clean_set` plus
+  non-null Kalshi/Polymarket/book probs, plus a resolved outcome)
 - `kalshi_home_prob` — Kalshi price at official start (book-mid post-cutoff,
   last-trade reconstruction pre-cutoff; validated vs archived books, 99%
   within 1pt)
@@ -28,11 +34,31 @@ One row per ESPN game. Columns:
   across ~10 US books at the closing hour; `book_home_prob_raw` /
   `book_away_prob_raw` keep the vigged versions (they sum to >1; the
   overround); `book_count` = books in the consensus
-- `book_home_prob_t24h` — same consensus 24h before start (84% coverage; the
+- `book_home_prob_t24h` — same consensus 24h before start (85% of book-priced
+  games; the
   missing games are mostly ones books don't list a day ahead)
 - `pinnacle_home_prob`, `betfair_home_prob` — de-vigged closing quotes from
   the EU snapshot (Pinnacle = the sharp book; Betfair = the incumbent
   betting exchange)
+
+#### Coverage: why a venue's price is blank
+
+A blank is a price that does not exist, not one that was dropped. Verified
+2026-09-30: of the 4,681 games with no book price and the 3,702 with no
+Polymarket price, **zero** have a price sitting unused in the upstream tables.
+Overall presence is Kalshi 99.5%, Polymarket 63.4%, book consensus 53.7%, and
+the three gaps have three different causes:
+
+| cause | where it shows |
+|---|---|
+| The Odds API budget was exhausted before the sample ended | book coverage falls 99.8% (2026-06) to 4.5% (2026-07) to 0% (2026-08) |
+| CBB-M was collected from Kalshi only | all 1,018 men's college basketball games have Kalshi and nothing else |
+| Historical backfill reached further on some venues than others | 2025-04 to 2025-09 runs 0-38% on both Polymarket and book |
+
+None of this touches the headline. The three-way set takes only games priced
+everywhere, so every result is computed on 5,333 complete rows; the wider file
+is kept because the Kalshi-only and two-venue rows carry the niche-market and
+coverage analyses.
 
 ### games_master.csv
 The underlying merged table (Kalshi + Polymarket + ESPN + book consensus)
