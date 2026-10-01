@@ -72,9 +72,13 @@ Suite: 65 modules, 233s total, 0 failed.
 
 ## Figures
 
+*Listed as published. Four entries were dropped from this inventory on
+2026-09-30: three superseded figures whose canonical versions are the
+F-numbered files in `results/report/` (see `docs/figure-map.md`), and one
+non-research image. The module table above is unmodified.*
+
 - book_moves.png
 - corp_reliability.png
-- equivalence_forest.png
 - fee_liquidity.png
 - five_min.png
 - four_way.png
@@ -84,8 +88,6 @@ Suite: 65 modules, 233s total, 0 failed.
 - horizon_translation.png
 - immediacy.png
 - kalshi_nuance.png
-- kalshi_vs_polymarket.png
-- linkedin_banner.png
 - margin_distribution.png
 - margin_pit.png
 - minute_lead_lag.png
@@ -96,7 +98,6 @@ Suite: 65 modules, 233s total, 0 failed.
 - oos_scorecard.png
 - plain_calibration.png
 - profitability.png
-- reliability_kalshi.png
 - retail_fingerprint.png
 - spread_coherence.png
 - three_way_calibration.png

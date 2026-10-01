@@ -154,7 +154,7 @@ HORIZON — people using these for long-term wealth — which is exactly the axi
 
 ### 5.1 The headline: a formal dead heat, at every level of scrutiny
 **Fig 1: `plain_calibration.png`** (teams priced at X% win X% of the time,
-1% resolution). **Fig 2: `equivalence_forest.png`** (all pairwise dBrier
+1% resolution). **Fig 2: `results/report/F3_equivalence_forest.png`** (all pairwise dBrier
 with 90% CIs inside ±1e-3). **Table 1**: plain calibration deciles.
 - Briers 0.2196 / 0.2199 / 0.2196 (K/P/B), slopes 0.96-1.01, ECE
   0.009-0.014 [three_way.log]. All clustered DM n.s.; TOST-equivalent,

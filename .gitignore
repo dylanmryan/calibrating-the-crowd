@@ -38,3 +38,20 @@ docs/outreach-*.md
 results/linkedin_banner.png
 scripts/
 .claude/
+
+# working material, not part of the public research artifact
+docs/advisor-email-2026-08-14.md
+docs/advisor-memo-2026-08.md
+docs/advisor-meeting-prep.md
+docs/project-update-*.md
+docs/roadmap.md
+docs/report-skeleton.md
+docs/Progress Memo*.docx
+report-figures/
+# dead: mlb_edge built on the retracted margin claim; calibration superseded by compare.py
+src/analysis/mlb_edge.py
+src/analysis/calibration.py
+# superseded figures — canonical versions live in results/report/
+results/reliability_kalshi.png
+results/kalshi_vs_polymarket.png
+results/equivalence_forest.png
